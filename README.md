@@ -1,7 +1,5 @@
 <p align="center">
-    <br/><br/><br/>
-    <img src="./www/src/resources/Image/Intro/icon.png" alt="teamIcon" width="200" title="Team icon" />
-    <img src="./icon/icon.png" alt="gameIcon" width="200" title="Game icon" />
+    <img src="./src/src/resources/Image/Intro/icon.png" alt="teamIcon" width="200" title="Team icon" />
 </p>
 
 This game is made by Shadow of the Red Fox\#5881 and the Kyrazail
@@ -38,7 +36,7 @@ contact us [here](./README.html#contact-us).
 Bug and Support
 ===============
 
-Known bug and future updates themes can be found on our [Discordserver](https://discord.gg/5mF5AHnRCr). You can report bug via Discord
+Known bug and future updates themes can be found on our [Discord server](https://discord.gg/5mF5AHnRCr). You can report bug via Discord
 or via the mail ****kyra.devs\@gmail.com****. Discord might be more
 reactive and tell you if it\'s a known bug or not. If you need any help
 in the game, press **P** to open the pause menu and select the **Help**
@@ -47,7 +45,7 @@ section. If you are stuck anyway, ask hint on Discord.
 Contact us
 ==========
 
-You can contact us on ****kyra.devs\@gmail.com**** or on our [Discordserver](https://discord.gg/5mF5AHnRCr).
+You can contact us on ****kyra.devs\@gmail.com**** or on our [Discord server](https://discord.gg/5mF5AHnRCr).
 
 ------------------------------------------------------------------------
 
@@ -58,7 +56,7 @@ Customizing parameters
 most of those parameters, so prevent editing this file directly!**
 
 In *`Game -> www -> src`*, there is a file called
-[config.js](./www/src/config.js). The default file looks like this:
+[config.js](./src/src/config.js). The default file looks like this:
 
 ```js
 const defaultConfig = {
