@@ -11,6 +11,13 @@ credit [here](./www/html/credits.html).
 
 ------------------------------------------------------------------------
 
+What is it about
+================
+
+This repository is the main sources of changes. All versions are made from this one, and the online version on itch.io is a replica of the **src** file.
+You will be able to downlaod all file version from itch.io (links coming soon).
+
+
 Update
 ======
 
