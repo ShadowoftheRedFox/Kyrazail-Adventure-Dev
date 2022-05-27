@@ -1,0 +1,27 @@
+{
+    "name": "kyrazial-adventure",
+    "version": "1.0.2.1",
+    "description": "Kyrazail adventure game.",
+    "main": "index.html",
+    "keywords": ["game", "2d"],
+    "author": "Shadow of the Red Fox#5881",
+    "license": "ISC",
+    "js-flags": "--expose-gc",
+    "chromium-args": "--enable-webgl --ignore-gpu-blacklist --disable-setuid-sandbox --force-color-profile=srgb",
+    "window": {
+        "title": "Kyrazail Adventure",
+        "icon": "icon/icon.png",
+        "toolbar": true,
+        "width": 1000,
+        "height": 1000,
+        "min-width": 800,
+        "min-height": 400
+    },
+    "lastUpdate": "23/05/2022",
+    "release": "Dev/Alpha",
+    "changelog": [
+        "Map is now rendered!",
+        "Added a crashHandler more efficient.",
+        "Changed the font text style."
+    ]
+}

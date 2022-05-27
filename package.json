@@ -1,0 +1,25 @@
+{
+    "name": "kyrazail-adventure-dev",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "nw src/",
+        "prod": "nwbuild --platforms win32,win64,osx64,linux32,linux64 --buildDir dist/ src/"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ShadowoftheRedFox/Kyrazail-Adventure-Dev.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/ShadowoftheRedFox/Kyrazail-Adventure-Dev/issues"
+    },
+    "homepage": "https://github.com/ShadowoftheRedFox/Kyrazail-Adventure-Dev#readme",
+    "devDependencies": {
+        "nw": "^0.64.1",
+        "nw-builder": "^3.6.0"
+    }
+}
