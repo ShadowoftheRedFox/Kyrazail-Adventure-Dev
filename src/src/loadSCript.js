@@ -212,7 +212,7 @@ const utilsFiles = [{
 
 const testFiles = [];
 
-const scripts = coreFiles.concat(audioFiles, buildFiles, coreFiles, entitiesFiles, eventsFiles, functionFiles, globalFiles, interfaceFiles, langFiles, mappingFiles, updatesFiles, utilsFiles, testFiles);
+const scripts = coreFiles.concat(utilsFiles, audioFiles, buildFiles, coreFiles, entitiesFiles, eventsFiles, functionFiles, globalFiles, interfaceFiles, langFiles, mappingFiles, updatesFiles, testFiles);
 
 
 //json data

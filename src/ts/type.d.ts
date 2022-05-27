@@ -732,4 +732,17 @@ declare global {
     declare const PluginManager: {
         setup(plugins: Array<{}>, call: any): void
     };
+
+     /**
+     * The static class that manages the window.
+     */
+    declare const WindowManager = {
+        /**
+         * Show error on canvas, for fatal one that block and stops the game.
+         * @param {Error} e The error.
+         * @param {number} w Width of the canvas.
+         * @param {number} h Height of the canvas.
+         */
+        fatal(e: Error, w: number, h: number): void;
+    }
 }

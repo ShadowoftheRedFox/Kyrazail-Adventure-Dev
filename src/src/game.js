@@ -163,16 +163,21 @@ class Game {
         //getting the save path on app, or we will reach online API if it's on cloud.
         if (this.constants.isNodejs === true) {
             const path = require('path');
+            if (navigator.appVersion.indexOf("Win") != -1) this.constants.platform = "win";
+            if (navigator.appVersion.indexOf("Mac") != -1) this.constants.platform = "mac";
+            if (navigator.appVersion.indexOf("X11") != -1) this.constants.platform = "os";
+            if (navigator.appVersion.indexOf("Linux") != -1) this.constants.platform = "linux";
+
             if (this.constants.platform === "linux") {
                 var base = path.dirname(process.mainModule.filename).split("/");
                 var rBase = path.join(`/${base[1]}/${base[2]}/KyraADV/save/`);
                 this.constants.savePath = rBase;
-            } else if (this.constants.platform === "win32") {
+            } else if (this.constants.platform === "win") {
                 let base = path.dirname(process.mainModule.filename).split("\\");
                 let rBase = `${base[0]}\\KyraADV\\save`;
                 this.constants.savePath = rBase;
             } else {
-                console.error(new UnsupportedPlatform(`You current platform is ${this.constants.platform} and is not supported by the current game version.\nIf you want saves to work for you, come at https://discord.gg/5mF5AHnRCr and ask for help.`));
+                console.error(new Error(`You current platform is ${this.constants.platform} and is not supported by the current game version.\nIf you want saves to work for you, come at https://discord.gg/5mF5AHnRCr and ask for help.`));
             }
         } else {
             this.constants.savePath = "Cloud";
@@ -217,7 +222,7 @@ class Game {
             /**
              * Where general data are stocked. 
              */
-            data: dataNwTest // DataManager._dataLoaded
+            data: /*dataNwTest*/ DataManager._dataLoaded
         };
 
         /**
@@ -263,6 +268,9 @@ class Game {
             this.render = gameRender(this);
             this.loop = new gameLoop(this);
             this.edit = gameEdit(this);
+
+            //load last to check everything
+            this.crashHandler = new crashHandler(this);
 
             //images that we want to be loaded now.
             var fullImageToLoad = [
@@ -376,8 +384,6 @@ class Game {
                 WindowManager.fatal(this.context, e, w, h);
             });
 
-            //load last to check everything
-            this.crashHandler = new crashHandler(this);
         } catch (e) {
             console.log(e);
             WindowManager.fatal(this.context, e, w, h);

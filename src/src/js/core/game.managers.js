@@ -5,16 +5,18 @@ function PluginManager() {
     throw new Error('This is a static class');
 }
 
+const container = document.getElementById("mainContainer");
+const $container = document.getElementById('container');
+
 PluginManager._scripts = [];
 PluginManager._errorUrls = [];
 PluginManager._parameters = {};
-PluginManager._count = 0;
 
 /**
  * @param {Array<{}>} plugins 
- * @param {any} call Callback function that is called when done
  */
-PluginManager.setup = function(plugins, call) {
+PluginManager.setup = function(plugins) {
+    PluginManager.task = plugins.length;
     plugins.forEach(function(plugin) {
         if (plugin.status && this._scripts.indexOf(plugin.name) === -1) {
             this.setParameters(plugin.name, plugin.parameters);
@@ -22,13 +24,6 @@ PluginManager.setup = function(plugins, call) {
             this._scripts.push(plugin.name);
         }
     }, this);
-
-    const inter = setInterval(() => {
-        if (PluginManager._count === plugins.length) {
-            if (call) call();
-            clearInterval(inter);
-        }
-    }, 100);
 };
 
 PluginManager.checkErrors = function() {
@@ -54,9 +49,7 @@ PluginManager.loadScript = function(name, path) {
     script.async = false;
     script.onerror = this.onError.bind(this);
     script._url = url;
-    const container = document.getElementById("mainContainer");
-    container.appendChild(script);
-    PluginManager._count++;
+    document.body.appendChild(script);
 };
 
 PluginManager.onError = function(e) {
@@ -212,26 +205,17 @@ function DataManager() {
 DataManager._scripts = [];
 DataManager._errorUrls = [];
 DataManager._dataLoaded = {};
-DataManager._count = 0;
 
 /**
  * @param {Array<Object>} plugins 
- * @param {any} call Callback function that is called when done
  */
-DataManager.setup = function(plugins, call) {
+DataManager.setup = function(plugins) {
     plugins.forEach(async function(plugin) {
         if (plugin.status && this._scripts.indexOf(plugin.name) === -1) {
             await this.loadScript(plugin.name + '.json', plugin.path, plugin);
             this._scripts.push(plugin.name);
         }
     }, this);
-
-    const inter = setInterval(() => {
-        if (DataManager._count === plugins.length) {
-            if (call) call();
-            clearInterval(inter);
-        }
-    }, 100);
 };
 
 DataManager.checkErrors = function() {
@@ -268,7 +252,6 @@ DataManager.loadScript = async function(name, path, obj) {
                 }
                 //adding data
                 currentPath[obj.name] = object;
-                DataManager._count++;
             }
         }
     });
@@ -287,7 +270,40 @@ function WindowManager() {
     throw new Error("WindowManager is a static class.");
 }
 
+WindowManager.data = {
+    viewport: null,
+    /**
+     * @type {CanvasRenderingContext2D}
+     */
+    ctx: null,
+    created: false
+};
+
 WindowManager.init = function() {
+    WindowManager.data.created = true;
+    const w = container.offsetWidth;
+    const h = container.offsetHeight;
+
+    function getPixelRatioInit(c) { var b = ['webkitBackingStorePixelRatio', 'mozBackingStorePixelRatio', 'msBackingStorePixelRatio', 'oBackingStorePixelRatio', 'backingStorePixelRatio']; var d = window.devicePixelRatio; var e = b.reduce(function(p, u) { return (c.hasOwnProperty(u) ? c[u] : 1); }); return d / e; }
+
+    function generateCanvasInit(w, h) {
+        var c = document.createElement('canvas'),
+            x = c.getContext('2d'),
+            r = getPixelRatioInit(x);
+        c.width = Math.round(w * r);
+        c.height = Math.round(h * r);
+        c.style.width = w + 'px';
+        c.style.height = h + 'px';
+        x.setTransform(r, 0, 0, r, 0, 0);
+        return c;
+    }
+
+    WindowManager.data.viewport = generateCanvasInit(w, h);
+    WindowManager.data.viewport.id = "errorViewPort";
+    WindowManager.data.ctx = WindowManager.data.viewport.getContext('2d');
+    $container.insertBefore(WindowManager.data.viewport, $container.firstChild);
+    console.log("Created error viewport.");
+
     window.addEventListener("beforeunload", function(e) {
         if (!window.game.state.once.checkUpdate.state.focused.yes || window.game.state.once.checkUpdate.state.focused.yes === false) {
             var confirmationMessage = "Are you sure you want to reload the page. Progression might not be saved.";
@@ -296,11 +312,11 @@ WindowManager.init = function() {
             return confirmationMessage; // Gecko, WebKit, Chrome <34
         }
     });
+    console.log("Added before unload event.");
 };
 
 WindowManager.closeGame = function() {
     window.game = {};
-    const containerElement = document.getElementById("container");
     var element = findElement(containerElement, "CANVAS");
     if (element == null) {
         return false;
@@ -317,26 +333,35 @@ WindowManager.reloadGame = function() {
 
 /**
  * Show error on canvas, for fatal one that block and stops the game.
- * @param {CanvasRenderingContext2D} ctx 
- * @param {Error} e 
+ * @param {Error} e The error.
+ * @param {number} w Width of the canvas.
+ * @param {number} h Height of the canvas.
  */
-WindowManager.fatal = function(ctx, e, w, h) {
-    window.cancelAnimationFrame(window.game.loop.stopLoop);
-    ctx.fillStyle = "#fff";
-    ctx.font = "bold 16px serif";
-    ctx.textAlign = "center";
-    ctx.clearRect(0, 0, w, h);
-    const report = e.stack.split("\n");
-    for (let i = 0; i < report.length; i++) {
-        const reportWidth = ctx.measureText(report[i]).width;
-        if (reportWidth > w) report.push("Long crash log found. Check console for a full report.");
-        ctx.fillText(report[i], w / 2, h / 2 + 16 * i);
+WindowManager.fatal = function(e, w, h) {
+    console.error(e);
+    const ctx = WindowManager.data.ctx;
+    try {
+        //stop the game loops
+        window.cancelAnimationFrame(window.game.loop.stopLoop);
+    } catch (err) {}
+
+    if (WindowManager.data.ctx) {
+        //show error
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 16px serif";
+        ctx.textAlign = "center";
+        ctx.clearRect(0, 0, w, h);
+        const report = e.stack.split("\n");
+        for (let i = 0; i < report.length; i++) {
+            const reportWidth = ctx.measureText(report[i]).width;
+            if (reportWidth > w) report.push("Long crash log found. Check console for a full report.");
+            ctx.fillText(report[i], w / 2, h / 2 + 16 * i);
+        }
+        ctx.fillStyle = "#ff0000";
+        ctx.font = "bold 32px serif";
+        ctx.textBaseline = 'top';
+        ctx.fillText("Fatal error:", w / 2, 10);
     }
-    console.log(e);
-    ctx.fillStyle = "#ff0000";
-    ctx.font = "bold 32px serif";
-    ctx.textBaseline = 'top';
-    ctx.fillText("Fatal error:", w / 2, 10);
 };
 
 

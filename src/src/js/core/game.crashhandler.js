@@ -25,8 +25,11 @@ class crashHandler {
             }
 
             if (!scope.context) {
-                return alert("CanvasRenderingContext2D has not been found. Please reload the game.");
+                let e = new Error("CanvasRenderingContext2D has not been found. Please reload the game.");
+                WindowManager.fatal(e, scope.constants.width, scope.constants.height);
             }
+
+            if (scope.menu.loadingGame === true || scope.menu.loadingMap === true) return;
 
             //check the integrity of config
             const conf = scope.settings.config;
@@ -169,11 +172,11 @@ class crashHandler {
 
             if (!scope.constants.tilesMap && scope.menu.loadingTiles === false) {
                 console.log(scope.constants);
-                WindowManager.fatal(scope.context, new Error("Tiles maps objects can't be found."));
+                WindowManager.fatal(new Error("Tiles maps objects can't be found."));
             }
             if (!scope.constants.tilesNames && scope.menu.loadingTiles === false) {
                 console.log(scope.constants);
-                WindowManager.fatal(scope.context, new Error("Tiles names object can't be found."), scope.constants.width, scope.constants.height);
+                WindowManager.fatal(new Error("Tiles names object can't be found."), scope.constants.width, scope.constants.height);
             }
 
             //make sure cache data are present
@@ -193,14 +196,14 @@ class crashHandler {
             if (!scope.cache.map) {
                 //we can't work without the map
                 let e = new Error("cache.map is not present. Can't display maps.");
-                WindowManager.fatal(scope.context, e, scope.constants.width, scope.constants.height);
+                WindowManager.fatal(e, scope.constants.width, scope.constants.height);
                 throw e;
             }
 
             if (!scope.update || !scope.render || !scope.loop || !scope.edit || !scope.crashHandler || !scope.maprender) {
                 //we can't run game without core modules
                 let e = new EvalError("Can't find one of the main core component of the game.");
-                WindowManager.fatal(scope.context, e, scope.constants.width, scope.constants.height);
+                WindowManager.fatal(e, scope.constants.width, scope.constants.height);
                 throw e;
             }
         };

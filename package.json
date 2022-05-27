@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "",
     "main": "src/index.html",
+    "chromium-args": "--enable-node-worker",
     "scripts": {
         "debug": "nw src/ --remote-debugging-port=9222",
         "dev": "nw src/",

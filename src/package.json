@@ -7,7 +7,7 @@
     "author": "Shadow of the Red Fox#5881",
     "license": "ISC",
     "js-flags": "--expose-gc",
-    "chromium-args": "--enable-webgl --ignore-gpu-blacklist --disable-setuid-sandbox --force-color-profile=srgb",
+    "chromium-args": "--enable-webgl --ignore-gpu-blacklist --disable-setuid-sandbox --force-color-profile=srgb --enable-node-worker",
     "window": {
         "title": "Kyrazail Adventure",
         "icon": "src/resources/Image/Intro/icon.png",
