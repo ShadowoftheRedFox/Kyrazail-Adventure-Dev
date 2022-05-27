@@ -1,0 +1,46 @@
+const scripts = [{
+    name: "loop",
+    path: "./core/",
+    status: true,
+    description: ""
+}, {
+    name: "render",
+    path: "./core/",
+    status: true,
+    description: ""
+}, {
+    name: "update",
+    path: "./core/",
+    status: true,
+    description: ""
+}, {
+    name: "edit",
+    path: "./core/",
+    status: true,
+    description: ""
+}, {
+    name: "canvas",
+    path: "./build/",
+    status: true,
+    description: ""
+}, {
+    name: "updater",
+    path: "./js/",
+    status: true,
+    description: ""
+}, {
+    name: "manager",
+    path: "./js/",
+    status: true,
+    description: ""
+}, {
+    name: "updateMenu",
+    path: "./js/",
+    status: true,
+    description: ""
+}, {
+    name: "config",
+    path: "../src/",
+    status: true,
+    description: ""
+}];

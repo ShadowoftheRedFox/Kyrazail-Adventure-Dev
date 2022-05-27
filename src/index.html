@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="En-en Fr-fr">
+
+<head>
+    <title>Kyrazail Adventure</title>
+    <link rel="shortcut icon" type="image/x-icon" href="./icon.ico">
+    <link rel="apple-touch-icon" href="../icon/icon.png">
+    <link rel="icon" href="./src/resources/Image/Intro/icon.png" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="./src/resources/styles/normalize.css">
+    <link rel="stylesheet" href="./src/resources/styles/main.css">
+    <script type="text/javascript" src="./src/resources/styles/modernizr-custom.js"></script>
+    <script type="text/javascript">
+        function clickIE() {
+            if (document) {
+                return false;
+            }
+        }
+
+        function clickNS(e) {
+            if (document.layers || (document.getElementById && !document.all)) {
+                if (e.which == 2 || e.which == 3) {
+                    return false;
+                }
+            }
+        }
+        if (document.layers) {
+            document.captureEvents(Event.MOUSEDOWN);
+            document.onmousedown = clickNS;
+        } else {
+            document.onmouseup = clickNS;
+            document.oncontextmenu = clickIE;
+        }
+        document.oncontextmenu = function() {
+            return false;
+        };
+
+        document.ondragstart = function() {
+            return false;
+        };
+
+        /**
+         * Data logged for files logs
+         */
+        window.log = [];
+    </script>
+</head>
+
+<body id="mainContainer">
+    <div id="container">
+        <!-- Here will be added element in the future -->
+    </div>
+    <script type="text/javascript" src="./src/resources/data/dataNwTest.js"></script>
+    <script type="text/javascript" src="./src/js/core/game.managers.js"></script>
+    <script type="text/javascript" src="./src/loadSCript.js"></script>
+    <script type="text/javascript" src="./src/config.js"></script>
+    <script type="text/javascript" src="./src/game.js"></script>
+    <script type="text/javascript" src="./src/main.js"></script>
+</body>
+
+</html>

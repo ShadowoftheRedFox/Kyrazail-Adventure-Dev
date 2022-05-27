@@ -1,0 +1,40 @@
+* {
+    padding: 10px;
+}
+
+#lang-js {
+    padding: 16px;
+    overflow: auto;
+    /* font-size: 85%; */
+    /* line-height: 1.45; */
+    background-color: #f0f0f0;
+    border-radius: 6px;
+}
+
+hr,
+strong,
+em,
+a,
+p {
+    padding: 0;
+}
+
+.hljs-number {
+    color: rgb(253, 196, 91);
+}
+
+.hljs-comment {
+    color: rgb(138, 138, 138);
+}
+
+.hljs-string {
+    color: rgb(78, 163, 67);
+}
+
+.ask {
+    color: rgb(79, 79, 255);
+}
+
+.warn {
+    color: #fa6262;
+}

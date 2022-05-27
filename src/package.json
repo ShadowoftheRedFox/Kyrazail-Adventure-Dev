@@ -10,7 +10,7 @@
     "chromium-args": "--enable-webgl --ignore-gpu-blacklist --disable-setuid-sandbox --force-color-profile=srgb",
     "window": {
         "title": "Kyrazail Adventure",
-        "icon": "icon/icon.png",
+        "icon": "src/resources/Image/Intro/icon.png",
         "toolbar": true,
         "width": 1000,
         "height": 1000,
