@@ -1,0 +1,1 @@
+butler push C:\Users\flmm\OneDrive\Documents\GitHub\Kyrazail-Adventure-Dev\dist\kyrazail-adventure\osx64 ShadowOfTheRedFox/Kyrazail-Adventure:osx

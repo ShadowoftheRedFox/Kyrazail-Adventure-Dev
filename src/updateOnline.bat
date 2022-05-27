@@ -1,0 +1,1 @@
+butler push C:\Users\flmm\OneDrive\Documents\GitHub\Kyrazail-Adventure-Dev\src ShadowOfTheRedFox/Kyrazail-Adventure:win32-browser
