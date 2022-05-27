@@ -1,4 +1,6 @@
 <p align="center">
+=======
+    <br/><br/><br/>
     <img src="./src/src/resources/Image/Intro/icon.png" alt="teamIcon" width="200" title="Team icon" />
 </p>
 
