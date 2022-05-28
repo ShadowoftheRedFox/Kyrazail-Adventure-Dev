@@ -6,8 +6,7 @@ This game is made by Shadow of the Red Fox\#5881 and the Kyrazail
 Adventure Team. For any support, join us on Discord here:
 [Server](https://discord.gg/5mF5AHnRCr).\
 [Credits and thank to all of our
-supporters!](./www/html/teamcredits.html) We used a base of RPG Maker,
-credit [here](./www/html/credits.html).
+supporters!](./www/html/teamcredits.html).
 
 ------------------------------------------------------------------------
 

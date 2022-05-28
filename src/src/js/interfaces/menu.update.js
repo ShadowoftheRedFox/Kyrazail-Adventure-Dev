@@ -32,8 +32,11 @@ class updateMenu {
 
         // Draw the menu on the canvas
         doUpdate.render = async function menuRender() {
+            //! we need to try with nw-webkit-updater, the built in methods do not works with all compressed files
+            scope.menu.update = false;
+            return;
+
             //TODO uncomment when pushing on github
-            /*
             if (scope.constants.isNodejs === false || navigator.onLine === false) {
                 scope.menu.update = false;
                 if (navigator.onLine === false) {
@@ -43,7 +46,6 @@ class updateMenu {
                 }
                 return;
             }
-            */
             var w = scope.constants.width, // largeur
                 h = scope.constants.height; // hauteur
             //set up some constant
