@@ -7,7 +7,8 @@
     "scripts": {
         "debug": "nw src/ --remote-debugging-port=9222",
         "dev": "nw src/",
-        "prod": "nwbuild --platforms win32,win64,osx64,linux32,linux64 --buildDir dist/ src/"
+        "prod": "nwbuild --platforms win32,win64,osx64,linux32,linux64 --buildDir dist/ src/",
+        "testprod": "nwbuild --zip false --platforms win32 --buildDir dist.test/ src/"
     },
     "repository": {
         "type": "git",
