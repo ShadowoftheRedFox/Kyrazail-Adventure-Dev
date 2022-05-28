@@ -71,7 +71,7 @@ class Welcome {
                             background: false
                         },
                         subImage: {
-                            quality: true,
+                            quality: true, //? keep it?
                             red: false,
                             blue: false,
                             yellow: false
@@ -552,8 +552,8 @@ class Welcome {
                         Focused.subSettings = true;
                         Focused.settings = false;
                     } else if (Focused.quitGame === true && scope.constants.transition.transition === false) {
-                        WindowManager.closeGame(); //close the page
                         window.close(); //only work for app
+                        WindowManager.closeGame(); //close the page
                     } else if (Focused.newGameSure === true && subMenu.newGameSure.no === true) {
                         Focused.newGame = true;
                         Focused.newGameSure = false;
