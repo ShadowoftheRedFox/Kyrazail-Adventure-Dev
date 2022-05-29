@@ -109,6 +109,9 @@ class updateMenu {
 
                 ctx.fillText("Update now", w / 2, 5 * h / 10);
                 ctx.fillText("Update later", w / 2, 6 * h / 10);
+            } else {
+                //no new version found
+                scope.menu.update = false;
             }
 
             if (s.confirmDoUpdate === true) {
