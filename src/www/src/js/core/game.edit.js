@@ -15,6 +15,7 @@ const gameEdit = function gameEdit(scope) {
             scope.constants.height = container.offsetHeight;
             regenerateCanvas(scope.viewport, scope.context, scope.constants.width, scope.constants.height);
             regenerateCanvas(scope.viewportMap, scope.contextMap, scope.constants.width, scope.constants.height);
+            if (WindowManager.data.created === true) regenerateCanvas(WindowManager.data.viewport, WindowManager.data.ctx, scope.constants.width, scope.constants.height);
         }
 
         if (scope.constants.loading === false) {

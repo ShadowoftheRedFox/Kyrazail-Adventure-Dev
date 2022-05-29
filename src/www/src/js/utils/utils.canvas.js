@@ -15,7 +15,7 @@ const getPixelRatio = function getPixelRatio(context) {
     });
 
     // Return the proper pixel ratio by dividing the device ratio by the backing ratio
-    return deviceRatio / backingRatio;
+    return deviceRatio / parseInt(backingRatio);
 };
 
 /**
@@ -45,11 +45,10 @@ function generateCanvas(w, h) {
 
 /**
  * Edit the canvas element on the html page to the new dimension.
- * @param {html.CanvasElement} canvas canvas element
+ * @param {HTMLCanvasElement} canvas canvas element
  * @param {CanvasRenderingContext2D} context
  * @param {number} neww width of the canvas
  * @param {number} newh heigth of the canvas 
- * @returns {void}
  */
 function regenerateCanvas(canvas, context, neww, newh) {
     // Pass our canvas' context to our getPixelRatio method

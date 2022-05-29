@@ -484,10 +484,10 @@ declare global {
             tilesMap: null
         }
 
-        viewport: HTMLCanvasElement //generateCanvas(w, h)
+        viewport: HTMLCanvasElement
 
         //this one for map and entities
-        viewportMap: HTMLCanvasElement //generateCanvas(w, h)
+        viewportMap: HTMLCanvasElement
 
         // Get and store the canvas context as a global
         contextMap: CanvasRenderingContext2D
@@ -716,7 +716,7 @@ declare global {
      * @param {boolean} [background = false] Return background ressources.
      * @param {boolean} [introduction = true] Return default ressources, to start the game.
      */
-    function loadGame(scope: scope, battle?: boolean, map?: boolean, animation: any, background?: boolean, introduction?: boolean): Promise<{ image: { intro: {}, faces: {}, battlebacks1: {}, battlebacks2: {}, battlers: {}, animations: {}, tilesets: {}, titles1: {}, titles2: {}, system: {}, parallaxes: {}, characters: {} }, audio: { BGM: {}, BGS: {}, MAIN: {}, ME: {}, SE: {} } }>
+    function loadGame(scope: scope, battle?: boolean, map?: boolean, animations?: any, background?: boolean, introduction?: boolean): Promise<{ image: { intro: {}, faces: {}, battlebacks1: {}, battlebacks2: {}, battlers: {}, animations: {}, tilesets: {}, titles1: {}, titles2: {}, system: {}, parallaxes: {}, characters: {} }, audio: { BGM: {}, BGS: {}, MAIN: {}, ME: {}, SE: {} } }>
 
     /**
      * Load image or sounds from names.
@@ -729,20 +729,206 @@ declare global {
     /**
      * The static class that manages the plugins.
      */
-    declare const PluginManager: {
+    const PluginManager: {
         setup(plugins: Array<{}>, call: any): void
     };
 
-     /**
-     * The static class that manages the window.
+    /**
+     * The static class that manages the json files.
      */
-    declare const WindowManager = {
+    const DataManager: {
+        setup(plugins: Array<{}>, call: any): void
+    };
+
+    /**
+    * The static class that manages the window.
+    */
+    const WindowManager: {
         /**
          * Show error on canvas, for fatal one that block and stops the game.
          * @param {Error} e The error.
          * @param {number} w Width of the canvas.
          * @param {number} h Height of the canvas.
          */
-        fatal(e: Error, w: number, h: number): void;
+        fatal(e: Error, w: number, h: number): void
+        /**
+         * Initialise the fatal error display.
+         */
+        init(): void
+        /**
+         * Show error on canvas, for fatal one that block and stops the game.
+         * @param {Error} e The error.
+         * @param {number} w Width of the canvas.
+         * @param {number} h Height of the canvas.
+         */
+        fatal(e: Error, w: number, h: number): void
+        /**
+         * "remove" the game from the current game.
+         */
+        closeGame(): void
+        /**
+         * Reload the game.
+         */
+        reloadGame(): void
+        data: {
+            viewport: HTMLCanvasElement,
+            ctx: CanvasRect,
+            created: boolean
+        }
+    }
+
+    /**
+     * The static class that manages the auto updates of the game.
+     */
+    const UpdateManager: {
+        /**
+         * Check the package.json in the git repo, and check version, if different, return true, if same, return false
+         * @param {string} version Current version of the game that will be tested with the version online. 
+         * @param {any} call callback function
+         * @returns { same: boolean, version: string }
+         */
+        checkVersion(version: string, call: any): { same: boolean, version: string },
+
+        /**
+         * We know there is a new version, save it if possible.
+         * @param {string} version Version found
+         */
+        laterSave(version: string): void;
+    }
+
+    /**
+     * Play a sound on the game from sound folder, looping the sound by default.
+     * @param {"BGM" | "BGS" | "MAIN" | "ME" | "SE"} folder Name of the folder.
+     * @param {String | "random"} sound Name of the song in folder.
+     * @param {scope} scope The position of the sound folder from the file that call this function.
+     * @returns {HTMLAudioElement}
+     * @throws {HTMLAudioElement} If no audio found, throw the first one or an error
+     * @link https://www.chosic.com/free-music/calm/
+     * @example playSound("Adeste", scope)
+     */
+    function playSound(folder: "BGM" | "BGS" | "MAIN" | "ME" | "SE", sound: String | "random", scope: scope): HTMLAudioElement
+
+    const defaultConfig: {
+        /**
+         * if the game will update at the next start
+         */
+        willUpdate: boolean,
+        /**
+         * the fps the game will be running. Between 1 and 60
+         * @default {60}
+         */
+        targetFps: number,
+        /**
+         * quality of the game, add or removes details. Between 1 and 3
+         * @default {3}
+         */
+        quality: number,
+        /**
+         * adjusting color if needed. Between 0 and 1
+         */
+        filter: {
+            red: number,
+            green: number,
+            blue: number
+        },
+        /**
+         * always run enabled or disabled
+         */
+        alwaysRun: boolean,
+        /**
+         * language of the game
+         */
+        lang: "en",
+        /**
+         * key input
+         * ? See all KEY NAME here: https://www.freecodecamp.org/news/javascript-keycode-list-keypress-event-key-codes/#a-full-list-of-key-event-values
+         * ! It is not recommended to put same keys at two different functionnality
+         */
+        keyBoard: {
+            up: ["ArrowUp", "z"],
+            down: ["ArrowDown", "s"],
+            right: ["ArrowRight", "d"],
+            left: ["ArrowLeft", "q"],
+            run: ["Shift"],
+            interaction: ["e", "Enter"],
+            debug: ["k"],
+            pause: ["p"],
+            back: ["Backspace", "x"],
+            confirm: ["Enter"],
+            inventory: ["c", "a"]
+        }
+    }
+
+    /**
+     * Get the proper pixel ratio of teh creen.
+     * @param {CanvasRenderingContext2D} context 
+     */
+    function getPixelRatio(context: CanvasRenderingContext2D): number
+
+    /**
+     * Create a canvas element on the html page.
+     * @param {number} w width of the canvas
+     * @param {number} h heigth of the canvas 
+     * @returns {HTMLCanvasElement}
+     */
+    function generateCanvas(w: number, h: number): HTMLCanvasElement
+
+    /**
+     * Edit the canvas element on the html page to the new dimension.
+     * @param {HTMLCanvasElement} canvas canvas element
+     * @param {CanvasRenderingContext2D} context
+     * @param {number} neww new width of the canvas
+     * @param {number} newh new heigth of the canvas 
+     */
+    function regenerateCanvas(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, neww: number, newh: number): void
+
+    /**
+     * Return current date in dd/mm/yyyy format.
+     * @returns {string}
+     * @example "19/05/2022"
+     */
+    function getDate(): string
+
+    /**
+     * Return the exact date in dd/mm/yyyy hh:mm:ss format
+     * @returns {string} exact date
+     * @example '05/17/2012 10:52:21'
+     */
+    function getExactDate(): string
+
+    /**
+     * Check wether or not to save log.
+     * Called by CustomConsole.
+     * @private
+     */
+    private function checkIfNeedToLog(): void
+
+    /**
+     * Custom logs: exactly like log, except that it logs the args to get pushed into a log file
+     */
+    const CustomConsole: {
+        log(any: any, ...args: any): void
+        warn(any: any, ...args: any): void
+        error(any: any, ...args: any): void
+        assert(any: any, ...args: any): void
+        clear(any: any, ...args: any): void
+        context(any: any, ...args: any): void
+        count(any: any, ...args: any): void
+        countReset(any: any, ...args: any): void
+        debug(any: any, ...args: any): void
+        dir(any: any, ...args: any): void
+        dirxml(any: any, ...args: any): void
+        group(any: any, ...args: any): void
+        groupCollapsed(any: any, ...args: any): void
+        groupEnd(any: any, ...args: any): void
+        info(any: any, ...args: any): void
+        profile(any: any, ...args: any): void
+        profileEnd(any: any, ...args: any): void
+        table(any: any, ...args: any): void
+        time(any: any, ...args: any): void
+        timeEnd(any: any, ...args: any): void
+        timeLog(any: any, ...args: any): void
+        timeStamp(any: any, ...args: any): void
+        trace(any: any, ...args: any): void
     }
 }

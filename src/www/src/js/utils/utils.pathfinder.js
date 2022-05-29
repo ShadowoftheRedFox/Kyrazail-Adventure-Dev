@@ -79,8 +79,7 @@ var layout = {
 // };
 
 for (var id in layout) {
-    if (!graph[id])
-        graph[id] = {};
+    if (!graph[id]) graph[id] = {};
     layout[id].forEach(aid => {
         graph[id][aid] = 1;
         if (!graph[aid])
