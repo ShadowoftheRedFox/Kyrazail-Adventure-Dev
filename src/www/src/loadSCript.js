@@ -166,12 +166,7 @@ const mappingFiles = [{
 
 const tsFiles = [];
 
-const updatesFiles = [{
-    name: "updates.updater",
-    path: "./src/js/updates/",
-    status: true,
-    description: "Update the updater, or launch it to update the game."
-}];
+const updatesFiles = [];
 
 const utilsFiles = [{
     name: "utils.canvas",
