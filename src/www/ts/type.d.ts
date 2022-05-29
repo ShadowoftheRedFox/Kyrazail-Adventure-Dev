@@ -901,7 +901,7 @@ declare global {
      * Called by CustomConsole.
      * @private
      */
-    private function checkIfNeedToLog(): void
+    function checkIfNeedToLog(): void
 
     /**
      * Custom logs: exactly like log, except that it logs the args to get pushed into a log file
