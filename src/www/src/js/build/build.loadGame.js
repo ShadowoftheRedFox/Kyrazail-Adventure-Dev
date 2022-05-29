@@ -89,7 +89,7 @@ const SE = [
  * @param {boolean} [introduction = true] Return default ressources, to start the game.
  * @returns {Promise<{ image: { intro: {}, faces: {}, battlebacks1: {}, battlebacks2: {}, battlers: {}, animations: {}, tilesets: {}, titles1: {}, titles2: {}, system: {}, parallaxes: {}, characters: {} }, audio: { BGM: {}, BGS: {}, MAIN: {}, ME: {}, SE: {} } }>}
  */
-const loadGame = async(scope, battle, map, animation, background, introduction) => new Promise((resolve, reject) => {
+const loadGame = async(scope, battle, map, animations, background, introduction) => new Promise((resolve, reject) => {
     //render a loading text
     const ctx = scope.context;
     ctx.fillStyle = "#000";
@@ -317,7 +317,7 @@ const loadGame = async(scope, battle, map, animation, background, introduction) 
             }
         });
     }
-    if (animation && animation == true) {
+    if (animations && animations == true) {
         other = true;
         totImg += system.length + parallaxes.length + titles1.length + titles2.length;
         imgCount += system.length + parallaxes.length + titles1.length + titles2.length;
