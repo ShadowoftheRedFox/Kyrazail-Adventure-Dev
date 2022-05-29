@@ -48,99 +48,30 @@ class Game {
         };
 
         this.constants = {
-            /**
-             * if NodeJS is included.
-             */
             isNodejs: typeof require === "function" && typeof process === 'object',
-            /**
-             * The current platform of the user. ONly works if isNodeJS === true; 
-             */
             platform: "Cloud",
-            /**
-             * The url relativ to the game.
-             */
             href: window.location.href,
-            /**
-             * The current filter applied.
-             */
             defaultFilter: null,
-            /**
-             * The text is written in the middle of the given y axis.
-             */
             textBaseline: 'middle',
-            /**
-             * The path to access save folder.
-             */
             savePath: null,
-            /**
-             * The width of the window.
-             */
             width: w,
-            /**
-             * The heigth of the window.
-             */
             height: h,
-            /**
-             * The fps to reach.
-             */
             targetFps: targetFps,
-            /**
-             * Transition property.
-             */
             transition: {
-                /**
-                 * If a transition is going on.
-                 */
                 transition: false,
-                /**
-                 * If the transition is starting.
-                 */
                 start: false,
-                /**
-                 * If a transition is ending.
-                 */
                 end: false,
-                /**
-                 * The speed of the transition.
-                 */
                 speed: 100,
-                /**
-                 * The count to keep track of the transition progression.
-                 */
                 count: 0
             },
-            /**
-             * Idle property to show idle screen.
-             */
             idle: {
-                /**
-                 * The idle time to reach before starting the idle screen, in ms.
-                 */
                 idleTimeMax: 2 * 60 * 1000,
-                /**
-                 * The current idle time, in ms.
-                 */
                 idleTime: 0,
-                /**
-                 * The last time the idle time has been checked, in ms.
-                 */
                 lastIdleCheck: null,
-                /**
-                 * If the game is idle or not.
-                 */
                 isIdle: false
             },
-            /**
-             * TIme property, to order reminders.
-             */
             time: {
-                /**
-                 * The time teh game started, in ms.
-                 */
                 startedPlayingSession: Date.now(),
-                /**
-                 * The last remind time, in ms.
-                 */
                 lastRemind: null
             },
             //loads after
@@ -207,21 +138,9 @@ class Game {
          * Game storage object.
          */
         this.cache = {
-            /**
-             * Where loaded images are stocked.
-             */
             image: {},
-            /**
-             * Where loaded sounds are stocked.
-             */
             audio: {},
-            /**
-             * Where all maps are stocked.
-             */
             map: {},
-            /**
-             * Where general data are stocked. 
-             */
             data: /*dataNwTest*/ DataManager._dataLoaded
         };
 
@@ -229,25 +148,9 @@ class Game {
          * Game audio property, those who are running.
          */
         this.audio = {
-            /**
-             * Currently running background audio.
-             * @type {HTMLAudioElement}
-             */
             background: null,
-            /**
-             * Currently running ambiant audio.
-             * @type {HTMLAudioElement}
-             */
             ambiant: null,
-            /**
-             * Currently running system audio.
-             * @type {HTMLAudioElement}
-             */
             system: null,
-            /**
-             * Currently running battle audio.
-             * @type {HTMLAudioElement}
-             */
             battle: null
         };
 
