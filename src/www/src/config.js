@@ -24,11 +24,11 @@ const defaultConfig = {
         right: ["ArrowRight", "d"],
         left: ["ArrowLeft", "q"],
         run: ["Shift"],
-        interaction: ["e", "Enter"],
+        interaction: ["e", "Enter"], //in game, with the player
         debug: ["k"],
         pause: ["p"],
         back: ["Backspace", "x"],
-        confirm: ["Enter"],
+        confirm: ["Enter"], //in menu
         inventory: ["c", "a"]
     }
 };
