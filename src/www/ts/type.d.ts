@@ -931,4 +931,14 @@ declare global {
         timeStamp(any: any, ...args: any): void
         trace(any: any, ...args: any): void
     }
+
+    /**
+     * Built in translate module. Translate the given string in other language
+     * @param {"en"|"fr"} lang the lang to translate
+     * @param {string} str the default string to translate, a keyCode like string
+     * @param {array} [param=[]] the paramters of the string to translate, if there is.
+     * @example translate("en","mainMenuNewGameButton"); //-> "New game"
+     * translate("fr","mainMenuNewGameButton"); //-> "Nouveau jeux"
+     */
+    function translate(lang: "en" | "fr", str: string, ...param?: any): string
 }
