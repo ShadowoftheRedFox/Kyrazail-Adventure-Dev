@@ -2,11 +2,11 @@
     "name": "kyrazail-adventure-dev",
     "version": "1.0.0",
     "description": "",
-    "main": "src/index.html",
+    "main": "src/www/index.html",
     "chromium-args": "--enable-node-worker",
     "scripts": {
         "debug": "nw src/ --remote-debugging-port=9222",
-        "dev": "nw src/",
+        "dev": "nw src/www/",
         "prod": "nwbuild --zip false --platforms win32,win64,osx64,linux32,linux64 --buildDir dist/ src/"
     },
     "repository": {

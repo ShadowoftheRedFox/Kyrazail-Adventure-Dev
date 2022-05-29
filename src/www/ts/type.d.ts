@@ -941,4 +941,13 @@ declare global {
      * translate("fr","mainMenuNewGameButton"); //-> "Nouveau jeux"
      */
     function translate(lang: "en" | "fr", str: string, ...param?: any): string
+
+    /**
+     * Return the element or null if found
+     * @param {Document | HTMLElement} document document or root element
+     * @param {HTMLElementTagNameMap} element type of element to find, as string
+     * @returns {null | HTMLElement}
+     * @example findElement(document, "p") => null | p //who is a HTMLElement
+     */
+    function findElement(document:Document, element:HTMLElementTagNameMap): null | HTMLElement
 }

@@ -52,6 +52,8 @@ class updateMenu {
             ctx.textAlign = "center";
             ctx.font = "24px Azure";
 
+            //TODO bug with app
+
             ctx.fillText("Checking updates...", w / 2, h / 2);
             if (s.checkingUpdate === false) {
                 s.checkingUpdate = true;

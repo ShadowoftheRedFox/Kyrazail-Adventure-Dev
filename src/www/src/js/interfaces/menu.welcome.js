@@ -37,12 +37,12 @@ class Welcome {
                 focused: {
                     newGame: true,
                     newGameSure: false,
-                    settings: false,
-                    subSettings: false,
-                    subsubSettings: false, //this is epic
                     load: false,
                     subLoad: false,
                     loadSure: false,
+                    settings: false,
+                    subSettings: false,
+                    subsubSettings: false, //this is epic
                     quitGame: false
                 },
                 subMenu: {
@@ -443,7 +443,6 @@ class Welcome {
             const kb = scope.settings.config.keyBoard;
             // Check if keys are pressed, if so, update the welcomes position.
             document.onkeyup = function(ev) {
-                //TODO centralize each input for each category
                 if (scope.menu.welcome === false) return;
                 if (data.spawnTransition === true) return;
                 if (ev.target.id === "textAreaLoad") return;
@@ -463,134 +462,101 @@ class Welcome {
                         scope.debug.debug = false;
                         scope.debug.showFps = false;
                     }
-                } else if (kb.left.includes(ev.key)) {
-                    if (subMenu.newGameSure.no === true) {
-                        subMenu.newGameSure.no = false;
-                        subMenu.newGameSure.yes = true;
-                        //we don't do it for yes since there is only 2 choice
-                    } else if (Focused.subSettings === true) {
-                        //! -----------------------------------------------------------------------------
+                }
 
-                        //! -----------------------------------------------------------------------------
-                    } else if (Focused.subLoad === true) {
-                        //! -----------------------------------------------------------------------------
-
-                        //! -----------------------------------------------------------------------------
-                    }
-                } else if (kb.right.includes(ev.key)) {
-                    if (subMenu.newGameSure.yes === true) {
-                        subMenu.newGameSure.yes = false;
-                        subMenu.newGameSure.no = true;
-                        //we don't do it for no since there is only 2 choice
-                    } else if (Focused.subSettings === true) {
-                        //! -----------------------------------------------------------------------------
-
-                        //! -----------------------------------------------------------------------------
-                    } else if (Focused.subLoad === true) {
-                        //! -----------------------------------------------------------------------------
-
-                        //! -----------------------------------------------------------------------------
-                    }
-                } else if (kb.up.includes(ev.key)) {
-                    if (Focused.subSettings === true) {
-                        //! -----------------------------------------------------------------------------
-
-                        //! -----------------------------------------------------------------------------
-                    } else if (Focused.subLoad === true) {
-                        //! -----------------------------------------------------------------------------
-
-                        //! -----------------------------------------------------------------------------
-                    } else if (Focused.newGame === true) {
-                        //nothing, we're already on top
-                    } else if (Focused.load === true) {
-                        Focused.load = false;
-                        Focused.newGame = true;
-                    } else if (Focused.settings === true) {
-                        Focused.settings = false;
-                        Focused.load = true;
-                    } else if (Focused.quitGame === true) {
-                        Focused.quitGame = false;
-                        Focused.settings = true;
-                    }
-                } else if (kb.down.includes(ev.key)) {
-                    if (Focused.subSettings === true) {
-                        //! -----------------------------------------------------------------------------
-
-                        //! -----------------------------------------------------------------------------
-                    } else if (Focused.subLoad === true) {
-                        //! -----------------------------------------------------------------------------
-
-                        //! -----------------------------------------------------------------------------
-                    } else if (Focused.newGame === true) {
-                        Focused.newGame = false;
-                        Focused.load = true;
-                    } else if (Focused.load === true) {
-                        Focused.load = false;
-                        Focused.settings = true;
-                    } else if (Focused.settings === true) {
-                        Focused.settings = false;
-                        Focused.quitGame = true;
-                    } else if (Focused.quitGame === true) {
-                        //nothing, we're already at the bottom
-                    }
-                } else if (kb.confirm.includes(ev.key)) {
-                    if (Focused.subSettings === true) {
-                        //! -----------------------------------------------------------------------------
-
-                        //! -----------------------------------------------------------------------------
-                    } else if (Focused.subLoad === true) {
-                        //! -----------------------------------------------------------------------------
-
-                        //! -----------------------------------------------------------------------------
-                    } else if (Focused.newGame === true) {
+                //* -----------------------------------------------------------------------------------------
+                if (Focused.newGame === true) {
+                    if (kb.confirm.includes(ev.key)) {
                         Focused.newGame = false;
                         Focused.newGameSure = true;
-                    } else if (Focused.load === true) {
-                        Focused.subLoad = true;
-                        Focused.load = false;
-                    } else if (Focused.settings === true) {
-                        Focused.subSettings = true;
-                        Focused.settings = false;
-                    } else if (Focused.quitGame === true && scope.constants.transition.transition === false) {
-                        window.close(); //only work for app
-                        WindowManager.closeGame(); //close the page
-                    } else if (Focused.newGameSure === true && subMenu.newGameSure.no === true) {
+                    } else if (kb.down.includes(ev.key)) {
+                        Focused.newGame = false;
+                        Focused.load = true;
+                    }
+                    //* -----------------------------------------------------------------------------------------
+                } else if (Focused.newGameSure === true) {
+                    if (kb.back.includes(ev.key)) {
                         Focused.newGame = true;
                         Focused.newGameSure = false;
-                    } else if (Focused.newGameSure === true && subMenu.newGameSure.yes === true) {
-                        Focused.newGame = true;
-                        Focused.newGameSure = false;
+                    } else if (subMenu.newGameSure.yes === true && kb.confirm.includes(ev.key)) {
                         subMenu.newGameSure.no = true;
+                        Focused.newGameSure = false;
+                        Focused.newGame = true;
                         scope.menu.welcome = false;
                         transition(100, scope);
-                    }
-                } else if (kb.back.includes(ev.key)) {
-                    if (Focused.subSettings === true) {
-                        //! -----------------------------------------------------------------------------
-
-                        //! -----------------------------------------------------------------------------
-                    } else if (Focused.subLoad === true) {
-                        //! -----------------------------------------------------------------------------
-
-                        //! -----------------------------------------------------------------------------
-                    } else if (Focused.newGameSure === true) {
+                    } else if (subMenu.newGameSure.no === true && kb.confirm.includes(ev.key)) {
                         Focused.newGame = true;
                         Focused.newGameSure = false;
-                    } else if (Focused.subLoad === true) {
+                    } else if (subMenu.newGameSure.yes === true && kb.right.includes(ev.key)) {
+                        subMenu.newGameSure.yes = false;
+                        subMenu.newGameSure.no = true;
+                    } else if (subMenu.newGameSure.no === true && kb.left.includes(ev.key)) {
+                        subMenu.newGameSure.no = false;
+                        subMenu.newGameSure.yes = true;
+                    }
+                    //* -----------------------------------------------------------------------------------------
+                } else if (Focused.load === true) {
+                    if (kb.confirm.includes(ev.key)) {
+                        Focused.load = false;
+                        Focused.subLoad = true;
+                    } else if (kb.down.includes(ev.key)) {
+                        Focused.load = false;
+                        Focused.settings = true;
+                    } else if (kb.up.includes(ev.key)) {
+                        Focused.load = false;
+                        Focused.newGame = true;
+                    }
+                    //* -----------------------------------------------------------------------------------------
+                } else if (Focused.subLoad === true) {
+                    if (kb.back.includes(ev.key)) {
                         Focused.subLoad = false;
                         Focused.load = true;
-                        data.textAreaPresent = false;
-                    } else if (Focused.subSettings === true) {
+                    }
+                    //* -----------------------------------------------------------------------------------------
+                } else if (Focused.loadSure === true) {
+                    if (kb.back.includes(ev.key)) {
+                        Focused.loadSure = false;
+                        Focused.subLoad = true;
+                    }
+                    //* -----------------------------------------------------------------------------------------
+                } else if (Focused.settings === true) {
+                    if (kb.confirm.includes(ev.key)) {
+                        Focused.settings = false;
+                        Focused.subSettings = true;
+                    } else if (kb.down.includes(ev.key)) {
+                        Focused.settings = false;
+                        Focused.quitGame = true;
+                    } else if (kb.up.includes(ev.key)) {
+                        Focused.settings = false;
+                        Focused.load = true;
+                    }
+                    //* -----------------------------------------------------------------------------------------
+                } else if (Focused.subSettings === true) {
+                    if (kb.back.includes(ev.key)) {
                         Focused.subSettings = false;
                         Focused.settings = true;
-                    } else if (Focused.subLanguage === true) {
-                        Focused.subLanguage = false;
-                        Focused.quitGame = true;
+                    }
+                    //* -----------------------------------------------------------------------------------------
+                } else if (Focused.subsubSettings === true) {
+                    if (kb.back.includes(ev.key)) {
+                        Focused.subsubSettings = false;
+                        Focused.subSettings = true;
+                    }
+                    //* -----------------------------------------------------------------------------------------
+                } else if (Focused.quitGame === true) {
+                    if (kb.confirm.includes(ev.key)) {
+                        if (scope.constants.isNodejs === true) {
+                            windowClose(); //only work for app
+                        } else {
+                            WindowManager.closeGame(); //close the page
+                        }
+                    } else if (kb.up.includes(ev.key)) {
+                        Focused.settings = true;
+                        Focused.quitGame = false;
                     }
                 }
             };
         };
-
         return welcome;
     }
 }

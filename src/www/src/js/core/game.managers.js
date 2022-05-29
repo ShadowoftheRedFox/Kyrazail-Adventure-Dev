@@ -317,7 +317,7 @@ WindowManager.init = function() {
 
 WindowManager.closeGame = function() {
     window.game = {};
-    var element = findElement(containerElement, "CANVAS");
+    var element = findElement($container, "CANVAS");
     if (element == null) {
         return false;
     } else {

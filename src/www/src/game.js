@@ -39,7 +39,7 @@ class Game {
             welcome: true,
             gameOver: false,
             paused: false,
-            update: true
+            update: false //TODO enable when update is fixed
         };
 
         this.debug = {
