@@ -168,7 +168,7 @@ class Intro {
             ctx.fillStyle = "#fff";
             ctx.font = "bold 16px Azure";
             ctx.textAlign = "left";
-            ctx.fillText(`${scope.cache.data.package.release} v${scope.cache.data.package.version} Last update: ${scope.cache.data.package.lastUpdate}`, 10, h - 26);
+            ctx.fillText(`${scope.cache.data.package.releaseType} v${scope.cache.data.package.version} Last update: ${scope.cache.data.package.lastUpdate}`, 10, h - 26);
         };
 
         // Fired via the global update method.

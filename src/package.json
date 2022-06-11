@@ -18,7 +18,7 @@
         "min-height": 400
     },
     "lastUpdate": "28/05/2022",
-    "release": "Dev/Alpha",
+    "releaseType": "Dev/Alpha",
     "changelog": [
         "Map is now rendered!",
         "Added a crashHandler more efficient.",
