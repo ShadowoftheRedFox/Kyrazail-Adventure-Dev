@@ -7,17 +7,20 @@
     "scripts": {
         "debug": "nw src/ --remote-debugging-port=9222",
         "dev": "nw src/www/",
-        "prod": "nwbuild --platforms win32,win64,osx64,linux32,linux64 --buildDir dist/ src/"
+        "prod": "nwbuild --zip true --platforms win32,win64,osx64,linux32,linux64 --buildDir dist/ src/"
     },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/ShadowoftheRedFox/Kyrazail-Adventure-Dev.git"
     },
     "keywords": [],
-    "author": "",
+    "author": "Shadow of the Red Fox#5881",
     "license": "ISC",
     "bugs": {
         "url": "https://github.com/ShadowoftheRedFox/Kyrazail-Adventure-Dev/issues"
+    },
+    "support": {
+        "url": "https://discord.gg/5mF5AHnRCr"
     },
     "homepage": "https://github.com/ShadowoftheRedFox/Kyrazail-Adventure-Dev#readme",
     "devDependencies": {
