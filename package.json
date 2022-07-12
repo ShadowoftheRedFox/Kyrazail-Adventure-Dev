@@ -5,7 +5,7 @@
     "main": "src/www/index.html",
     "chromium-args": "--enable-node-worker",
     "scripts": {
-        "debug": "nw src/ --remote-debugging-port=9222",
+        "debug": "nw src/www/ --remote-debugging-port=9222",
         "dev": "nw src/www/",
         "prod": "nwbuild --platforms win32,win64,osx64,linux32,linux64 --buildDir dist/ src/"
     },

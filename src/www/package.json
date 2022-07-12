@@ -6,14 +6,12 @@
     "keywords": ["game", "2d"],
     "author": "Shadow of the Red Fox#5881",
     "license": "ISC",
-    "js-flags": "--expose-gc",
-    "chromium-args": "--enable-webgl --ignore-gpu-blacklist --disable-setuid-sandbox --force-color-profile=srgb --enable-node-worker",
     "window": {
         "title": "Kyrazail Adventure",
         "icon": "src/resources/Image/Intro/icon.png",
-        "toolbar": true,
-        "width": 1000,
-        "height": 1000,
+        "toolbar": false,
+        "width": 800,
+        "height": 400,
         "min-width": 800,
         "min-height": 400
     },
