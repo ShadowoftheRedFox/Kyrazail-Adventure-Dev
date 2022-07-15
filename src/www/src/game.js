@@ -7,7 +7,7 @@
 class Game {
     /**
      * @param {number} w Width of the starting canvas .
-     * @param {number} h Heigth of the starting canavs.
+     * @param {number} h Heigth of the starting canvas.
      * @param {number} targetFps Refresh speed of the canvas.
      */
     constructor(w, h, targetFps) {
@@ -92,25 +92,25 @@ class Game {
         }
 
         //getting the save path on app, or we will reach online API if it's on cloud.
-        if (this.constants.isNodejs === true) {
+        if ((typeof require === "function" && typeof process === 'object') === true) {
             const path = require('path');
-            // if (navigator.appVersion.indexOf("Win") != -1) this.constants.platform = "win";
-            // if (navigator.appVersion.indexOf("Mac") != -1) this.constants.platform = "mac";
-            // if (navigator.appVersion.indexOf("X11") != -1) this.constants.platform = "os";
-            // if (navigator.appVersion.indexOf("Linux") != -1) this.constants.platform = "linux";
+            if (navigator.appVersion.indexOf("Win") != -1) this.constants.platform = "win";
+            if (navigator.appVersion.indexOf("Mac") != -1) this.constants.platform = "mac";
+            if (navigator.appVersion.indexOf("X11") != -1) this.constants.platform = "os";
+            if (navigator.appVersion.indexOf("Linux") != -1) this.constants.platform = "linux";
 
-            // if (this.constants.platform === "linux") {
-            //     var base = path.dirname(process.mainModule.filename).split("/");
-            //     var rBase = path.join(`/${base[1]}/${base[2]}/KyraADV/save/`);
-            //     this.constants.savePath = rBase;
-            // } else if (this.constants.platform === "win") {
-            //     let base = path.dirname(process.mainModule.filename).split("\\");
-            //     let rBase = `${base[0]}\\KyraADV\\save`;
-            //     this.constants.savePath = rBase;
-            // } else {
-            //     console.error(new Error(`You current platform is ${this.constants.platform} and is not supported by the current game version.\nIf you want saves to work for you, come at https://discord.gg/5mF5AHnRCr and ask for help.`));
-            // }
-            this.constants.savePath = path.dirname(__dirname + "/src/resources/json");
+            if (this.constants.platform === "linux") {
+                var base = path.dirname(process.mainModule.filename).split("/");
+                var rBase = path.join(`/${base[1]}/${base[2]}/KyraADV/save/`);
+                this.constants.savePath = rBase;
+            } else if (this.constants.platform === "win") {
+                let base = path.dirname(process.mainModule.filename).split("\\");
+                let rBase = `${base[0]}\\KyraADV\\save`;
+                this.constants.savePath = rBase;
+            } else {
+                console.error(new UnsupportedPlatformError(`You current platform is ${this.constants.platform} and is not supported by the current game version.\nIf you want saves to work for you, come at https://discord.gg/5mF5AHnRCr and ask for help.`));
+            }
+            WindowManager.fatal(new Error(`${this.constants.savePath}`));
         } else {
             this.constants.savePath = "Cloud";
         }
@@ -285,12 +285,12 @@ class Game {
                 }
             }).catch((e) => {
                 console.log(e);
-                WindowManager.fatal(this.context, e, w, h);
+                WindowManager.fatal(e, w, h);
             });
 
         } catch (e) {
             console.log(e);
-            WindowManager.fatal(this.context, e, w, h);
+            WindowManager.fatal(e, w, h);
         }
     }
 }

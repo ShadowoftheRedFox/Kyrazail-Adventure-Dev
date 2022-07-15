@@ -409,11 +409,13 @@ declare global {
              */
             platform: "Cloud" | "aix" | "darwin" | "freebsd" | "linux" | "openbsd" | "sunos" | "win32" | "android",
             /**
-             * The width of the window.
+             * The width of the window. 
+             * min-width: 800px / max-width: 5120px
              */
             width: number,
             /**
              * The heigth of the window.
+             * min-height: 400px / max-height: 2880px
              */
             height: number,
             /**
@@ -756,13 +758,6 @@ declare global {
          */
         init(): void
         /**
-         * Show error on canvas, for fatal one that block and stops the game.
-         * @param {Error} e The error.
-         * @param {number} w Width of the canvas.
-         * @param {number} h Height of the canvas.
-         */
-        fatal(e: Error, w: number, h: number): void
-        /**
          * "remove" the game from the current game.
          */
         closeGame(): void
@@ -936,11 +931,11 @@ declare global {
      * Built in translate module. Translate the given string in other language
      * @param {"en"|"fr"} lang the lang to translate
      * @param {string} str the default string to translate, a keyCode like string
-     * @param {array} [param=[]] the paramters of the string to translate, if there is.
+     * @param {array} [param=string[]] the paramters of the string to translate, if there is.
      * @example translate("en","mainMenuNewGameButton"); //-> "New game"
      * translate("fr","mainMenuNewGameButton"); //-> "Nouveau jeux"
      */
-    function translate(lang: "en" | "fr", str: string, ...param?: any): string
+    function translate(lang: "en" | "fr", str: string, param?: string[]): string
 
     /**
      * Return the element or null if found

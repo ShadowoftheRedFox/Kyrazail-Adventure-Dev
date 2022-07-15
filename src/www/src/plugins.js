@@ -94,6 +94,11 @@ const functionFiles = [{
     path: "./src/js/functions/",
     status: true,
     description: "Underline text with correct width, height and color."
+}, {
+    name: "fct.error",
+    path: "./src/js/functions/",
+    status: true,
+    description: "Custom error for better debugging."
 }];
 
 const globalFiles = [{

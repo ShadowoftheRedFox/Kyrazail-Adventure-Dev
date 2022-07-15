@@ -5,9 +5,9 @@
 
 html {
     min-width: 800px;
-    min-height: 450px;
-    max-height: 2880px;
+    min-height: 400px;
     max-width: 5120px;
+    max-height: 2880px;
     position: fixed;
     right: 0;
     left: 0;
@@ -18,7 +18,7 @@ html {
 body {
     background: #000;
     min-width: 800px;
-    min-height: 450px;
+    min-height: 400px;
     max-width: 5120px;
     max-height: 2880px;
     padding: 0;

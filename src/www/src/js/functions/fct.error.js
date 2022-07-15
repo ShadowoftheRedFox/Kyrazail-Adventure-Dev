@@ -5,7 +5,7 @@ class ValidationError extends Error {
     }
 }
 
-class UnsupportedPlatform extends Error {
+class UnsupportedPlatformError extends Error {
     constructor(message) {
         super(message);
         this.name = "UnsupportedPlatform";
