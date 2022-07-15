@@ -25,6 +25,6 @@
     "homepage": "https://github.com/ShadowoftheRedFox/Kyrazail-Adventure-Dev#readme",
     "devDependencies": {
         "nw": "^0.12.0",
-        "nw-builder": "^3.6.0"
+        "nw-builder": "^3.8.0"
     }
 }
