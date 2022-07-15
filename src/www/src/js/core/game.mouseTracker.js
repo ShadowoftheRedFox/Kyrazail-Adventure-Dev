@@ -1,26 +1,19 @@
-/**
- * Track the mouse mouvement, position and click.  
- * @return {MouseEvent} Object with all the data.
- */
-function tracker() {
-    document.onmousedown = function(ev) {};
-    document.onmousemove = function(ev) {};
-}
-
 function MouseTrackerManager() {
     throw new StaticClassError("MouseTrackerManager is a static class.");
 }
 
 MouseTrackerManager.data = {
+    lastMove: {
+        x: null,
+        y: null
+    },
     /**
-     * @type {scope}
+     * @type {{x: number, y: number, date: number}[]}
      */
-    scope: window.game
+    click: []
 };
 
 MouseTrackerManager.init = function() {
-    MouseTrackerManager.data.scope = window.game; //when initialised, get the true scope
-
     document.onmousedown = function(ev) { MouseTrackerManager.OnMouseClick(ev); };
     document.onmousemove = function(ev) { MouseTrackerManager.OnMouseMove(ev); };
 };
@@ -29,16 +22,54 @@ MouseTrackerManager.init = function() {
  * @param {MouseEvent} event 
  */
 MouseTrackerManager.OnMouseMove = function(event) {
-    const x = event.clientX;
-    const y = event.clientY;
+    MouseTrackerManager.data.lastMove = { x: event.clientX, y: event.clientY };
 };
 
 /**
  * @param {MouseEvent} event 
  */
 MouseTrackerManager.OnMouseClick = function(event) {
-    const x = event.clientX;
-    const y = event.clientY;
+    MouseTrackerManager.data.click.push({
+        x: event.clientX,
+        y: event.clientY,
+        date: Date.now()
+    });
+};
+
+/**
+ * @param {number} x
+ * @param {number} y
+ * @param {number} w
+ * @param {number} h
+ * @returns {boolean}
+ */
+MouseTrackerManager.checkOver = function(x, y, w, h) {
+    const o = MouseTrackerManager.data.lastMove;
+    if (o.x >= x && o.x <= x + w && o.y >= y && o.y <= y + h) return true;
+    else return false;
+};
+
+/**
+ * @param {number} x
+ * @param {number} y
+ * @param {number} w
+ * @param {number} h
+ * @param {number} time
+ * @returns {boolean}
+ */
+MouseTrackerManager.checkClick = function(x, y, w, h, time) {
+    let clickedIn = true;
+    MouseTrackerManager.data.click.forEach(c => {
+        //check if click is new enough, under 100 ms
+        if (Date.now() - c.date <= time) {
+            if (c.x >= x && c.x <= x + w && c.y >= y && c.y <= y + h) {
+                //the click is in but we won't count it
+            } else {
+                clickedIn = false;
+            }
+        }
+    });
+    return clickedIn;
 };
 
 /*

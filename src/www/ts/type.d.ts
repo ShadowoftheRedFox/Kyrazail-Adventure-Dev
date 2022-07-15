@@ -944,5 +944,38 @@ declare global {
      * @returns {null | HTMLElement}
      * @example findElement(document, "p") => null | p //who is a HTMLElement
      */
-    function findElement(document:Document, element:HTMLElementTagNameMap): null | HTMLElement
+    function findElement(document: Document, element: HTMLElementTagNameMap): null | HTMLElement
+
+    const MouseTrackerManager: {
+        data: {
+            lastMove: { x: number, y: number },
+            click: {
+                x: number,
+                y: number,
+                date: number
+            }[]
+        }
+        /**
+         * Initialise the manager.
+         */
+        init(): void
+        /**
+         * Track the mouse move event.
+         * @param {MouseEvent} event 
+         */
+        OnMouseMove(event: MouseEvent): void
+        /**
+         * Track the mouse click event.
+         * @param {MouseEvent} event 
+         */
+        OnMouseClick(event: MouseEvent): void
+        /**
+         * Check if the mouse is inside the rectangle
+         */
+        checkOver(x: number, y: number, w: number, h: number): boolean
+        /**
+         * Check if there is a click inside the rectangle
+         */
+        checkClick(x: number, y: number, w: number, h: number, time:number): boolean
+    };
 }

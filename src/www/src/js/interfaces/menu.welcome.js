@@ -159,31 +159,14 @@ class Welcome {
             //menu
             if (scope.cache.image.titles1.Landscape) {
                 const img = scope.cache.image.titles1.Landscape.image;
-                ctx.drawImage(img, 0, 0,
-                    img.width, img.height - 55,
-                    welcome.state.position.x,
-                    welcome.state.position.y,
-                    scope.constants.width,
-                    scope.constants.height
-                );
+                ctx.drawImage(img, 0, 0, img.width, img.height - 55, welcome.state.position.x, welcome.state.position.y, scope.constants.width, scope.constants.height);
             } else if (scope.constants.image.titles1.Night) {
                 const img = scope.cache.image.titles1.Night.image;
-                ctx.drawImage(img, 0, 0,
-                    img.width, img.height,
-                    welcome.state.position.x,
-                    welcome.state.position.y,
-                    scope.constants.width,
-                    scope.constants.height
-                );
+                ctx.drawImage(img, 0, 0, img.width, img.height, welcome.state.position.x, welcome.state.position.y, scope.constants.width, scope.constants.height);
             } else {
                 ctx.fillStyle = '#8cf598';
-                ctx.fillRect(
-                    //in case the image don't load correctly
-                    welcome.state.position.x,
-                    welcome.state.position.y,
-                    scope.constants.width,
-                    scope.constants.height
-                );
+                //in case the image don't load correctly
+                ctx.fillRect(welcome.state.position.x, welcome.state.position.y, scope.constants.width, scope.constants.height);
             }
 
             ctx.lineWidth = 10;
@@ -336,6 +319,32 @@ class Welcome {
                 ctx.fillText("Kyrazail Adventure", w / 2, h / 3);
                 underline(ctx, "Kyrazail Adventure", w / 2, h / 3, gradient, "40px", ctx.textAlign);
 
+                //! testing cursor tracking
+                /*
+                i've finished my manager, now i'm setting it up to see if it'll works
+                */
+                if (MouseTrackerManager.checkOver(w / 2 - 175, Math.round(52 * h / 100) - 40, 350, 80) === true) {
+                    Focused.newGame = true;
+                } else {
+                    Focused.newGame = false;
+                }
+                if (MouseTrackerManager.checkOver(w / 2 - 175, Math.round(64.5 * h / 100) - 40, 350, 80) === true) {
+                    Focused.load = true;
+                } else {
+                    Focused.load = false;
+                }
+                if (MouseTrackerManager.checkOver(w / 2 - 175, Math.round(77 * h / 100) - 40, 350, 80) === true) {
+                    Focused.settings = true;
+                } else {
+                    Focused.settings = false;
+                }
+                if (MouseTrackerManager.checkOver(w / 2 - 175, Math.round(89.5 * h / 100) - 40, 350, 80) === true) {
+                    Focused.quitGame = true;
+                } else {
+                    Focused.quitGame = false;
+                }
+
+
                 //round rect that show which one are we choising
                 ctx.fillStyle = "#59BAE9";
                 if (Focused.newGame === true) {
@@ -434,6 +443,25 @@ class Welcome {
                     ctx.fillRect(0, 0, w, h);
                 }
                 ctx.globalAlpha = 1;
+            }
+
+
+            if (MouseTrackerManager.checkClick(0, 0, 10000, 10000, 5000)) {
+                if (MouseTrackerManager.data.click.length > 0) {
+                    let c = MouseTrackerManager.data.click[MouseTrackerManager.data.click.length - 1];
+
+                    //this whole part draw a circle on the screen, it's to check where i'm click and if ot's working fine :p
+                    const centerX = c.x; //what this do? xD 
+                    const centerY = c.y;
+                    const radius = 5;
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+                    ctx.fillStyle = 'red';
+                    ctx.fill();
+                    ctx.lineWidth = 5;
+                    ctx.strokeStyle = '#003300';
+                    ctx.stroke();
+                }
             }
         };
 

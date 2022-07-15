@@ -286,14 +286,17 @@ WindowManager.init = function() {
 
     function getPixelRatioInit(c) { var b = ['webkitBackingStorePixelRatio', 'mozBackingStorePixelRatio', 'msBackingStorePixelRatio', 'oBackingStorePixelRatio', 'backingStorePixelRatio']; var d = window.devicePixelRatio; var e = b.reduce(function(p, u) { return (c.hasOwnProperty(u) ? c[u] : 1); }); return d / e; }
 
-    function generateCanvasInit(w, h) { var c = document.createElement('canvas'),
+    function generateCanvasInit(w, h) {
+        var c = document.createElement('canvas'),
             x = c.getContext('2d'),
             r = getPixelRatioInit(x);
         c.width = Math.round(w * r);
         c.height = Math.round(h * r);
         c.style.width = w + 'px';
         c.style.height = h + 'px';
-        x.setTransform(r, 0, 0, r, 0, 0); return c; }
+        x.setTransform(r, 0, 0, r, 0, 0);
+        return c;
+    }
 
     WindowManager.data.viewport = generateCanvasInit(w, h);
     WindowManager.data.viewport.id = "errorViewPort";
@@ -337,14 +340,17 @@ WindowManager.reloadGame = function() {
 WindowManager.fatal = function(e, w, h) {
     function getPixelRatioInit(c) { var b = ['webkitBackingStorePixelRatio', 'mozBackingStorePixelRatio', 'msBackingStorePixelRatio', 'oBackingStorePixelRatio', 'backingStorePixelRatio']; var d = window.devicePixelRatio; var e = b.reduce(function(p, u) { return (c.hasOwnProperty(u) ? c[u] : 1); }); return d / e; }
 
-    function generateCanvasInit(w, h) { var c = document.createElement('canvas'),
+    function generateCanvasInit(w, h) {
+        var c = document.createElement('canvas'),
             x = c.getContext('2d'),
             r = getPixelRatioInit(x);
         c.width = Math.round(w * r);
         c.height = Math.round(h * r);
         c.style.width = w + 'px';
         c.style.height = h + 'px';
-        x.setTransform(r, 0, 0, r, 0, 0); return c; }
+        x.setTransform(r, 0, 0, r, 0, 0);
+        return c;
+    }
 
     console.error(e);
     try {
