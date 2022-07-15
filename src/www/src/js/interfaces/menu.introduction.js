@@ -177,8 +177,8 @@ class Intro {
             // Check if keys are pressed, if so, update the menus position.
             // Set up `onkeydown` event handler.
             document.onkeyup = function(ev) {
-                //skip intro
-                if (ev) {
+                //skip intro if space is pressed
+                if (ev.key === " ") {
                     scope.menu.intro = false;
                 }
             };
