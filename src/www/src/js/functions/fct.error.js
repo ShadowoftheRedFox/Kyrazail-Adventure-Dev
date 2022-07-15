@@ -8,6 +8,13 @@ class ValidationError extends Error {
 class UnsupportedPlatformError extends Error {
     constructor(message) {
         super(message);
-        this.name = "UnsupportedPlatform";
+        this.name = "UnsupportedPlatformError";
+    }
+}
+
+class StaticClassError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "StaticClassError";
     }
 }

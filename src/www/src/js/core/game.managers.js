@@ -2,7 +2,7 @@
 // The static class that manages the plugins.
 
 function PluginManager() {
-    throw new Error('This is a static class');
+    throw new StaticClassError('This is a static class');
 }
 
 const container = document.getElementById("mainContainer");
@@ -15,9 +15,9 @@ PluginManager._parameters = {};
 /**
  * @param {Array<{}>} plugins 
  */
-PluginManager.setup = function (plugins) {
+PluginManager.setup = function(plugins) {
     PluginManager.task = plugins.length;
-    plugins.forEach(function (plugin) {
+    plugins.forEach(function(plugin) {
         if (plugin.status && this._scripts.indexOf(plugin.name) === -1) {
             this.setParameters(plugin.name, plugin.parameters);
             this.loadScript(plugin.name + '.js', plugin.path);
@@ -26,22 +26,22 @@ PluginManager.setup = function (plugins) {
     }, this);
 };
 
-PluginManager.checkErrors = function () {
+PluginManager.checkErrors = function() {
     var url = this._errorUrls.shift();
     if (url) {
         throw new Error('Failed to load: ' + url);
     }
 };
 
-PluginManager.parameters = function (name) {
+PluginManager.parameters = function(name) {
     return this._parameters[name.toLowerCase()] || {};
 };
 
-PluginManager.setParameters = function (name, parameters) {
+PluginManager.setParameters = function(name, parameters) {
     this._parameters[name.toLowerCase()] = parameters;
 };
 
-PluginManager.loadScript = function (name, path) {
+PluginManager.loadScript = function(name, path) {
     var url = path + name;
     var script = document.createElement('script');
     script.type = 'text/javascript';
@@ -52,7 +52,7 @@ PluginManager.loadScript = function (name, path) {
     document.body.appendChild(script);
 };
 
-PluginManager.onError = function (e) {
+PluginManager.onError = function(e) {
     this._errorUrls.push(e.target._url);
 };
 
@@ -61,7 +61,7 @@ PluginManager.onError = function (e) {
 // The static class that manages saves.
 
 function SaveManager() {
-    throw new Error('This is a static class');
+    throw new StaticClassError('This is a static class');
 }
 
 /**
@@ -72,7 +72,7 @@ function SaveManager() {
  * @param {any} data the data that will be saved in the file, crypted
  * @return {object} info if the action succeed, or not, and some other info
  */
-SaveManager.save = function (scope, path, name, data) {
+SaveManager.save = function(scope, path, name, data) {
     if (scope.constants.isNodejs === true) {
         //save in local save using Node.js
         const fs = require('fs');
@@ -117,7 +117,7 @@ SaveManager.save = function (scope, path, name, data) {
  * @param {string} path Where the file should be saved
  * @param {string} name the name of the file
  */
-SaveManager.load = function (scope, path, name) {
+SaveManager.load = function(scope, path, name) {
     if (scope.constants.isNodejs === true) {
         //load from local save using Node.js
         const fs = require('fs');
@@ -138,12 +138,12 @@ SaveManager.load = function (scope, path, name) {
  * status: "error" | "success"
  * }} The file directory and some info on each file.
  */
-SaveManager.loadDir = function (scope, path) {
+SaveManager.loadDir = function(scope, path) {
     if (scope === true || scope.constants.isNodejs === true) {
         //load from local save using Node.js
         const fs = require('fs');
         //test C:\\KyraADV\\save
-        const files = fs.readdirSync(path, function (err) {
+        const files = fs.readdirSync(path, function(err) {
             //handling error
             if (err) {
                 console.log("loadDir failed.");
@@ -165,7 +165,7 @@ SaveManager.loadDir = function (scope, path) {
     }
 };
 
-SaveManager.loadSaveFileViewer = function (scope, path) {
+SaveManager.loadSaveFileViewer = function(scope, path) {
     if (scope === true || scope.constants.isNodejs === true) {
         //load from local save using Node.js
         const fs = require('fs');
@@ -199,7 +199,7 @@ SaveManager.loadSaveFileViewer = function (scope, path) {
 // The static class that manages the json files.
 
 function DataManager() {
-    throw new error("This is a static class.");
+    throw new StaticClassError("This is a static class.");
 }
 
 DataManager._scripts = [];
@@ -209,8 +209,8 @@ DataManager._dataLoaded = {};
 /**
  * @param {Array<Object>} plugins 
  */
-DataManager.setup = function (plugins) {
-    plugins.forEach(async function (plugin) {
+DataManager.setup = function(plugins) {
+    plugins.forEach(async function(plugin) {
         if (plugin.status && this._scripts.indexOf(plugin.name) === -1) {
             await this.loadScript(plugin.name + '.json', plugin.path, plugin);
             this._scripts.push(plugin.name);
@@ -218,20 +218,20 @@ DataManager.setup = function (plugins) {
     }, this);
 };
 
-DataManager.checkErrors = function () {
+DataManager.checkErrors = function() {
     var url = this._errorUrls.shift();
     if (url) {
         throw new Error('Failed to load: ' + url);
     }
 };
 
-DataManager.loadScript = async function (name, path, obj) {
+DataManager.loadScript = async function(name, path, obj) {
     var url = path + name;
     let httpRequest = new XMLHttpRequest(); // asynchronous request
     httpRequest.open("GET", `${url}`);
     httpRequest.overrideMimeType('application/json');
     httpRequest.send();
-    httpRequest.addEventListener("readystatechange", async function () {
+    httpRequest.addEventListener("readystatechange", async function() {
         if (this.readyState === this.DONE) {
             // when the request has completed
             let object = JSON.parse(this.response);
@@ -256,7 +256,7 @@ DataManager.loadScript = async function (name, path, obj) {
         }
     });
 
-    httpRequest.onerror = function (err) {
+    httpRequest.onerror = function(err) {
 
     };
 };
@@ -267,7 +267,7 @@ DataManager.loadScript = async function (name, path, obj) {
 // The static class that manages the window related interactions.
 
 function WindowManager() {
-    throw new Error("WindowManager is a static class.");
+    throw new StaticClassError("WindowManager is a static class.");
 }
 
 WindowManager.data = {
@@ -279,14 +279,21 @@ WindowManager.data = {
     created: false
 };
 
-WindowManager.init = function () {
+WindowManager.init = function() {
     WindowManager.data.created = true;
     const w = container.offsetWidth;
     const h = container.offsetHeight;
 
-    function getPixelRatioInit(c) { var b = ['webkitBackingStorePixelRatio', 'mozBackingStorePixelRatio', 'msBackingStorePixelRatio', 'oBackingStorePixelRatio', 'backingStorePixelRatio']; var d = window.devicePixelRatio; var e = b.reduce(function (p, u) { return (c.hasOwnProperty(u) ? c[u] : 1); }); return d / e; }
+    function getPixelRatioInit(c) { var b = ['webkitBackingStorePixelRatio', 'mozBackingStorePixelRatio', 'msBackingStorePixelRatio', 'oBackingStorePixelRatio', 'backingStorePixelRatio']; var d = window.devicePixelRatio; var e = b.reduce(function(p, u) { return (c.hasOwnProperty(u) ? c[u] : 1); }); return d / e; }
 
-    function generateCanvasInit(w, h) {var c = document.createElement('canvas'),x = c.getContext('2d'),r = getPixelRatioInit(x);c.width = Math.round(w * r);c.height = Math.round(h * r);c.style.width = w + 'px';c.style.height = h + 'px';x.setTransform(r, 0, 0, r, 0, 0);return c;}
+    function generateCanvasInit(w, h) { var c = document.createElement('canvas'),
+            x = c.getContext('2d'),
+            r = getPixelRatioInit(x);
+        c.width = Math.round(w * r);
+        c.height = Math.round(h * r);
+        c.style.width = w + 'px';
+        c.style.height = h + 'px';
+        x.setTransform(r, 0, 0, r, 0, 0); return c; }
 
     WindowManager.data.viewport = generateCanvasInit(w, h);
     WindowManager.data.viewport.id = "errorViewPort";
@@ -294,7 +301,7 @@ WindowManager.init = function () {
     $container.insertBefore(WindowManager.data.viewport, $container.firstChild);
     console.log("Created error viewport.");
 
-    window.addEventListener("beforeunload", function (e) {
+    window.addEventListener("beforeunload", function(e) {
         if (!window.game.state.once.checkUpdate.state.focused.yes || window.game.state.once.checkUpdate.state.focused.yes === false) {
             var confirmationMessage = "Are you sure you want to reload the page. Progression might not be saved.";
 
@@ -305,7 +312,7 @@ WindowManager.init = function () {
     console.log("Added before unload event.");
 };
 
-WindowManager.closeGame = function () {
+WindowManager.closeGame = function() {
     window.game = {};
     var element = findElement($container, "CANVAS");
     if (element == null) {
@@ -316,7 +323,7 @@ WindowManager.closeGame = function () {
     }
 };
 
-WindowManager.reloadGame = function () {
+WindowManager.reloadGame = function() {
     //true for firefox
     location.reload(true);
 };
@@ -327,10 +334,17 @@ WindowManager.reloadGame = function () {
  * @param {number} w Width of the canvas.
  * @param {number} h Height of the canvas.
  */
-WindowManager.fatal = function (e, w, h) {
-    function getPixelRatioInit(c) { var b = ['webkitBackingStorePixelRatio', 'mozBackingStorePixelRatio', 'msBackingStorePixelRatio', 'oBackingStorePixelRatio', 'backingStorePixelRatio']; var d = window.devicePixelRatio; var e = b.reduce(function (p, u) { return (c.hasOwnProperty(u) ? c[u] : 1); }); return d / e; }
+WindowManager.fatal = function(e, w, h) {
+    function getPixelRatioInit(c) { var b = ['webkitBackingStorePixelRatio', 'mozBackingStorePixelRatio', 'msBackingStorePixelRatio', 'oBackingStorePixelRatio', 'backingStorePixelRatio']; var d = window.devicePixelRatio; var e = b.reduce(function(p, u) { return (c.hasOwnProperty(u) ? c[u] : 1); }); return d / e; }
 
-    function generateCanvasInit(w, h) {var c = document.createElement('canvas'),x = c.getContext('2d'),r = getPixelRatioInit(x);c.width = Math.round(w * r);c.height = Math.round(h * r);c.style.width = w + 'px';c.style.height = h + 'px';x.setTransform(r, 0, 0, r, 0, 0);return c;}
+    function generateCanvasInit(w, h) { var c = document.createElement('canvas'),
+            x = c.getContext('2d'),
+            r = getPixelRatioInit(x);
+        c.width = Math.round(w * r);
+        c.height = Math.round(h * r);
+        c.style.width = w + 'px';
+        c.style.height = h + 'px';
+        x.setTransform(r, 0, 0, r, 0, 0); return c; }
 
     console.error(e);
     try {
@@ -392,7 +406,7 @@ WindowManager.fatal = function (e, w, h) {
 // The static class that manages the auto updates of the game.
 
 function UpdateManager() {
-    throw new Error("UpdateManager is a static class.");
+    throw new StaticClassError("UpdateManager is a static class.");
 }
 
 /**
@@ -401,7 +415,7 @@ function UpdateManager() {
  * @param {any} call callback function
  * @returns {Boolean}
  */
-UpdateManager.checkVersion = function (version, call) {
+UpdateManager.checkVersion = function(version, call) {
     if (!call) throw new TypeError("Call is not defined");
 
     function reqListener(res) {
@@ -424,7 +438,7 @@ UpdateManager.checkVersion = function (version, call) {
  * We know there is a new version, save it if possible.
  * @param {string} version Version found
  */
-UpdateManager.laterSave = function (version) {
+UpdateManager.laterSave = function(version) {
     if (typeof require === "function" && typeof process === 'object') {
         const date = getDate();
         const fs = require("fs");
@@ -432,7 +446,7 @@ UpdateManager.laterSave = function (version) {
         updateSaveFile.lastCheck = date;
         updateSaveFile.versionFound = version;
         updateSaveFile.updateFound = true;
-        fs.writeFileSync(`../../resources/data/Update.json`, JSON.stringify(updateSaveFile), function (err) {
+        fs.writeFileSync(`../../resources/data/Update.json`, JSON.stringify(updateSaveFile), function(err) {
             if (err) throw err;
         });
     }

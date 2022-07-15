@@ -250,7 +250,7 @@ class Welcome {
                             let inputs = document.createElement('input');
                             inputs.type = 'file';
                             //! because the page need a user interaction before firing it
-                            // document.onclick = () => inputs.click();
+                            //_ document.onclick = () => inputs.click();
 
                             //? if we are in the pause menu, the user already interacted
                             inputs.click();
@@ -535,9 +535,45 @@ class Welcome {
                     if (kb.back.includes(ev.key)) {
                         Focused.subSettings = false;
                         Focused.settings = true;
+
+                        /* settings order
+                            general
+                            audio
+                            image
+                            inputs
+                            
+                            we'll talk here, it'll be easier  
+                            so u see what i'm doing down here?
+                            basically, i'm doing the keyboard action to choose the menu in settings
+
+                            kb stands for keayboard   
+                            do you have the type.d.ts file open?
+                        */
+                    } else if (kb.up.includes(ev.key)) {
+                        if (subMenu.settings.Audio === true) {
+                            subMenu.settings.Audio = false;
+                            subMenu.settings.General = true;
+                        } else if (subMenu.settings.Image === true) {
+                            subMenu.settings.Image = false;
+                            subMenu.settings.Audio = true;
+                        } else if (subMenu.settings.Inputs === true) {
+                            subMenu.settings.Inputs = false;
+                            subMenu.settings.Image = true;
+                        }
+                    } else if (kb.down.includes(ev.key)) {
+                        if (subMenu.settings.General === true) {
+                            subMenu.settings.Audio = false;
+                            subMenu.settings.General = true;
+                        } else if (subMenu.settings.Audio === true) {
+                            subMenu.settings.Image = false;
+                            subMenu.settings.Audio = true;
+                        } else if (subMenu.settings.Image === true) {
+                            subMenu.settings.Inputs = false;
+                            subMenu.settings.Image = true;
+                        }
                     }
                     //* -----------------------------------------------------------------------------------------
-                } else if (Focused.subsubSettings === true) {
+                } else if (Focused.subsubSettings === true) { //epic subsub
                     if (kb.back.includes(ev.key)) {
                         Focused.subsubSettings = false;
                         Focused.subSettings = true;
