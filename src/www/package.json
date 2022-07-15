@@ -1,6 +1,6 @@
 {
     "name": "kyrazail-adventure",
-    "version": "1.0.2.1",
+    "version": "1.0.2.2",
     "description": "Kyrazail adventure game.",
     "main": "index.html",
     "keywords": ["game", "2d"],
@@ -15,7 +15,7 @@
         "min-width": 400,
         "min-height": 800
     },
-    "lastUpdate": "23/05/2022",
+    "lastUpdate": "15/07/2022",
     "releaseType": "Dev/Alpha",
     "changelog": [
         "Map is now rendered!",

@@ -12,8 +12,8 @@
         "toolbar": false,
         "width": 800,
         "height": 400,
-        "min-width": 800,
-        "min-height": 400
+        "min-width": 400,
+        "min-height": 800
     },
     "lastUpdate": "28/05/2022",
     "releaseType": "Dev/Alpha",
