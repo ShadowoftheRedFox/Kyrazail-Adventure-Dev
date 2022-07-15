@@ -648,7 +648,7 @@ declare global {
      * @param {number} [iw] Width of the rectangle of the image. If imageToDraw is specified, must be defined.
      * @param {number} [ih] Heigth of the rectangle of the image. If imageToDraw is specified, must be defined.
      */
-    function frameRectangle(scope: scope, x: number, y: number, w: number, h: number, imageToDraw: HTMLImageElement, ix: number, iy: number, iw: number, ih: number): void;
+    function frameRectangle(scope: scope, x: number, y: number, w: number, h: number, imageToDraw?: HTMLImageElement, ix?: number, iy?: number, iw?: number, ih?: number): void;
 
     /**
      * Create a light effect. Add one pixel by one pixel.

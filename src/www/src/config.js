@@ -1,3 +1,14 @@
+/****************************************************************************
+ *                                                                          *
+ *                                 BE AWARE                                 *
+ *                     MANUALLY CHANGING THOSE SETTINGS                     *
+ *                           MAY BRAKE THE GAMES                            *
+ *                 DO NOT TOUCH UNLESS YOU KNOW WHAT TO DO                  *
+ *                                                                          *
+ *                                                                          *
+ *                 THOSE PARAMETERS CAN BE EDITED IN GAMES                  *
+ *                                                                          *
+ ****************************************************************************/
 const defaultConfig = {
     //if the game will update at the next start
     willUpdate: false,

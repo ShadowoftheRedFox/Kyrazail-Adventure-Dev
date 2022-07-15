@@ -88,8 +88,6 @@ class Welcome {
                     w: w / 1.7 - 87,
                     oldW: w / 1.7 - 87
                 },
-                token: null,
-                textAreaPresent: false,
                 countUp: 100,
                 spawnTransition: true
             },
@@ -319,31 +317,49 @@ class Welcome {
                 ctx.fillText("Kyrazail Adventure", w / 2, h / 3);
                 underline(ctx, "Kyrazail Adventure", w / 2, h / 3, gradient, "40px", ctx.textAlign);
 
-                //! testing cursor tracking
-                /*
-                i've finished my manager, now i'm setting it up to see if it'll works
-                */
-                if (MouseTrackerManager.checkOver(w / 2 - 175, Math.round(52 * h / 100) - 40, 350, 80) === true) {
-                    Focused.newGame = true;
-                } else {
-                    Focused.newGame = false;
-                }
-                if (MouseTrackerManager.checkOver(w / 2 - 175, Math.round(64.5 * h / 100) - 40, 350, 80) === true) {
-                    Focused.load = true;
-                } else {
-                    Focused.load = false;
-                }
-                if (MouseTrackerManager.checkOver(w / 2 - 175, Math.round(77 * h / 100) - 40, 350, 80) === true) {
-                    Focused.settings = true;
-                } else {
-                    Focused.settings = false;
-                }
-                if (MouseTrackerManager.checkOver(w / 2 - 175, Math.round(89.5 * h / 100) - 40, 350, 80) === true) {
-                    Focused.quitGame = true;
-                } else {
-                    Focused.quitGame = false;
-                }
+                if (Focused.newGameSure === false && data.spawnTransition === false) { //for moving using mouse
+                    if (MouseTrackerManager.checkOver(w / 2 - 175, Math.round(52 * h / 100) - 40, 350, 80) === true) {
+                        Focused.newGame = true;
+                        Focused.load = false;
+                        Focused.settings = false;
+                        Focused.quitGame = false;
+                    } else if (MouseTrackerManager.checkOver(w / 2 - 175, Math.round(64.5 * h / 100) - 40, 350, 80) === true) {
+                        Focused.load = true;
+                        Focused.newGame = false;
+                        Focused.settings = false;
+                        Focused.quitGame = false;
+                    } else if (MouseTrackerManager.checkOver(w / 2 - 175, Math.round(77 * h / 100) - 40, 350, 80) === true) {
+                        Focused.settings = true;
+                        Focused.newGame = false;
+                        Focused.load = false;
+                        Focused.quitGame = false;
+                    } else if (MouseTrackerManager.checkOver(w / 2 - 175, Math.round(89.5 * h / 100) - 40, 350, 80) === true) {
+                        Focused.quitGame = true;
+                        Focused.newGame = false;
+                        Focused.load = false;
+                        Focused.settings = false;
+                    }
 
+                    if (MouseTrackerManager.checkClick(w / 2 - 175, Math.round(52 * h / 100) - 40, 350, 80) === true) {
+                        Focused.newGame = false;
+                        Focused.newGameSure = true;
+                        MouseTrackerManager.data.click = [];
+                    } else if (MouseTrackerManager.checkClick(w / 2 - 175, Math.round(64.5 * h / 100) - 40, 350, 80) === true) {
+                        Focused.load = false;
+                        Focused.subLoad = true;
+                        MouseTrackerManager.data.click = [];
+                    } else if (MouseTrackerManager.checkClick(w / 2 - 175, Math.round(77 * h / 100) - 40, 350, 80) === true) {
+                        Focused.settings = false;
+                        Focused.subSettings = true;
+                        MouseTrackerManager.data.click = [];
+                    } else if (MouseTrackerManager.checkClick(w / 2 - 175, Math.round(89.5 * h / 100) - 40, 350, 80) === true) {
+                        if (scope.constants.isNodejs === true) {
+                            windowClose(); //only work for app
+                        } else {
+                            WindowManager.closeGame(); //close the page
+                        }
+                    }
+                }
 
                 //round rect that show which one are we choising
                 ctx.fillStyle = "#59BAE9";
@@ -384,6 +400,31 @@ class Welcome {
             }
 
             if (Focused.newGameSure === true) {
+                //mouse interaction
+                if (MouseTrackerManager.checkOver(w / 1.7 - 87, h / 1.8 - 55, 174, 80) === true) {
+                    subMenu.newGameSure.no = true;
+                    subMenu.newGameSure.yes = false;
+                } else if (MouseTrackerManager.checkOver(w / 2.52 - 87, h / 1.8 - 55, 174, 80) === true) {
+                    subMenu.newGameSure.yes = true;
+                    subMenu.newGameSure.no = false;
+                }
+
+                if (MouseTrackerManager.checkClick(w / 2.52 - 87, h / 1.8 - 55, 174, 80) === true) {
+                    MouseTrackerManager.data.click = [];
+                    subMenu.newGameSure.no = true;
+                    subMenu.newGameSure.yes = false;
+                    Focused.newGameSure = false;
+                    Focused.newGame = true;
+                    scope.menu.welcome = false;
+                    transition(100, scope);
+                } else if (MouseTrackerManager.data.click.length > 0) {
+                    MouseTrackerManager.data.click = [];
+                    subMenu.newGameSure.no = true;
+                    subMenu.newGameSure.yes = false;
+                    Focused.newGameSure = false;
+                    Focused.newGame = true;
+                }
+
                 //background rect
                 if (scope.cache.image.intro.blueForest) {
                     ctx.drawImage(scope.cache.image.intro.blueForest.image, w / 4, h / 4, w / 2, h / 2);
@@ -473,7 +514,6 @@ class Welcome {
             document.onkeyup = function(ev) {
                 if (scope.menu.welcome === false) return;
                 if (data.spawnTransition === true) return;
-                if (ev.target.id === "textAreaLoad") return;
                 if (scope.debug.debug) console.log(ev);
                 if (kb.debug.includes(ev.key)) {
                     if (scope.debug.debug === false) {
@@ -508,6 +548,7 @@ class Welcome {
                         Focused.newGameSure = false;
                     } else if (subMenu.newGameSure.yes === true && kb.confirm.includes(ev.key)) {
                         subMenu.newGameSure.no = true;
+                        subMenu.newGameSure.yes = false;
                         Focused.newGameSure = false;
                         Focused.newGame = true;
                         scope.menu.welcome = false;
