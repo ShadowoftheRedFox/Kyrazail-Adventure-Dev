@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="./src/src/resources/Image/Intro/icon.png" alt="teamIcon" width="200" title="Team icon" />
+    <img src="./www/src/resources/Image/Intro/icon.png" alt="teamIcon" width="200" title="Team icon" />
 </p>
 
 This game is made by Shadow of the Red Fox\#5881 and the Kyrazail
