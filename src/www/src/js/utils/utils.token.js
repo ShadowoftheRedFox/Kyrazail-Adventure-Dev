@@ -17,8 +17,10 @@ function tokenGeneration(data) {
  */
 function tokenDecrypt(token) {
     var decrypted = CryptoJS.AES.decrypt(token, key).toString(CryptoJS.enc.Utf8);
-    decrypted = JSON.parse(decrypted);
-    if (typeof(decrypted) !== "object") {
+    try {
+        decrypted = JSON.parse(decrypted);
+    } catch (e) { return false; }
+    if (typeof (decrypted) !== "object") {
         return false;
     }
     return decrypted;
