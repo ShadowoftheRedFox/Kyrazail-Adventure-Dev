@@ -12,7 +12,7 @@ DataManager.setup(datas);
 WindowManager.init();
 
 // wait for the HTML to load
-window.onload = async function() {
+window.onload = function() {
     try {
         const container = document.getElementById("mainContainer");
         console.log("Html domain is fully loaded, starting game.");
