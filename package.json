@@ -7,7 +7,7 @@
     "scripts": {
         "debug": "nw src/www/ --remote-debugging-port=9222",
         "dev": "nw",
-        "prod": "nwbuild --zip true --platforms win32 win64 osx64 linux32 linux64 --buildDir dist/ src/"
+        "prod": "nwbuild --zip false --platforms win32 win64 osx64 linux32 linux64 --buildDir dist/ src/"
     },
     "repository": {
         "type": "git",
@@ -24,7 +24,7 @@
     },
     "homepage": "https://github.com/ShadowoftheRedFox/Kyrazail-Adventure-Dev#readme",
     "devDependencies": {
-        "nw": "^0.12.0",
+        "nw": "^0.44.1-sdk",
         "nw-builder": "^3.8.0"
     }
 }
