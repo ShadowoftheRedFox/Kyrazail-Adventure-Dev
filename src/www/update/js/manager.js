@@ -1,3 +1,4 @@
+// since we know (or we need to check) that we are online, we can request a script from a url
 import { Octokit } from "https://cdn.skypack.dev/@octokit/rest";
 /**
  * Draws a rounded rectangle using the current state of the canvas.
