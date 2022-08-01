@@ -3,9 +3,9 @@
     "version": "1.0.0",
     "description": "",
     "main": "src/www/index.html",
-    "chromium-args": "--enable-node-worker",
+    "chromium-args": "--enable-node-worker --allow-file-access-from-files",
     "scripts": {
-        "debug": "nw src/www/ --remote-debugging-port=9222",
+        "debug": "nw src/www/ --remote-debugging-port=9222 --allow-file-access-from-files",
         "dev": "nw",
         "prod": "nwbuild --zip false --platforms win32 win64 osx64 linux32 linux64 --buildDir dist/ src/"
     },
