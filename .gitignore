@@ -3,3 +3,4 @@ dist/
 dist.test/
 .vscode
 cache
+./App
