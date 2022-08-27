@@ -44,7 +44,6 @@ declare global {
             right: string[]
             left: string[]
             run: string[]
-            interaction: string[]
             debug: string[]
             pause: string[]
             back: string[]
