@@ -1,21 +1,28 @@
 {
-    "name": "kyrazail-adventure-dev",
-    "version": "1.0.0",
-    "description": "",
-    "main": "src/www/index.html",
+    "name": "kyrazail-adventure",
+    "main": "./App/index.html",
+    "author": "Shadow of the Red Fox#5881",
+    "license": "ISC",
+    "window": {
+        "title": "Kyrazail Adventure",
+        "icon": "App/resources/Image/Intro/icon.png",
+        "toolbar": false,
+        "width": 800,
+        "height": 400,
+        "min-width": 800,
+        "min-height": 400
+    },
     "chromium-args": "--enable-node-worker --allow-file-access-from-files",
     "scripts": {
-        "debug": "nw src/www/ --remote-debugging-port=9222 --allow-file-access-from-files",
+        "debug": "nw App/ --remote-debugging-port=9222 --allow-file-access-from-files",
         "dev": "nw",
-        "prod": "nwbuild --zip false --platforms win32 win64 osx64 linux32 linux64 --buildDir dist/ src/"
+        "prod": "nwbuild --zip false --buildDir dist/ ./",
+        "test": "node ./App/test/script.test.js"
     },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/ShadowoftheRedFox/Kyrazail-Adventure-Dev.git"
     },
-    "keywords": [],
-    "author": "Shadow of the Red Fox#5881",
-    "license": "ISC",
     "bugs": {
         "url": "https://github.com/ShadowoftheRedFox/Kyrazail-Adventure-Dev/issues"
     },
