@@ -184,9 +184,13 @@ class GameMainInterface extends GameInterfaces {
                         h: 0,
                         special: true,
                         f: (dir) => {
-                            var s = scope.soundsSettings.volumeBG;
-                            if (dir == 1 && s + 5 <= 1) { s = s * 100; s += 5; s = s / 100; }
-                            else if (dir == 0 && s - 5 >= 0) { s = s * 100; s -= 5; s = s / 100; }
+                            var s = scope.soundsSettings.volumeBG * 100;
+                            if (dir == 1 && s + 5 <= 100) {
+                                s += 5;
+                            } else if (dir == 0 && s - 5 >= 0) {
+                                s -= 5;
+                            }
+                            scope.soundsSettings.volumeBG = Math.round((s / 100 + Number.EPSILON) * 100) / 100;
                         }
                     },
                     {
@@ -197,9 +201,13 @@ class GameMainInterface extends GameInterfaces {
                         h: 0,
                         special: true,
                         f: (dir) => {
-                            var s = scope.soundsSettings.volumeEFX;
-                            if (dir == 1 && s + 5 <= 1) { s = s * 100; s += 5; s = s / 100; }
-                            else if (dir == 0 && s - 5 >= 0) { s = s * 100; s -= 5; s = s / 100; }
+                            var s = scope.soundsSettings.volumeEFX * 100;
+                            if (dir == 1 && s + 5 <= 100) {
+                                s += 5;
+                            } else if (dir == 0 && s - 5 >= 0) {
+                                s -= 5;
+                            }
+                            scope.soundsSettings.volumeEFX = Math.round((s / 100 + Number.EPSILON) * 100) / 100;
                         }
                     },
                     {
@@ -218,6 +226,9 @@ class GameMainInterface extends GameInterfaces {
                 f: this.settingsKeyBindMenuFct,
                 button: [
                     {
+
+                    },
+                    {
                         name: "Back",
                         x: 0,
                         y: 0,
@@ -226,16 +237,13 @@ class GameMainInterface extends GameInterfaces {
                         f: this.toSettings
                     }
                 ],
-                focusedButton: 0
+                focusedButton: 0,
+                awaitInput: [0, 0]
             }
         ];
         this.focusedMenu = 0;
     }
 
-    /**
-     * @param {GameScope} scope
-     * @param {this} that 
-     */
     startNewGame(scope, that) {
         //TODO save the game in an auto save if a game is currently being played
 
@@ -254,45 +262,7 @@ class GameMainInterface extends GameInterfaces {
         }, 5000);
     }
 
-    /**
-     * @param {GameScope} scope
-     * @param {this} that 
-     */
-    toMain(scope, that) {
-        that.u();
-        that.focusedMenu = 0;
-    }
-
-    /**
-     * @param {GameScope} scope
-     * @param {this} that 
-     */
-    toLoad(scope, that) {
-        that.u();
-        that.focusedMenu = 1;
-    }
-
-    /**
-     * @param {GameScope} scope
-     * @param {this} that 
-     */
-    toSettings(scope, that) {
-        that.u();
-        that.focusedMenu = 2;
-    }
-    toGeneral(scope, that) {
-        that.u();
-        that.focusedMenu = 3;
-    }
-    toAudio(scope, that) {
-        that.u();
-        that.focusedMenu = 4;
-    }
-    toKeyBind(scope, that) {
-        that.u();
-        that.focusedMenu = 5;
-    }
-
+    toMain(scope, that) { that.u(); that.focusedMenu = 0; } toLoad(scope, that) { that.u(); that.focusedMenu = 1; } toSettings(scope, that) { that.u(); that.focusedMenu = 2; } toGeneral(scope, that) { that.u(); that.focusedMenu = 3; } toAudio(scope, that) { that.u(); that.focusedMenu = 4; } toKeyBind(scope, that) { that.u(); that.focusedMenu = 5; }
     /**
      * @param {GameScope} scope 
      * @param {this} that
@@ -384,8 +354,6 @@ class GameMainInterface extends GameInterfaces {
             if (index == currentMenu.button.length - 1) {
                 that.createBackButton(ctx, button, w, h);
             } else {
-                //correct the position
-                index--;
                 // special button menu
                 switch (index) {
                     case 0:
@@ -447,9 +415,9 @@ class GameMainInterface extends GameInterfaces {
     }
 
     /**
-    * @param {GameScope} scope
-    * @param {this} that 
-    */
+     * @param {GameScope} scope
+     * @param {this} that 
+     */
     settingsAudioMenuFct(scope, that) {
         const ctx = scope.cache.context[that.canvasGroup],
             w = scope.w,
@@ -473,8 +441,6 @@ class GameMainInterface extends GameInterfaces {
             if (index == currentMenu.button.length - 1) {
                 that.createBackButton(ctx, button, w, h);
             } else {
-                //correct the position
-                index--;
                 // special button menu
                 switch (index) {
                     case 0:
@@ -485,7 +451,7 @@ class GameMainInterface extends GameInterfaces {
                         button.w = w / 2;
                         button.h = 40;
                         ctx.textAlign = "center";
-                        ctx.fillText(`${scope.soundsSettings.volumeBG > 0 ? "-" : " "}    ${scope.soundsSettings.volumeBG * 100}%    ${scope.soundsSettings.volumeBG < 1 ? "+" : " "}`, w / 2, h / 1.8 + 52 * index);
+                        ctx.fillText(`${scope.soundsSettings.volumeBG > 0 ? "-" : " "}    ${Math.floor(scope.soundsSettings.volumeBG * 100)}%    ${scope.soundsSettings.volumeBG < 1 ? "+" : " "}`, w / 2, h / 1.8 + 52 * index);
                         break;
                     case 1:
                         ctx.textAlign = "left";
@@ -495,16 +461,16 @@ class GameMainInterface extends GameInterfaces {
                         button.w = w / 2;
                         button.h = 40;
                         ctx.textAlign = "center";
-                        ctx.fillText(`${scope.soundsSettings.volumeEFX > 0 ? "-" : " "}    ${scope.soundsSettings.volumeEFX * 100}%    ${scope.soundsSettings.volumeEFX < 1 ? "+" : " "}`, w / 2, h / 1.8 + 52 * index);
+                        ctx.fillText(`${scope.soundsSettings.volumeEFX > 0 ? "-" : " "}    ${Math.floor(scope.soundsSettings.volumeEFX * 100)}%    ${scope.soundsSettings.volumeEFX < 1 ? "+" : " "}`, w / 2, h / 1.8 + 52 * index);
                         break;
                 }
             }
         });
     }
     /**
-  * @param {GameScope} scope
-  * @param {this} that 
-  */
+     * @param {GameScope} scope
+     * @param {this} that 
+     */
     settingsKeyBindMenuFct(scope, that) {
         const ctx = scope.cache.context[that.canvasGroup],
             w = scope.w,
@@ -528,7 +494,6 @@ class GameMainInterface extends GameInterfaces {
             if (index == currentMenu.button.length - 1) {
                 that.createBackButton(ctx, button, w, h);
             } else {
-                index--;
                 ctx.fillText(button.name, w / 2, h / 1.8 + 52 * index, w);
                 button.x = w / 2 - 200;
                 button.y = h / 1.8 + 52 * index - 16;
@@ -565,7 +530,6 @@ class GameMainInterface extends GameInterfaces {
             if (index == currentMenu.button.length - 1) {
                 that.createBackButton(ctx, button, w, h);
             } else {
-                index--;
                 ctx.fillText(button.name, w / 2, h / 1.8 + 52 * index, w);
                 button.x = w / 2 - 200;
                 button.y = h / 1.8 + 52 * index - 16;
@@ -615,7 +579,7 @@ class GameMainInterface extends GameInterfaces {
 
             currentMenu.button.forEach((button, index) => {
                 if (index == currentMenu.focusedButton) {
-                    if (index == 0) {
+                    if (index == currentMenu.button.length - 1) {
                         gradient = ctx.createLinearGradient(button.x, button.y, button.x + button.w, button.y);
                         gradient.addColorStop(0, "#F3C126");
                         gradient.addColorStop(0.5, "#6FE0E181");
@@ -626,19 +590,8 @@ class GameMainInterface extends GameInterfaces {
                 }
                 ctx.fillStyle = that.choosen[2];
                 //? back button will always be the first one in the array
-                if (index == 0) {
-                    ctx.textAlign = "left";
-                    ctx.textBaseline = "bottom";
-                    const metrics = ctx.measureText(button.name);
-                    const actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
-                    ctx.fillText(button.name, 20, h - 20, w);
-                    // bigger hitbox, that's why it's different than the text coos
-                    button.x = 0;
-                    button.y = h - actualHeight - 40;
-                    button.w = metrics.width + 40;
-                    button.h = h - button.y;
-                    ctx.textAlign = "center";
-                    ctx.textBaseline = "middle";
+                if (index == currentMenu.button.length - 1) {
+                    that.createBackButton(ctx, button, w, h);
                 } else {
                     ctx.fillText(button.name, w / 2, h / 1.8 + 52 * index, w);
                     button.x = w / 2 - 200;
