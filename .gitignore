@@ -1,9 +1,4 @@
 node_modules/
 cache/
 dist/
-updateLinux32.bat
-updateLinux64.bat
-updateOS64.bat
-updateOnline.bat
-updateWin64.bat
-updateWin32.bat
+*.bat
