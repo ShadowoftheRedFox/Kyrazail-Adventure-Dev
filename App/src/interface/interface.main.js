@@ -83,7 +83,8 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: this.toMain
+                        f: this.toMain,
+                        back: true
                     }
                 ],
                 focusedButton: 0
@@ -120,7 +121,8 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: this.toMain
+                        f: this.toMain,
+                        back: true
                     }
                 ],
                 focusedButton: 0
@@ -167,7 +169,8 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: this.toSettings
+                        f: this.toSettings,
+                        back: true
                     }
                 ],
                 focusedButton: 0
@@ -216,7 +219,8 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: this.toSettings
+                        f: this.toSettings,
+                        back: true
                     }
                 ],
                 focusedButton: 0
@@ -226,7 +230,40 @@ class GameMainInterface extends GameInterfaces {
                 f: this.settingsKeyBindMenuFct,
                 button: [
                     {
-
+                        name: "Up",
+                        x: 0,
+                        y: 0,
+                        w: 0,
+                        h: 0,
+                        f: () => { }
+                    }, {
+                        name: "Up",
+                        x: 0,
+                        y: 0,
+                        w: 0,
+                        h: 0,
+                        f: () => { }
+                    }, {
+                        name: "Up",
+                        x: 0,
+                        y: 0,
+                        w: 0,
+                        h: 0,
+                        f: () => { }
+                    }, {
+                        name: "Up",
+                        x: 0,
+                        y: 0,
+                        w: 0,
+                        h: 0,
+                        f: () => { }
+                    }, {
+                        name: "Up",
+                        x: 0,
+                        y: 0,
+                        w: 0,
+                        h: 0,
+                        f: () => { }
                     },
                     {
                         name: "Back",
@@ -234,7 +271,8 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: this.toSettings
+                        f: this.toSettings,
+                        back: true
                     }
                 ],
                 focusedButton: 0,
@@ -750,6 +788,9 @@ class GameMainInterface extends GameInterfaces {
             if (currentMenu.button[currentMenu.focusedButton].special) {
                 if (k.right.includes(ev.key)) { currentMenu.button[currentMenu.focusedButton].f(1); that.u(); }
                 if (k.left.includes(ev.key)) { currentMenu.button[currentMenu.focusedButton].f(0); that.u(); }
+            }
+            if (k.back.includes(ev.key) && currentMenu.button[currentMenu.button.length - 1].back) {
+                currentMenu.button[currentMenu.button.length - 1].f(scope, that);
             }
         };
 
