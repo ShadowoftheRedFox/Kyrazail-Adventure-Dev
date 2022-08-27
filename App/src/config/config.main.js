@@ -19,11 +19,10 @@ const GameConfig = {
         right: ["ArrowRight", "d"],
         left: ["ArrowLeft", "q"],
         run: ["Shift"],
-        interaction: ["e", "Enter"],
         debug: ["k"],
         pause: ["p"],
         back: ["Backspace", "x"],
-        confirm: ["Enter"],
+        confirm: ["e","Enter"],
         inventory: ["c", "a"]
     }
 };
