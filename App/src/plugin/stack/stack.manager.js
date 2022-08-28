@@ -12,5 +12,10 @@ const StackLoadManager = [{
     name: "manager.update",
     path: "./src/manager/",
     status: true,
-    description: "Used too detect and launch the game update."
+    description: "Used to detect and launch the game update."
+}, {
+    name: "manager.sound",
+    path: "./src/manager/",
+    status: true,
+    description: "Manage sound and music, as well as transition between them."
 }];
