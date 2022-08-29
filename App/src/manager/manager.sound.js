@@ -6,6 +6,11 @@ function GameSoundManager() {
 }
 
 GameSoundManager.busy = false;
+/**
+ * Return the game scope from the dom object.
+ * Local function because when this script file is loaded, the window.game object is still undefined.
+ */
+function scope() { return window.game; }
 
 /**
  * Start a sound. If another sound is being played, it will play it after.
