@@ -801,4 +801,15 @@ declare global {
          */
         clamp(min: number, max: number): number
     }
+
+    const ArrowDrawer: {
+        /**
+         * Draw a pixelised arrow.
+         * @param w width
+         * @param h height
+         * @param a direction the arrow is pointing
+         * @returns the arrow image on the canvas
+         */
+        pixel(w: number | 20, h: number | 20, a: ("up" | "down" | "right" | "left") | "right"): HTMLCanvasElement
+    }
 }
