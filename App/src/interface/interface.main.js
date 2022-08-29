@@ -65,7 +65,8 @@ class GameMainInterface extends GameInterfaces {
                     }
                 ],
                 focusedButton: 0
-            }, {
+            },
+            {
                 name: "Load game",
                 f: this.loadMenuFct,
                 button: [
@@ -235,37 +236,163 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: () => { }
+                        keyboard: true,
+                        key1: GameConfig.keyBoard.up[0],
+                        key2: GameConfig.keyBoard.up[1],
+                        f: (dir, b) => {
+                            if (dir == 0) {
+                                // custom key 1
+                                GameConfig.keyBoard.up[0] = b.key1;
+                            } else if (dir == 1) {
+                                // custom key 2
+                                GameConfig.keyBoard.up[1] = b.key2;
+                            }
+                        }
                     }, {
-                        name: "Up",
+                        name: "Down",
                         x: 0,
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: () => { }
+                        keyboard: true,
+                        key1: GameConfig.keyBoard.down[0],
+                        key2: GameConfig.keyBoard.down[1],
+                        f: (dir, b) => {
+                            if (dir == 0) {
+                                // custom key 1
+                                GameConfig.keyBoard.down[0] = b.key1;
+                            } else if (dir == 1) {
+                                // custom key 2
+                                GameConfig.keyBoard.down[1] = b.key2;
+                            }
+                        }
                     }, {
-                        name: "Up",
+                        name: "Left",
                         x: 0,
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: () => { }
+                        keyboard: true,
+                        key1: GameConfig.keyBoard.left[0],
+                        key2: GameConfig.keyBoard.left[1],
+                        f: (dir, b) => {
+                            if (dir == 0) {
+                                // custom key 1
+                                GameConfig.keyBoard.left[0] = b.key1;
+                            } else if (dir == 1) {
+                                // custom key 2
+                                GameConfig.keyBoard.left[1] = b.key2;
+                            }
+                        }
                     }, {
-                        name: "Up",
+                        name: "Right",
                         x: 0,
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: () => { }
+                        keyboard: true,
+                        key1: GameConfig.keyBoard.right[0],
+                        key2: GameConfig.keyBoard.right[1],
+                        f: (dir, b) => {
+                            if (dir == 0) {
+                                // custom key 1
+                                GameConfig.keyBoard.right[0] = b.key1;
+                            } else if (dir == 1) {
+                                // custom key 2
+                                GameConfig.keyBoard.right[1] = b.key2;
+                            }
+                        }
                     }, {
-                        name: "Up",
+                        name: "Run",
                         x: 0,
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: () => { }
-                    },
-                    {
+                        keyboard: true,
+                        key1: GameConfig.keyBoard.run[0],
+                        key2: GameConfig.keyBoard.run[1],
+                        f: (dir, b) => {
+                            if (dir == 0) {
+                                // custom key 1
+                                GameConfig.keyBoard.run[0] = b.key1;
+                            } else if (dir == 1) {
+                                // custom key 2
+                                GameConfig.keyBoard.run[1] = b.key2;
+                            }
+                        }
+                    }, {
+                        name: "Pause",
+                        x: 0,
+                        y: 0,
+                        w: 0,
+                        h: 0,
+                        keyboard: true,
+                        key1: GameConfig.keyBoard.pause[0],
+                        key2: GameConfig.keyBoard.pause[1],
+                        f: (dir, b) => {
+                            if (dir == 0) {
+                                // custom key 1
+                                GameConfig.keyBoard.pause[0] = b.key1;
+                            } else if (dir == 1) {
+                                // custom key 2
+                                GameConfig.keyBoard.pause[1] = b.key2;
+                            }
+                        }
+                    }, {
+                        name: "Back",
+                        x: 0,
+                        y: 0,
+                        w: 0,
+                        h: 0,
+                        keyboard: true,
+                        key1: GameConfig.keyBoard.back[0],
+                        key2: GameConfig.keyBoard.back[1],
+                        f: (dir, b) => {
+                            if (dir == 0) {
+                                // custom key 1
+                                GameConfig.keyBoard.back[0] = b.key1;
+                            } else if (dir == 1) {
+                                // custom key 2
+                                GameConfig.keyBoard.back[1] = b.key2;
+                            }
+                        }
+                    }, {
+                        name: "Interaction",
+                        x: 0,
+                        y: 0,
+                        w: 0,
+                        h: 0,
+                        keyboard: true,
+                        key1: GameConfig.keyBoard.confirm[0],
+                        key2: GameConfig.keyBoard.confirm[1],
+                        f: (dir, b) => {
+                            if (dir == 0) {
+                                // custom key 1
+                                GameConfig.keyBoard.confirm[0] = b.key1;
+                            } else if (dir == 1) {
+                                // custom key 2
+                                GameConfig.keyBoard.confirm[1] = b.key2;
+                            }
+                        }
+                    }, {
+                        name: "Inventory",
+                        x: 0,
+                        y: 0,
+                        w: 0,
+                        h: 0,
+                        keyboard: true,
+                        key1: GameConfig.keyBoard.inventory[0],
+                        key2: GameConfig.keyBoard.inventory[1],
+                        f: (dir, b) => {
+                            if (dir == 0) {
+                                // custom key 1
+                                GameConfig.keyBoard.inventory[0] = b.key1;
+                            } else if (dir == 1) {
+                                // custom key 2
+                                GameConfig.keyBoard.inventory[1] = b.key2;
+                            }
+                        }
+                    }, {
                         name: "Back",
                         x: 0,
                         y: 0,
@@ -275,11 +402,40 @@ class GameMainInterface extends GameInterfaces {
                         back: true
                     }
                 ],
+                arrow: [
+                    {
+                        name: "",
+                        x: 0,
+                        y: 0,
+                        w: 0,
+                        h: 0,
+                        f: () => { },
+                        draw: (w, h) => { ArrowDrawer.pixel(w, h, "up"); },
+                        arrowUp: true
+                    }, {
+                        name: "",
+                        x: 0,
+                        y: 0,
+                        w: 0,
+                        h: 0,
+                        f: () => { },
+                        draw: (w, h) => { ArrowDrawer.pixel(w, h, "down"); },
+                        arrowDown: true
+                    }
+                ],
                 focusedButton: 0,
                 awaitInput: [0, 0]
             }
         ];
         this.focusedMenu = 0;
+
+        // for keyboard customisation
+        this.oldKey = "";
+        this.awaitInput = false;
+        /**
+         * @type {{ id: number, key: number }}
+         */
+        this.buttonToChange = { id: null, key: null };
     }
 
     startNewGame(scope, that) {
@@ -300,7 +456,23 @@ class GameMainInterface extends GameInterfaces {
         }, 5000);
     }
 
-    toMain(scope, that) { that.u(); that.focusedMenu = 0; } toLoad(scope, that) { that.u(); that.focusedMenu = 1; } toSettings(scope, that) { that.u(); that.focusedMenu = 2; } toGeneral(scope, that) { that.u(); that.focusedMenu = 3; } toAudio(scope, that) { that.u(); that.focusedMenu = 4; } toKeyBind(scope, that) { that.u(); that.focusedMenu = 5; }
+    toMain(scope, that) { that.focusedMenu = 0; } toLoad(scope, that) { that.focusedMenu = 1; } toGeneral(scope, that) { that.focusedMenu = 3; } toAudio(scope, that) { that.focusedMenu = 4; } toKeyBind(scope, that) { that.focusedMenu = 5; }
+    toSettings(scope, that) {
+        that.focusedMenu = 2;
+        if (this.awaitInput) {
+            // cancel input
+            if (MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time)) {
+                b.key1 = that.oldKey.key1;
+                that.awaitInput = false;
+                that.buttonToChange = { id: null, key: null };
+            }
+            if (MouseTrackerManager.checkClick(b.x + b.w / 2, b.y, b.w / 2, b.h, time)) {
+                b.key2 = that.oldKey.key2;
+                that.awaitInput = false;
+                that.buttonToChange = { id: null, key: null };
+            }
+        }
+    }
     /**
      * @param {GameScope} scope 
      * @param {this} that
@@ -522,21 +694,22 @@ class GameMainInterface extends GameInterfaces {
         gradient.addColorStop(1, "#3C1EEE00");
 
         currentMenu.button.forEach((button, index) => {
-            if (index == currentMenu.focusedButton) {
-                ctx.fillStyle = gradient;
-                if (index == currentMenu.button.length - 1) that.createGradient(ctx, button);
-                ctx.fillRect(button.x, button.y, button.w, button.h);
-            }
             ctx.fillStyle = that.choosen[2];
             //? back button will always be the first one in the array
             if (index == currentMenu.button.length - 1) {
                 that.createBackButton(ctx, button, w, h);
             } else {
-                ctx.fillText(button.name, w / 2, h / 1.8 + 52 * index, w);
-                button.x = w / 2 - 200;
+                ctx.textAlign = "left";
+                ctx.fillText(button.name, w / 10, h / 1.8 + 52 * index, w);
+                button.x = w / 2 - w / 4;
                 button.y = h / 1.8 + 52 * index - 16;
-                button.w = 400;
+                button.w = w / 2;
                 button.h = 40;
+                ctx.textAlign = "center";
+                ctx.font = "bold 200% serif";
+                ctx.fillText((button.key1 ? button.key1.CapitalizeFirstLetterWord() : "Undefined"), button.x + button.w / 4, button.y + 16);
+                ctx.fillText((button.key2 ? button.key2.CapitalizeFirstLetterWord() : "Undefined"), button.x + 3 * button.w / 4, button.y + 16);
+                ctx.font = "200% Azure";
             }
         });
     }
@@ -794,6 +967,10 @@ class GameMainInterface extends GameInterfaces {
             }
         };
 
+        //TODO correct the key bind bug where if you click one after one different key, it cancel the last one
+        //TODO also add a go down method to show all key
+        //TODO add arrow that do that on click or on keyboard, also add if go down on keyboard, go down like arrow
+
         currentMenu.button.forEach((b, idx) => {
             // time between two frame
             const time = 1000 / GameConfig.targetFps;
@@ -802,20 +979,71 @@ class GameMainInterface extends GameInterfaces {
                 that.u();
             }
             if (MouseTrackerManager.checkClick(b.x, b.y, b.w, b.h, time) && !b.special) {
-                that.u();
                 b.f(scope, that);
+                that.u();
             }
             if (b.special) {
                 if (MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time)) {
-                    that.u();
                     b.f(0);
+                    that.u();
                 }
                 if (MouseTrackerManager.checkClick(b.x + b.w / 2, b.y, b.w / 2, b.h, time)) {
-                    that.u();
                     b.f(1);
+                    that.u();
+                }
+            }
+            if (b.keyboard) {
+                if (!that.awaitInput) {
+                    // create input
+                    if (MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time)) {
+                        that.oldKey = { 1: b.key1, 2: b.key2 };
+                        b.key1 = "Press a key...";
+                        that.awaitInput = true;
+                        that.buttonToChange = { id: idx, key: 1 };
+                        that.u();
+                    }
+                    if (MouseTrackerManager.checkClick(b.x + b.w / 2, b.y, b.w / 2, b.h, time)) {
+                        that.oldKey = { key1: b.key1, key2: b.key2 };
+                        b.key2 = "Press a key...";
+                        that.awaitInput = true;
+                        that.buttonToChange = { id: idx, key: 2 };
+                        that.u();
+                    }
+                } else {
+                    // cancel input
+                    if (MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time)) {
+                        b.key1 = that.oldKey.key1;
+                        that.awaitInput = false;
+                        that.buttonToChange = { id: null, key: null };
+                        that.u();
+                    }
+                    if (MouseTrackerManager.checkClick(b.x + b.w / 2, b.y, b.w / 2, b.h, time)) {
+                        b.key2 = that.oldKey.key2;
+                        that.awaitInput = false;
+                        that.buttonToChange = { id: null, key: null };
+                        that.u();
+                    }
                 }
             }
         });
+
+        if (this.awaitInput) {
+            onkeydown = (ev) => {
+                if (that.buttonToChange.key == 1) {
+                    that.menu[5].button[that.buttonToChange.id].key1 = ev.key;
+                    // change the correct data in the config
+                    that.menu[5].button[that.buttonToChange.id].f(0, that.menu[5].button[that.buttonToChange.id]);
+                }
+                if (that.buttonToChange.key == 2) {
+                    that.menu[5].button[that.buttonToChange.id].key2 = ev.key;
+                    // change the correct data in the config
+                    that.menu[5].button[that.buttonToChange.id].f(1, that.menu[5].button[that.buttonToChange.id]);
+                }
+                that.awaitInput = false;
+                that.buttonToChange = { id: null, key: null };
+                that.u();
+            };
+        }
 
         if (ConfigConst.DEBUG && MouseTrackerManager.data.click[MouseTrackerManager.data.click.length - 1].date + 1000 >= Date.now()) that.u();
     }
