@@ -750,5 +750,55 @@ declare global {
      */
     function underline(context: CanvasRenderingContext2D, text: string, x: number, y: number, color: string | CanvasGradient | CanvasPattern, textSize: string, align: CanvasTextAlign): void
 
-    interface Window { game: GameScope }
+    interface Window {
+        /** The game object. */
+        game: GameScope
+    }
+
+    interface Array {
+        /** 
+         * Return a random element of the array. 
+         */
+        random(): T | undefined
+        /**
+         * Check whether the two arrays are the same.
+         * @param array The array to compare to.
+         */
+        equals(array: any[]): boolean
+    }
+
+    interface String {
+        /**
+         * Check whether the string contains a given string.
+         * Basically the same as inclides, but has a wider support range.
+         * @param string The string ti search for.
+         */
+        contains(string: string): boolean
+        /**
+         * Replaces %1, %2 and so on in the string to the arguments.
+         * Return a formatted string.
+         * @param args The value to replace, in order.
+         * @example
+         * "%1 %2 and %3".format("0", "8", "7") => "0 8 and 7"
+         * "%3 %2 and %1".format("0", "8", "7") => "7 8 and 0"
+         */
+        format(...args: any): string
+        /**
+         * Put a capital letter on the first character of each words.
+         */
+        CapitalizeFirstLetterSentence(): string
+        /** 
+         * Put a capital letter on the first character of the string.
+         */
+        CapitalizeFirstLetterWord(): string
+    }
+
+    interface Number {
+        /**
+         * Return a number between the given range.
+         * @param min The lower boundary.
+         * @param max The upper boundary.
+         */
+        clamp(min: number, max: number): number
+    }
 }

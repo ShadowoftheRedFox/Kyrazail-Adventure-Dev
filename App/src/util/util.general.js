@@ -10,46 +10,40 @@ Array.prototype.random = function () {
     return this[Math.floor(Math.random() * this.length)];
 };
 
-Object.defineProperties(Array.prototype, {
-    /**
-     * Checks whether the two arrays are same.
-     *
-     * @method Array.prototype.equals
-     * @param {Array} array The array to compare to
-     * @return {Boolean} True if the two arrays are same
-     */
-    equals: {
-        enumerable: false,
-        value: function (array) {
-            if (!array || this.length !== array.length) {
+/**
+ * Checks whether the two arrays are same.
+ *
+ * @method Array.prototype.equals
+ * @param {Array} array The array to compare to
+ * @return {Boolean} True if the two arrays are same
+ */
+Array.prototype.equals = function (array) {
+    if (!array || this.length !== array.length) {
+        return false;
+    }
+    for (var i = 0; i < this.length; i++) {
+        if (this[i] instanceof Array && array[i] instanceof Array) {
+            if (!this[i].equals(array[i])) {
                 return false;
             }
-            for (var i = 0; i < this.length; i++) {
-                if (this[i] instanceof Array && array[i] instanceof Array) {
-                    if (!this[i].equals(array[i])) {
-                        return false;
-                    }
-                } else if (this[i] !== array[i]) {
-                    return false;
-                }
-            }
-            return true;
-        }
-    },
-    /**
-     * Checks whether the array contains a given element.
-     *
-     * @method Array.prototype.contains
-     * @param {Any} element The element to search for
-     * @return {Boolean} True if the array contains a given element
-     */
-    contains: {
-        enumerable: false,
-        value: function (element) {
-            return this.indexOf(element) >= 0;
+        } else if (this[i] !== array[i]) {
+            return false;
         }
     }
-});
+    return true;
+};
+
+String.prototype.CapitalizeFirstLetterWord = function () {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+};
+
+String.prototype.CapitalizeFirstLetterSentence = function () {
+    const a = this.split(" ");
+    for (var i = 0; i < a.length; i++) {
+        a[i] = a[i].CapitalizeFirstLetterWord();
+    }
+    return a.join(" ");
+};
 
 /**
  * Replaces %1, %2 and so on in the string to the arguments.
@@ -66,7 +60,7 @@ String.prototype.format = function () {
         return args[Number(n) - 1];
     });
 };
-
+Math.
 /**
  * Checks whether the string contains a given string.
  *
@@ -77,7 +71,6 @@ String.prototype.format = function () {
 String.prototype.contains = function (string) {
     return this.indexOf(string) >= 0;
 };
-
 
 /**
  * Returns a number whose value is limited to the given range.
