@@ -60,7 +60,7 @@ String.prototype.format = function () {
         return args[Number(n) - 1];
     });
 };
-Math.
+
 /**
  * Checks whether the string contains a given string.
  *
