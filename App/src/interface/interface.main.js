@@ -467,6 +467,7 @@ class GameMainInterface extends GameInterfaces {
     toSettings(scope, that) {
         that.focusedMenu = 2;
         if (that.awaitInput) {
+            const time = 1000 / GameConfig.targetFps;
             const currentMenu = that.menu[that.focusedMenu],
                 b = currentMenu.button[that.buttonToChange.id];
             // cancel input
