@@ -424,18 +424,20 @@ class GameMainInterface extends GameInterfaces {
                     }
                 ],
                 focusedButton: 0,
+                sideButton: 0,
                 awaitInput: [0, 0]
             }
         ];
         this.focusedMenu = 0;
 
         // for keyboard customisation
-        this.oldKey = "";
+        this.oldKey = { key1: "", key2: "" };
         this.awaitInput = false;
         /**
          * @type {{ id: number, key: number }}
          */
         this.buttonToChange = { id: null, key: null };
+        this.arrowHeightChange = 0;
     }
 
     startNewGame(scope, that) {
@@ -457,9 +459,16 @@ class GameMainInterface extends GameInterfaces {
     }
 
     toMain(scope, that) { that.focusedMenu = 0; } toLoad(scope, that) { that.focusedMenu = 1; } toGeneral(scope, that) { that.focusedMenu = 3; } toAudio(scope, that) { that.focusedMenu = 4; } toKeyBind(scope, that) { that.focusedMenu = 5; }
+    /**
+     * 
+     * @param {GameScope} scope 
+     * @param {this} that 
+     */
     toSettings(scope, that) {
         that.focusedMenu = 2;
-        if (this.awaitInput) {
+        if (that.awaitInput) {
+            const currentMenu = that.menu[that.focusedMenu],
+                b = currentMenu.button[that.buttonToChange.id];
             // cancel input
             if (MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time)) {
                 b.key1 = that.oldKey.key1;
@@ -695,23 +704,62 @@ class GameMainInterface extends GameInterfaces {
 
         currentMenu.button.forEach((button, index) => {
             ctx.fillStyle = that.choosen[2];
+            ctx.strokeStyle = that.choosen[2];
             //? back button will always be the first one in the array
             if (index == currentMenu.button.length - 1) {
                 that.createBackButton(ctx, button, w, h);
             } else {
                 ctx.textAlign = "left";
-                ctx.fillText(button.name, w / 10, h / 1.8 + 52 * index, w);
-                button.x = w / 2 - w / 4;
-                button.y = h / 1.8 + 52 * index - 16;
+                ctx.fillText(button.name, w / 6, h / 1.8 + 52 * index, w);
+                button.x = w / 2 - w / 8;
+                button.y = h / 1.8 + 52 * index - 16 + that.arrowHeightChange;
                 button.w = w / 2;
                 button.h = 40;
                 ctx.textAlign = "center";
                 ctx.font = "bold 200% serif";
-                ctx.fillText((button.key1 ? button.key1.CapitalizeFirstLetterWord() : "Undefined"), button.x + button.w / 4, button.y + 16);
-                ctx.fillText((button.key2 ? button.key2.CapitalizeFirstLetterWord() : "Undefined"), button.x + 3 * button.w / 4, button.y + 16);
+                const b1 = that.keyBindShowerCorrect(button.key1),
+                    b2 = that.keyBindShowerCorrect(button.key2);
+                ctx.fillText(b1, button.x + button.w / 4, button.y + 16);
+                ctx.fillText(b2, button.x + 3 * button.w / 4, button.y + 16);
+
+                // underline the current button where the mouse is on
+                if (currentMenu.focusedButton == index && currentMenu.sideButton > 0) {
+                    const metrics = ctx.measureText((currentMenu.sideButton == 1 ? b1 : b2));
+                    ctx.beginPath();
+                    ctx.lineWidth = 3;
+                    // beccause sideButton is 1 or 2, we use this multiplication to only do one task, and not test the side
+                    ctx.moveTo((button.x + (currentMenu.sideButton - 1) * button.w / 2) + button.w / 4 - metrics.width / 2,
+                        button.y + button.h);
+                    ctx.lineTo((button.x + (currentMenu.sideButton - 1) * button.w / 2) + button.w / 4 + metrics.width / 2,
+                        button.y + button.h);
+                    ctx.stroke();
+                }
                 ctx.font = "200% Azure";
             }
         });
+
+        //TODO add arrow button
+    }
+
+    /**
+     * Correct key bing name for better visibility.
+     * @param {string} str 
+     * @returns {string}
+     */
+    keyBindShowerCorrect(str) {
+        var r = "";
+        switch (str) {
+            case " ":
+                r = "Space";
+                break;
+            case undefined:
+                r = "Undefined";
+                break;
+            default:
+                r = str.CapitalizeFirstLetterWord();
+                break;
+        }
+        return r;
     }
 
     /**
@@ -947,27 +995,28 @@ class GameMainInterface extends GameInterfaces {
             currentMenu = this.menu[this.focusedMenu];
 
         document.onkeydown = function (ev) {
-            if (k.down.includes(ev.key) && currentMenu.focusedButton < currentMenu.button.length - 1) {
-                currentMenu.focusedButton++;
-                that.u();
-            }
-            if (k.up.includes(ev.key) && currentMenu.focusedButton > 0) {
-                currentMenu.focusedButton--;
-                that.u();
-            }
-            if (k.confirm.includes(ev.key) && !currentMenu.button[currentMenu.focusedButton].special) {
-                currentMenu.button[currentMenu.focusedButton].f(scope, that);
-            }
-            if (currentMenu.button[currentMenu.focusedButton].special) {
-                if (k.right.includes(ev.key)) { currentMenu.button[currentMenu.focusedButton].f(1); that.u(); }
-                if (k.left.includes(ev.key)) { currentMenu.button[currentMenu.focusedButton].f(0); that.u(); }
-            }
-            if (k.back.includes(ev.key) && currentMenu.button[currentMenu.button.length - 1].back) {
-                currentMenu.button[currentMenu.button.length - 1].f(scope, that);
+            if (!that.awaitInput) {
+                if (k.down.includes(ev.key) && currentMenu.focusedButton < currentMenu.button.length - 1) {
+                    currentMenu.focusedButton++;
+                    that.u();
+                }
+                if (k.up.includes(ev.key) && currentMenu.focusedButton > 0) {
+                    currentMenu.focusedButton--;
+                    that.u();
+                }
+                if (k.confirm.includes(ev.key) && !currentMenu.button[currentMenu.focusedButton].special) {
+                    currentMenu.button[currentMenu.focusedButton].f(scope, that);
+                }
+                if (currentMenu.button[currentMenu.focusedButton].special) {
+                    if (k.right.includes(ev.key)) { currentMenu.button[currentMenu.focusedButton].f(1); that.u(); }
+                    if (k.left.includes(ev.key)) { currentMenu.button[currentMenu.focusedButton].f(0); that.u(); }
+                }
+                if (k.back.includes(ev.key) && currentMenu.button[currentMenu.button.length - 1].back) {
+                    currentMenu.button[currentMenu.button.length - 1].f(scope, that);
+                }
             }
         };
 
-        //TODO correct the key bind bug where if you click one after one different key, it cancel the last one
         //TODO also add a go down method to show all key
         //TODO add arrow that do that on click or on keyboard, also add if go down on keyboard, go down like arrow
 
@@ -976,6 +1025,16 @@ class GameMainInterface extends GameInterfaces {
             const time = 1000 / GameConfig.targetFps;
             if (MouseTrackerManager.checkOver(b.x, b.y, b.w, b.h)) {
                 currentMenu.focusedButton = idx;
+                // underline the button
+                if (currentMenu.button[idx].keyboard) {
+                    if (MouseTrackerManager.checkOver(b.x, b.y, b.w / 2, b.h)) {
+                        currentMenu.sideButton = 1;
+                    } else if (MouseTrackerManager.checkOver(b.x + b.w / 2, b.y, b.w / 2, b.h)) {
+                        currentMenu.sideButton = 2;
+                    } else {
+                        currentMenu.sideButton = 0;
+                    }
+                }
                 that.u();
             }
             if (MouseTrackerManager.checkClick(b.x, b.y, b.w, b.h, time) && !b.special) {
@@ -996,13 +1055,14 @@ class GameMainInterface extends GameInterfaces {
                 if (!that.awaitInput) {
                     // create input
                     if (MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time)) {
-                        that.oldKey = { 1: b.key1, 2: b.key2 };
+                        console.log("create input 1");
+                        that.oldKey = { key1: b.key1, key2: b.key2 };
                         b.key1 = "Press a key...";
                         that.awaitInput = true;
                         that.buttonToChange = { id: idx, key: 1 };
                         that.u();
-                    }
-                    if (MouseTrackerManager.checkClick(b.x + b.w / 2, b.y, b.w / 2, b.h, time)) {
+                    } else if (MouseTrackerManager.checkClick(b.x + b.w / 2, b.y, b.w / 2, b.h, time)) {
+                        console.log("create input 2");
                         that.oldKey = { key1: b.key1, key2: b.key2 };
                         b.key2 = "Press a key...";
                         that.awaitInput = true;
@@ -1011,39 +1071,68 @@ class GameMainInterface extends GameInterfaces {
                     }
                 } else {
                     // cancel input
-                    if (MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time)) {
-                        b.key1 = that.oldKey.key1;
-                        that.awaitInput = false;
-                        that.buttonToChange = { id: null, key: null };
-                        that.u();
-                    }
-                    if (MouseTrackerManager.checkClick(b.x + b.w / 2, b.y, b.w / 2, b.h, time)) {
-                        b.key2 = that.oldKey.key2;
-                        that.awaitInput = false;
-                        that.buttonToChange = { id: null, key: null };
-                        that.u();
+                    // check if it's the same button
+                    if (idx == that.buttonToChange.id &&
+                        (MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time) && that.buttonToChange.key == 1) &&
+                        (MouseTrackerManager.checkClick(b.x + b.w / 2, b.y, b.w / 2, b.h, time) && that.buttonToChange.key == 2)) {
+                        if (MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time)) {
+                            console.log("cancel 1");
+                            b.key1 = that.oldKey.key1;
+                            that.awaitInput = false;
+                            that.buttonToChange = { id: null, key: null };
+                            that.u();
+                        } else if (MouseTrackerManager.checkClick(b.x + b.w / 2, b.y, b.w / 2, b.h, time)) {
+                            console.log("cancel 2");
+                            b.key2 = that.oldKey.key2;
+                            that.awaitInput = false;
+                            that.buttonToChange = { id: null, key: null };
+                            that.u();
+                        }
+                    } else if (that.awaitInput) {
+                        // if not, cancel last button and prepare that one
+                        currentMenu.button[that.buttonToChange.id].key1 = that.oldKey.key1;
+                        currentMenu.button[that.buttonToChange.id].key2 = that.oldKey.key2;
+                        console.log(currentMenu.button[that.buttonToChange.id].name, b.name);
+                        // create input for this current button
+                        if (MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time)) {
+                            console.log("cancel then new 1");
+                            that.oldKey = { key1: b.key1, key2: b.key2 };
+                            b.key1 = "Press a key...";
+                            that.awaitInput = true;
+                            that.buttonToChange = { id: idx, key: 1 };
+                            that.u();
+                        } else if (MouseTrackerManager.checkClick(b.x + b.w / 2, b.y, b.w / 2, b.h, time)) {
+                            console.log("cancel then new 2");
+                            that.oldKey = { key1: b.key1, key2: b.key2 };
+                            b.key2 = "Press a key...";
+                            that.awaitInput = true;
+                            that.buttonToChange = { id: idx, key: 2 };
+                            that.u();
+                        }
                     }
                 }
             }
-        });
 
-        if (this.awaitInput) {
-            onkeydown = (ev) => {
-                if (that.buttonToChange.key == 1) {
-                    that.menu[5].button[that.buttonToChange.id].key1 = ev.key;
-                    // change the correct data in the config
-                    that.menu[5].button[that.buttonToChange.id].f(0, that.menu[5].button[that.buttonToChange.id]);
-                }
-                if (that.buttonToChange.key == 2) {
-                    that.menu[5].button[that.buttonToChange.id].key2 = ev.key;
-                    // change the correct data in the config
-                    that.menu[5].button[that.buttonToChange.id].f(1, that.menu[5].button[that.buttonToChange.id]);
-                }
-                that.awaitInput = false;
-                that.buttonToChange = { id: null, key: null };
-                that.u();
-            };
-        }
+            if (this.awaitInput) {
+                onkeydown = (ev) => {
+                    if (that.buttonToChange.key == 1) {
+                        that.menu[5].button[that.buttonToChange.id].key1 = ev.key;
+                        // change the correct data in the config
+                        that.menu[5].button[that.buttonToChange.id].f(0, that.menu[5].button[that.buttonToChange.id]);
+                    }
+                    if (that.buttonToChange.key == 2) {
+                        that.menu[5].button[that.buttonToChange.id].key2 = ev.key;
+                        // change the correct data in the config
+                        that.menu[5].button[that.buttonToChange.id].f(1, that.menu[5].button[that.buttonToChange.id]);
+                    }
+                    that.awaitInput = false;
+                    that.buttonToChange = { id: null, key: null };
+                    that.oldKey = { key1: "", key2: "" };
+                    console.log("Updated key");
+                    that.u();
+                };
+            }
+        });
 
         if (ConfigConst.DEBUG && MouseTrackerManager.data.click[MouseTrackerManager.data.click.length - 1].date + 1000 >= Date.now()) that.u();
     }
