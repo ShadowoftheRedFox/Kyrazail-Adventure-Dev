@@ -755,7 +755,7 @@ declare global {
         game: GameScope
     }
 
-    interface Array {
+    interface Array<T> {
         /** 
          * Return a random element of the array. 
          */
@@ -765,6 +765,13 @@ declare global {
          * @param array The array to compare to.
          */
         equals(array: any[]): boolean
+        /**
+         * Return the element starting by the end of the array.
+         * @param n The index starting from the end. Default is 0.
+         */
+        last(n: number): T
+
+        [n: number]: T
     }
 
     interface String {
@@ -808,8 +815,9 @@ declare global {
          * @param w width
          * @param h height
          * @param a direction the arrow is pointing
+         * @param c color of the arrow
          * @returns the arrow image on the canvas
          */
-        pixel(w: number | 20, h: number | 20, a: ("up" | "down" | "right" | "left") | "right"): HTMLCanvasElement
+        pixel(w: number | 20, h: number | 20, a: ("up" | "down" | "right" | "left") | "right", c: (string | CanvasGradient | CanvasPattern) | "black"): HTMLCanvasElement
     }
 }

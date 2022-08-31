@@ -33,6 +33,11 @@ Array.prototype.equals = function (array) {
     return true;
 };
 
+Array.prototype.last = function (n = 0) {
+    if (isNaN(n)) throw new TypeError(`${n} must be a number`);
+    return this[this.length - 1 - n];
+};
+
 String.prototype.CapitalizeFirstLetterWord = function () {
     return this.charAt(0).toUpperCase() + this.slice(1);
 };
