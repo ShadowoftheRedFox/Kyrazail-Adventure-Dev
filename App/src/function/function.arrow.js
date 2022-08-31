@@ -31,9 +31,10 @@ ArrowDrawer.createStrictContext = function (w, h) {
  * @param {number} w width
  * @param {number} h height
  * @param {"up" | "down" | "right" | "left"} a direction the arrow is pointing
+ * @param {(string | CanvasGradient | CanvasPattern) | "black"} c the color of the arrow
  * @return {HTMLImageElement} the arrow image
  */
-ArrowDrawer.draw = function (img, w = 20, h = 20, a = "right") {
+ArrowDrawer.draw = function (img, w = 20, h = 20, a = "right", c = "black") {
     const canvas = ArrowDrawer.createContext(w, h),
         ctx = canvas.getContext("2d");
     var rad = Math.PI;
@@ -48,18 +49,15 @@ ArrowDrawer.draw = function (img, w = 20, h = 20, a = "right") {
             rad = rad * 1.5;
             break;
     }
-    console.log(w, h);
 
     ctx.imageSmoothingQuality = "high";
     ctx.save();
     ctx.translate(w / 2, h / 2);
     ctx.rotate(rad);
-    ctx.fillStyle = "black";
+    ctx.fillStyle = c;
     // center of a rect is -w/2 and -h/2
     ctx.drawImage(img, -img.width / 2, -img.height / 2);
     ctx.restore();
-
-    console.log(canvas.toDataURL());
 
     return canvas;
 };
@@ -69,9 +67,10 @@ ArrowDrawer.draw = function (img, w = 20, h = 20, a = "right") {
  * @param {number} w width
  * @param {number} h height
  * @param {"up" | "down" | "right" | "left"} a direction the arrow is pointing
+ * @param {(string | CanvasGradient | CanvasPattern) | "black"} c the color of the arrow
  * @returns {HTMLCanvasElement} the arrow
  */
-ArrowDrawer.pixel = function (w = 20, h = 20, a = "right") {
+ArrowDrawer.pixel = function (w = 20, h = 20, a = "right", c = "black") {
     const canvas = ArrowDrawer.createStrictContext(20, 20),
         ctx = canvas.getContext("2d");
 
@@ -100,13 +99,12 @@ ArrowDrawer.pixel = function (w = 20, h = 20, a = "right") {
     ];
 
     ctx.clearRect(0, 0, 20, 20);
-    ctx.fillStyle = "black";
+    ctx.fillStyle = c;
     arrow.forEach((l, lx) => {
         l.forEach((r, rx) => {
             if (r == 1) ctx.fillRect(rx, lx, 1, 1);
         });
     });
-    console.log(canvas.toDataURL());
 
     return ArrowDrawer.draw(canvas, w, h, a);
 };
