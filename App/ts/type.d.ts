@@ -769,7 +769,13 @@ declare global {
          * Return the element starting by the end of the array.
          * @param n The index starting from the end. Default is 0.
          */
-        last(n: number): T
+        last(n: number | 0): T
+
+        /**
+         * Return the index of the element starting from the end.
+         * @param n the index starting from the end. Default is 0.
+         */
+        reverseIndex(n: number | 0): number
 
         [n: number]: T
     }

@@ -33,9 +33,13 @@ Array.prototype.equals = function (array) {
     return true;
 };
 
+Array.prototype.reverseIndex = function (n = 0) {
+    return this.length - 1 - n;
+};
+
 Array.prototype.last = function (n = 0) {
     if (isNaN(n)) throw new TypeError(`${n} must be a number`);
-    return this[this.length - 1 - n];
+    return this[this.reverseIndex(n)];
 };
 
 String.prototype.CapitalizeFirstLetterWord = function () {
