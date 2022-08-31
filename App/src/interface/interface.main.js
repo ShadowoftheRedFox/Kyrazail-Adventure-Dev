@@ -409,18 +409,20 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: () => { },
-                        draw: (w, h) => { ArrowDrawer.pixel(w, h, "up"); },
-                        arrowUp: true
+                        f: (that) => { that.arrowHeightChange += 52; },
+                        draw: (w, h, c) => { return ArrowDrawer.pixel(w, h, "up", c); },
+                        arrowUp: true,
+                        enabled: false
                     }, {
                         name: "",
                         x: 0,
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: () => { },
-                        draw: (w, h) => { ArrowDrawer.pixel(w, h, "down"); },
-                        arrowDown: true
+                        f: (that) => { that.arrowHeightChange -= 52; },
+                        draw: (w, h, c) => { return ArrowDrawer.pixel(w, h, "down", c); },
+                        arrowDown: true,
+                        enabled: false
                     }
                 ],
                 focusedButton: 0,
@@ -467,20 +469,14 @@ class GameMainInterface extends GameInterfaces {
     toSettings(scope, that) {
         that.focusedMenu = 2;
         if (that.awaitInput) {
-            const time = 1000 / GameConfig.targetFps;
             const currentMenu = that.menu[that.focusedMenu],
                 b = currentMenu.button[that.buttonToChange.id];
             // cancel input
-            if (MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time)) {
-                b.key1 = that.oldKey.key1;
-                that.awaitInput = false;
-                that.buttonToChange = { id: null, key: null };
-            }
-            if (MouseTrackerManager.checkClick(b.x + b.w / 2, b.y, b.w / 2, b.h, time)) {
-                b.key2 = that.oldKey.key2;
-                that.awaitInput = false;
-                that.buttonToChange = { id: null, key: null };
-            }
+            that.menu[that.focusedMenu].button[that.buttonToChange.id].key1 = that.oldKey.key1;
+            that.menu[that.focusedMenu].button[that.buttonToChange.id].key2 = that.oldKey.key2;
+            that.u();
+            that.awaitInput = false;
+            that.buttonToChange = { id: null, key: null };
         }
     }
     /**
@@ -697,6 +693,7 @@ class GameMainInterface extends GameInterfaces {
             h = scope.h,
             currentMenu = that.menu[that.focusedMenu];
         that.drawTitle(ctx, currentMenu.name, that, scope.w, scope.h);
+        ctx.lineWidth = 3;
 
         var gradient = ctx.createLinearGradient(w / 2 - 200, h / 1.8, w / 2 + 200, h / 1.8);
         gradient.addColorStop(0, "#F3C12600");
@@ -711,23 +708,22 @@ class GameMainInterface extends GameInterfaces {
                 that.createBackButton(ctx, button, w, h);
             } else {
                 ctx.textAlign = "left";
-                ctx.fillText(button.name, w / 6, h / 1.8 + 52 * index, w);
+                ctx.fillText(button.name, w / 6, h / 3.5 + 52 * index + that.arrowHeightChange, w);
                 button.x = w / 2 - w / 8;
-                button.y = h / 1.8 + 52 * index - 16 + that.arrowHeightChange;
+                button.y = h / 3.5 + 52 * index - 16 + that.arrowHeightChange;
                 button.w = w / 2;
                 button.h = 40;
                 ctx.textAlign = "center";
                 ctx.font = "bold 200% serif";
                 const b1 = that.keyBindShowerCorrect(button.key1),
                     b2 = that.keyBindShowerCorrect(button.key2);
-                ctx.fillText(b1, button.x + button.w / 4, button.y + 16);
-                ctx.fillText(b2, button.x + 3 * button.w / 4, button.y + 16);
+                ctx.fillText(b1, button.x + button.w / 4, button.y + 16 + that.arrowHeightChange);
+                ctx.fillText(b2, button.x + 3 * button.w / 4, button.y + 16 + that.arrowHeightChange);
 
                 // underline the current button where the mouse is on
                 if (currentMenu.focusedButton == index && currentMenu.sideButton > 0) {
                     const metrics = ctx.measureText((currentMenu.sideButton == 1 ? b1 : b2));
                     ctx.beginPath();
-                    ctx.lineWidth = 3;
                     // beccause sideButton is 1 or 2, we use this multiplication to only do one task, and not test the side
                     ctx.moveTo((button.x + (currentMenu.sideButton - 1) * button.w / 2) + button.w / 4 - metrics.width / 2,
                         button.y + button.h);
@@ -740,6 +736,62 @@ class GameMainInterface extends GameInterfaces {
         });
 
         //TODO add arrow button
+        // get the size of the title
+        ctx.font = '200% Azure';
+        const metrics = ctx.measureText(currentMenu.name);
+        ctx.font = '150% Azure';
+
+        // check if first button is out of screen
+        if (currentMenu.button[0].y < h / 6 + metrics.actualBoundingBoxDescent + 10) {
+            // button is out of screen, enable arrow down
+            currentMenu.arrow[0].enabled = true;
+        } else if (currentMenu.arrow[0].enabled) {
+            // disable the arrow
+            currentMenu.arrow[0].enabled = false;
+            currentMenu.arrow[0].x = 0;
+            currentMenu.arrow[0].y = 0;
+            currentMenu.arrow[0].w = 0;
+            currentMenu.arrow[0].h = 0;
+        }
+
+        // check if last button is out of screen
+        if (currentMenu.button.last(1).y + currentMenu.button.last(1).h > h - 10) {
+            // button is out of screen, enable arrow down
+            currentMenu.arrow[1].enabled = true;
+        } else if (currentMenu.arrow[1].enabled) {
+            // disable the arrow
+            currentMenu.arrow[1].enabled = false;
+            currentMenu.arrow[1].x = 0;
+            currentMenu.arrow[1].y = 0;
+            currentMenu.arrow[1].w = 0;
+            currentMenu.arrow[1].h = 0;
+        }
+
+        const arrowSize = 20,
+            arrowOffset = 50;
+        currentMenu.arrow.forEach((a, i) => {
+            if (i == 0 && (a.enabled || ConfigConst.DEBUG)) {
+                a.w = arrowSize + arrowOffset;
+                a.h = arrowSize + arrowOffset;
+                a.x = w - 10 - arrowOffset - arrowOffset / 2;
+                a.y = h / 6 + metrics.actualBoundingBoxDescent + arrowOffset - arrowOffset / 2;
+                if (ConfigConst.DEBUG) {
+                    ctx.fillStyle = "red";
+                    ctx.fillRect(a.x, a.y, a.w, a.h);
+                }
+                ctx.drawImage(a.draw(arrowSize, arrowSize, that.choosen[2]), w - 10 - arrowOffset, h / 6 + metrics.actualBoundingBoxDescent + arrowOffset);
+            } else if (i == 1 && (a.enabled || ConfigConst.DEBUG)) {
+                a.w = arrowSize + arrowOffset;
+                a.h = arrowSize + arrowOffset;
+                a.x = w - 10 - arrowOffset - arrowOffset / 2;
+                a.y = h - 10 - arrowOffset - arrowOffset / 2;
+                if (ConfigConst.DEBUG) {
+                    ctx.fillStyle = "red";
+                    ctx.fillRect(a.x, a.y, a.w, a.h);
+                }
+                ctx.drawImage(a.draw(arrowSize, arrowSize, that.choosen[2]), w - 10 - arrowOffset, h - 10 - arrowOffset);
+            }
+        });
     }
 
     /**
@@ -1018,8 +1070,6 @@ class GameMainInterface extends GameInterfaces {
             }
         };
 
-        //TODO also add a go down method to show all key
-        //TODO add arrow that do that on click or on keyboard, also add if go down on keyboard, go down like arrow
 
         currentMenu.button.forEach((b, idx) => {
             // time between two frame
@@ -1056,14 +1106,12 @@ class GameMainInterface extends GameInterfaces {
                 if (!that.awaitInput) {
                     // create input
                     if (MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time)) {
-                        console.log("create input 1");
                         that.oldKey = { key1: b.key1, key2: b.key2 };
                         b.key1 = "Press a key...";
                         that.awaitInput = true;
                         that.buttonToChange = { id: idx, key: 1 };
                         that.u();
                     } else if (MouseTrackerManager.checkClick(b.x + b.w / 2, b.y, b.w / 2, b.h, time)) {
-                        console.log("create input 2");
                         that.oldKey = { key1: b.key1, key2: b.key2 };
                         b.key2 = "Press a key...";
                         that.awaitInput = true;
@@ -1074,16 +1122,14 @@ class GameMainInterface extends GameInterfaces {
                     // cancel input
                     // check if it's the same button
                     if (idx == that.buttonToChange.id &&
-                        (MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time) && that.buttonToChange.key == 1) &&
-                        (MouseTrackerManager.checkClick(b.x + b.w / 2, b.y, b.w / 2, b.h, time) && that.buttonToChange.key == 2)) {
+                        ((MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time) && that.buttonToChange.key == 1) ||
+                            (MouseTrackerManager.checkClick(b.x + b.w / 2, b.y, b.w / 2, b.h, time) && that.buttonToChange.key == 2))) {
                         if (MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time)) {
-                            console.log("cancel 1");
                             b.key1 = that.oldKey.key1;
                             that.awaitInput = false;
                             that.buttonToChange = { id: null, key: null };
                             that.u();
                         } else if (MouseTrackerManager.checkClick(b.x + b.w / 2, b.y, b.w / 2, b.h, time)) {
-                            console.log("cancel 2");
                             b.key2 = that.oldKey.key2;
                             that.awaitInput = false;
                             that.buttonToChange = { id: null, key: null };
@@ -1091,19 +1137,18 @@ class GameMainInterface extends GameInterfaces {
                         }
                     } else if (that.awaitInput) {
                         // if not, cancel last button and prepare that one
-                        currentMenu.button[that.buttonToChange.id].key1 = that.oldKey.key1;
-                        currentMenu.button[that.buttonToChange.id].key2 = that.oldKey.key2;
-                        console.log(currentMenu.button[that.buttonToChange.id].name, b.name);
                         // create input for this current button
                         if (MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time)) {
-                            console.log("cancel then new 1");
+                            currentMenu.button[that.buttonToChange.id].key1 = that.oldKey.key1;
+                            currentMenu.button[that.buttonToChange.id].key2 = that.oldKey.key2;
                             that.oldKey = { key1: b.key1, key2: b.key2 };
                             b.key1 = "Press a key...";
                             that.awaitInput = true;
                             that.buttonToChange = { id: idx, key: 1 };
                             that.u();
                         } else if (MouseTrackerManager.checkClick(b.x + b.w / 2, b.y, b.w / 2, b.h, time)) {
-                            console.log("cancel then new 2");
+                            currentMenu.button[that.buttonToChange.id].key1 = that.oldKey.key1;
+                            currentMenu.button[that.buttonToChange.id].key2 = that.oldKey.key2;
                             that.oldKey = { key1: b.key1, key2: b.key2 };
                             b.key2 = "Press a key...";
                             that.awaitInput = true;
@@ -1112,6 +1157,23 @@ class GameMainInterface extends GameInterfaces {
                         }
                     }
                 }
+
+                //TODO also add a go down method to show all key
+                //TODO add arrow that do that on click or on keyboard, also add if go down on keyboard, go down like arrow
+                /*
+                ? So what's going on since last time:
+                - Arrow have been added, but no click limit
+                - Button menu disappear after a click
+                - Didn't add keyboard navigation up and down scroll
+                - Also need to add a keyboard navigation left right method to switch between keys (that will aslo reach the arrows)
+                - Also, cancel on back button click doesn't works
+                */
+                currentMenu.arrow.forEach(a => {
+                    if (MouseTrackerManager.checkClick(a.x, a.y, a.w, a.h) && a.enabled) {
+                        a.f(that);
+                        that.u();
+                    }
+                });
             }
 
             if (this.awaitInput) {
@@ -1129,7 +1191,6 @@ class GameMainInterface extends GameInterfaces {
                     that.awaitInput = false;
                     that.buttonToChange = { id: null, key: null };
                     that.oldKey = { key1: "", key2: "" };
-                    console.log("Updated key");
                     that.u();
                 };
             }
