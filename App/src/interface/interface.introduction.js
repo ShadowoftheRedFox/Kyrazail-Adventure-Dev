@@ -17,7 +17,7 @@ class GameIntroductionInterface extends GameInterfaces {
             transitionSpawnDuration: 1000,
             needsUpdate: true
         }, scope);
-        this.stepDelay = [1000, 1000, 1000, 1000, scope.constants.package.changelog.length * 500, 1000];
+        this.stepDelay = [1000, 1000, 1000, 1000, scope.constants.package.changelog.length * 1000, 1000];
         this.started = 0;
         this.transitionNumber = 0;
         this.transitionStart = 0;
