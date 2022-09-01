@@ -1,7 +1,7 @@
 {
     "name": "kyrazail-adventure",
-    "version": "1.1.0.2",
-    "lastUpdate": "30/08/2022",
+    "version": "1.1.0.3",
+    "lastUpdate": "1/09/2022",
     "releaseType": "Dev/Alpha",
     "description": "Kyrazail adventure game. Maybe a real description soon, who knows?",
     "main": "./index.html",
@@ -13,13 +13,13 @@
     "author": "Shadow of the Red Fox#5881",
     "license": "ISC",
     "changelog": [
-        "Map is now rendered!",
-        "Added a crashHandler more efficient.",
         "Changed the font text style.",
         "Available on windows, linux and os!",
         "Better loading and loading screen!",
         "Main menu theme and window title messages!",
-        "Playable on phone!"
+        "Playable on phone!",
+        "You can now customise your control!",
+        "Added social media button!"
     ],
     "repository": {
         "type": "git",
@@ -31,5 +31,6 @@
     "support": {
         "url": "https://discord.gg/5mF5AHnRCr"
     },
-    "homepage": "https://github.com/ShadowoftheRedFox/Kyrazail-Adventure-Alpha-Dev#readme"
+    "homepage": "https://github.com/ShadowoftheRedFox/Kyrazail-Adventure-Alpha-Dev#readme",
+    "online": "https://shadowoftheredfox.itch.io/kyrazail-adventure"
 }
