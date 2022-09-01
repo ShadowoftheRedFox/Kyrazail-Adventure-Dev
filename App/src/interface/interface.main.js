@@ -237,6 +237,7 @@ class GameMainInterface extends GameInterfaces {
                         w: 0,
                         h: 0,
                         keyboard: true,
+                        enabled: true,
                         key1: GameConfig.keyBoard.up[0],
                         key2: GameConfig.keyBoard.up[1],
                         f: (dir, b) => {
@@ -255,6 +256,7 @@ class GameMainInterface extends GameInterfaces {
                         w: 0,
                         h: 0,
                         keyboard: true,
+                        enabled: true,
                         key1: GameConfig.keyBoard.down[0],
                         key2: GameConfig.keyBoard.down[1],
                         f: (dir, b) => {
@@ -273,6 +275,7 @@ class GameMainInterface extends GameInterfaces {
                         w: 0,
                         h: 0,
                         keyboard: true,
+                        enabled: true,
                         key1: GameConfig.keyBoard.left[0],
                         key2: GameConfig.keyBoard.left[1],
                         f: (dir, b) => {
@@ -291,6 +294,7 @@ class GameMainInterface extends GameInterfaces {
                         w: 0,
                         h: 0,
                         keyboard: true,
+                        enabled: true,
                         key1: GameConfig.keyBoard.right[0],
                         key2: GameConfig.keyBoard.right[1],
                         f: (dir, b) => {
@@ -309,6 +313,7 @@ class GameMainInterface extends GameInterfaces {
                         w: 0,
                         h: 0,
                         keyboard: true,
+                        enabled: true,
                         key1: GameConfig.keyBoard.run[0],
                         key2: GameConfig.keyBoard.run[1],
                         f: (dir, b) => {
@@ -327,6 +332,7 @@ class GameMainInterface extends GameInterfaces {
                         w: 0,
                         h: 0,
                         keyboard: true,
+                        enabled: true,
                         key1: GameConfig.keyBoard.pause[0],
                         key2: GameConfig.keyBoard.pause[1],
                         f: (dir, b) => {
@@ -345,6 +351,7 @@ class GameMainInterface extends GameInterfaces {
                         w: 0,
                         h: 0,
                         keyboard: true,
+                        enabled: true,
                         key1: GameConfig.keyBoard.back[0],
                         key2: GameConfig.keyBoard.back[1],
                         f: (dir, b) => {
@@ -363,6 +370,7 @@ class GameMainInterface extends GameInterfaces {
                         w: 0,
                         h: 0,
                         keyboard: true,
+                        enabled: true,
                         key1: GameConfig.keyBoard.confirm[0],
                         key2: GameConfig.keyBoard.confirm[1],
                         f: (dir, b) => {
@@ -381,6 +389,7 @@ class GameMainInterface extends GameInterfaces {
                         w: 0,
                         h: 0,
                         keyboard: true,
+                        enabled: true,
                         key1: GameConfig.keyBoard.inventory[0],
                         key2: GameConfig.keyBoard.inventory[1],
                         f: (dir, b) => {
@@ -409,7 +418,7 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: (that) => { that.arrowHeightChange -= 52; },
+                        f: (that, f) => { that.arrowHeightChange += 52;/*f is the button focused var*/f++; },
                         draw: (w, h, c) => { return ArrowDrawer.pixel(w, h, "up", c); },
                         arrowUp: true,
                         enabled: false
@@ -419,7 +428,7 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: (that) => { that.arrowHeightChange += 52; },
+                        f: (that, f) => { that.arrowHeightChange -= 52;/*f is the button focused var*/f--; },
                         draw: (w, h, c) => { return ArrowDrawer.pixel(w, h, "down", c); },
                         arrowDown: true,
                         enabled: false
@@ -516,13 +525,7 @@ class GameMainInterface extends GameInterfaces {
         }, 5000);
     }
 
-    toAccount(scope, that) { that.focusedMenu = 6; } toMain(scope, that) { that.focusedMenu = 0; } toLoad(scope, that) { that.focusedMenu = 1; } toGeneral(scope, that) { that.focusedMenu = 3; } toAudio(scope, that) { that.focusedMenu = 4; } toKeyBind(scope, that) { that.focusedMenu = 5; }
-    /**
-     * 
-     * @param {GameScope} scope 
-     * @param {this} that 
-     */
-    toSettings(scope, that) {
+    toAccount(scope, that) { that.focusedMenu = 6; } toMain(scope, that) { that.focusedMenu = 0; } toLoad(scope, that) { that.focusedMenu = 1; } toGeneral(scope, that) { that.focusedMenu = 3; } toAudio(scope, that) { that.focusedMenu = 4; } toKeyBind(scope, that) { that.focusedMenu = 5; } toSettings(scope, that) {
         if (that.awaitInput) {
             const currentMenu = that.menu[that.focusedMenu],
                 bu = currentMenu.button[that.buttonToChange.id];
@@ -627,12 +630,12 @@ class GameMainInterface extends GameInterfaces {
         currentMenu.button.forEach((button, index) => {
             if (index == currentMenu.focusedButton) {
                 ctx.fillStyle = gradient;
-                if (index == currentMenu.button.length - 1) that.createGradient(ctx, button);
+                if (index == currentMenu.button.reverseIndex()) that.createGradient(ctx, button);
                 ctx.fillRect(button.x, button.y, button.w, button.h);
             }
             ctx.fillStyle = that.choosen[2];
-            //? back button will always be the first one in the array
-            if (index == currentMenu.button.length - 1) {
+            //? back button will always be the last one in the array
+            if (index == currentMenu.button.reverseIndex()) {
                 that.createBackButton(ctx, button, w, h);
             } else {
                 // special button menu
@@ -714,12 +717,12 @@ class GameMainInterface extends GameInterfaces {
         currentMenu.button.forEach((button, index) => {
             if (index == currentMenu.focusedButton) {
                 ctx.fillStyle = gradient;
-                if (index == currentMenu.button.length - 1) that.createGradient(ctx, button);
+                if (index == currentMenu.button.reverseIndex()) that.createGradient(ctx, button);
                 ctx.fillRect(button.x, button.y, button.w, button.h);
             }
             ctx.fillStyle = that.choosen[2];
-            //? back button will always be the first one in the array
-            if (index == currentMenu.button.length - 1) {
+            //? back button will always be the last one in the array
+            if (index == currentMenu.button.reverseIndex()) {
                 that.createBackButton(ctx, button, w, h);
             } else {
                 // special button menu
@@ -765,15 +768,24 @@ class GameMainInterface extends GameInterfaces {
         gradient.addColorStop(0.5, "#6FE0E1");
         gradient.addColorStop(1, "#3C1EEE00");
 
+        // get the size of the title
+        ctx.font = '200% Azure';
+        const metrics = ctx.measureText(currentMenu.name);
+
         currentMenu.button.forEach((button, index) => {
             ctx.fillStyle = that.choosen[2];
             ctx.strokeStyle = that.choosen[2];
-            //? back button will always be the first one in the array
-            if (index == currentMenu.button.length - 1) {
+            //? back button will always be the last one in the array
+            if (index == currentMenu.button.reverseIndex()) {
+                ctx.font = '150% Azure';
+                if (currentMenu.focusedButton == currentMenu.button.reverseIndex()) {
+                    that.createGradient(ctx, button);
+                    ctx.fillRect(button.x, button.y, button.w, button.h);
+                }
+                ctx.fillStyle = that.choosen[2];
                 that.createBackButton(ctx, button, w, h);
             } else {
                 ctx.textAlign = "left";
-                ctx.fillText(button.name, w / 6, h / 3.5 + 52 * index + that.arrowHeightChange, w);
                 button.x = w / 2 - w / 8;
                 button.y = h / 3.5 + 52 * index - 16 + that.arrowHeightChange;
                 button.w = w / 2;
@@ -782,29 +794,31 @@ class GameMainInterface extends GameInterfaces {
                 ctx.font = "bold 200% serif";
                 const b1 = that.keyBindShowerCorrect(button.key1),
                     b2 = that.keyBindShowerCorrect(button.key2);
-                ctx.fillText(b1, button.x + button.w / 4, button.y + 16 + that.arrowHeightChange);
-                ctx.fillText(b2, button.x + 3 * button.w / 4, button.y + 16 + that.arrowHeightChange);
 
-                // underline the current button where the mouse is on
-                if (currentMenu.focusedButton == index && currentMenu.sideButton > 0) {
-                    const metrics = ctx.measureText((currentMenu.sideButton == 1 ? b1 : b2));
-                    ctx.beginPath();
-                    // beccause sideButton is 1 or 2, we use this multiplication to only do one task, and not test the side
-                    ctx.moveTo((button.x + (currentMenu.sideButton - 1) * button.w / 2) + button.w / 4 - metrics.width / 2,
-                        button.y + button.h);
-                    ctx.lineTo((button.x + (currentMenu.sideButton - 1) * button.w / 2) + button.w / 4 + metrics.width / 2,
-                        button.y + button.h);
-                    ctx.stroke();
+                //if we can see the button, draw them
+                if (button.y > h / 6 + metrics.actualBoundingBoxDescent + 10 && button.y + button.h < h - 10) {
+                    button.enabled = true;
+                    ctx.fillText(button.name, w / 6, button.y + 16, w);
+                    ctx.fillText(b1, button.x + button.w / 4, button.y + 16);
+                    ctx.fillText(b2, button.x + 3 * button.w / 4, button.y + 16);
+
+                    // underline the current button where the mouse is on
+                    if (currentMenu.focusedButton == index && currentMenu.sideButton > 0) {
+                        const metrics = ctx.measureText((currentMenu.sideButton == 1 ? b1 : b2));
+                        ctx.beginPath();
+                        // beccause sideButton is 1 or 2, we use this multiplication to only do one task, and not test the side
+                        ctx.moveTo((button.x + (currentMenu.sideButton - 1) * button.w / 2) + button.w / 4 - metrics.width / 2,
+                            button.y + button.h);
+                        ctx.lineTo((button.x + (currentMenu.sideButton - 1) * button.w / 2) + button.w / 4 + metrics.width / 2,
+                            button.y + button.h);
+                        ctx.stroke();
+                    }
+                } else {
+                    button.enabled = false;
                 }
                 ctx.font = "200% Azure";
             }
         });
-
-        //TODO add arrow button
-        // get the size of the title
-        ctx.font = '200% Azure';
-        const metrics = ctx.measureText(currentMenu.name);
-        ctx.font = '150% Azure';
 
         // check if first button is out of screen
         if (currentMenu.button[0].y < h / 6 + metrics.actualBoundingBoxDescent + 10) {
@@ -899,12 +913,12 @@ class GameMainInterface extends GameInterfaces {
         currentMenu.button.forEach((button, index) => {
             if (index == currentMenu.focusedButton) {
                 ctx.fillStyle = gradient;
-                if (index == currentMenu.button.length - 1) that.createGradient(ctx, button);
+                if (index == currentMenu.button.reverseIndex()) that.createGradient(ctx, button);
                 ctx.fillRect(button.x, button.y, button.w, button.h);
             }
             ctx.fillStyle = that.choosen[2];
-            //? back button will always be the first one in the array
-            if (index == currentMenu.button.length - 1) {
+            //? back button will always be the last one in the array
+            if (index == currentMenu.button.reverseIndex()) {
                 that.createBackButton(ctx, button, w, h);
             } else {
                 ctx.fillText(button.name, w / 2, h / 1.8 + 52 * index, w);
@@ -956,7 +970,7 @@ class GameMainInterface extends GameInterfaces {
 
             currentMenu.button.forEach((button, index) => {
                 if (index == currentMenu.focusedButton) {
-                    if (index == currentMenu.button.length - 1) {
+                    if (index == currentMenu.button.reverseIndex()) {
                         gradient = ctx.createLinearGradient(button.x, button.y, button.x + button.w, button.y);
                         gradient.addColorStop(0, "#F3C126");
                         gradient.addColorStop(0.5, "#6FE0E181");
@@ -966,8 +980,8 @@ class GameMainInterface extends GameInterfaces {
                     ctx.fillRect(button.x, button.y, button.w, button.h);
                 }
                 ctx.fillStyle = that.choosen[2];
-                //? back button will always be the first one in the array
-                if (index == currentMenu.button.length - 1) {
+                //? back button will always be the last one in the array
+                if (index == currentMenu.button.reverseIndex()) {
                     that.createBackButton(ctx, button, w, h);
                 } else {
                     ctx.fillText(button.name, w / 2, h / 1.8 + 52 * index, w);
@@ -1114,7 +1128,7 @@ class GameMainInterface extends GameInterfaces {
 
         document.onkeydown = function (ev) {
             if (!that.awaitInput) {
-                if (k.down.includes(ev.key) && currentMenu.focusedButton < currentMenu.button.length - 1) {
+                if (k.down.includes(ev.key) && currentMenu.focusedButton < currentMenu.button.reverseIndex()) {
                     currentMenu.focusedButton++;
                     that.u();
                 }
@@ -1122,7 +1136,8 @@ class GameMainInterface extends GameInterfaces {
                     currentMenu.focusedButton--;
                     that.u();
                 }
-                if (k.confirm.includes(ev.key) && !currentMenu.button[currentMenu.focusedButton].special) {
+                if (k.confirm.includes(ev.key) && !currentMenu.button[currentMenu.focusedButton].special &&
+                    !currentMenu.button[currentMenu.focusedButton].keyboard) {
                     currentMenu.button[currentMenu.focusedButton].f(scope, that);
                     that.u();
                 }
@@ -1130,17 +1145,25 @@ class GameMainInterface extends GameInterfaces {
                     if (k.right.includes(ev.key)) { currentMenu.button[currentMenu.focusedButton].f(1); that.u(); }
                     if (k.left.includes(ev.key)) { currentMenu.button[currentMenu.focusedButton].f(0); that.u(); }
                 }
-                if (k.back.includes(ev.key) && currentMenu.button[currentMenu.button.length - 1].back) {
-                    currentMenu.button[currentMenu.button.length - 1].f(scope, that);
+                if (k.back.includes(ev.key) && currentMenu.button[currentMenu.button.reverseIndex()].back) {
+                    currentMenu.button[currentMenu.button.reverseIndex()].f(scope, that);
+                    that.u();
+                }
+                if (currentMenu.sideButton) {
+                    if (k.right.includes(ev.key)) { currentMenu.sideButton = 2; that.u(); }
+                    if (k.left.includes(ev.key)) { currentMenu.sideButton = 1; that.u(); }
+                }
+                if (k.confirm.includes(ev.key) && currentMenu.button[currentMenu.focusedButton].keyboard) {
+                    currentMenu.button[currentMenu.focusedButton].f(scope, that);
                     that.u();
                 }
             }
         };
 
 
+        // time between two frame
+        const time = 1000 / GameConfig.targetFps;
         currentMenu.button.forEach((b, idx) => {
-            // time between two frame
-            const time = 1000 / GameConfig.targetFps;
             if (MouseTrackerManager.checkOver(b.x, b.y, b.w, b.h)) {
                 currentMenu.focusedButton = idx;
                 // underline the button
@@ -1149,8 +1172,6 @@ class GameMainInterface extends GameInterfaces {
                         currentMenu.sideButton = 1;
                     } else if (MouseTrackerManager.checkOver(b.x + b.w / 2, b.y, b.w / 2, b.h)) {
                         currentMenu.sideButton = 2;
-                    } else {
-                        currentMenu.sideButton = 0;
                     }
                 }
                 that.u();
@@ -1169,7 +1190,7 @@ class GameMainInterface extends GameInterfaces {
                     that.u();
                 }
             }
-            if (b.keyboard) {
+            if (b.keyboard && b.enabled) {
                 if (!that.awaitInput) {
                     // create input
                     if (MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time)) {
@@ -1224,24 +1245,6 @@ class GameMainInterface extends GameInterfaces {
                         }
                     }
                 }
-
-                //TODO also add a go down method to show all key
-                //TODO add arrow that do that on click or on keyboard, also add if go down on keyboard, go down like arrow
-                //TODO add a checker so that the same key can't be put in key1 and key2
-                /*
-                ? So what's going on since last time:
-                - Arrow have been added, but no click limit
-                - Button menu disappear after a click
-                - Didn't add keyboard navigation up and down scroll
-                - Also need to add a keyboard navigation left right method to switch between keys (that will aslo reach the arrows)
-                - Also, cancel on back button click doesn't works
-                */
-                currentMenu.arrow.forEach(a => {
-                    if (MouseTrackerManager.checkClick(a.x, a.y, a.w, a.h) && a.enabled) {
-                        a.f(that);
-                        that.u();
-                    }
-                });
             }
 
             if (this.awaitInput) {
@@ -1261,6 +1264,19 @@ class GameMainInterface extends GameInterfaces {
                     that.oldKey = { key1: "", key2: "" };
                     that.u();
                 };
+            }
+        });
+        //TODO add arrow that do that on click or on keyboard, also add if go down on keyboard, go down like arrow
+        //TODO add a checker so that the same key can't be put in key1 and key2
+        /*
+        ? So what's going on since last time:
+        - Didn't add keyboard navigation up and down scroll
+        - Also need to add a keyboard navigation left right method to switch between keys (that will aslo reach the arrows)
+        */
+        if (currentMenu.arrow) currentMenu.arrow.forEach(a => {
+            if (MouseTrackerManager.checkClick(a.x, a.y, a.w, a.h, time) && a.enabled) {
+                a.f(that, currentMenu);
+                that.u();
             }
         });
 
