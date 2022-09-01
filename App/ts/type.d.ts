@@ -314,6 +314,12 @@ declare global {
                 lastUpdate: string
                 releaseType: "Dev/Alpha" | "Dev/Beta" | "Release"
                 changelog: string[]
+                /** Discord server link. */
+                support: string
+                /** Github repo readme link. */
+                homepage: string
+                /** Online game link. */
+                online: string
             }
         }
         checkGameUpdate: {
