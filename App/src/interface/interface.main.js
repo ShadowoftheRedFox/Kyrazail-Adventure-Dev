@@ -109,7 +109,7 @@ class GameMainInterface extends GameInterfaces {
                         h: 0,
                         f: this.toAudio
                     }, {
-                        name: "Key bind",
+                        name: "Control",
                         x: 0,
                         y: 0,
                         w: 0,
@@ -227,7 +227,7 @@ class GameMainInterface extends GameInterfaces {
                 focusedButton: 0
             },
             {
-                name: "Settings: Key bind",
+                name: "Settings: Control",
                 f: this.settingsKeyBindMenuFct,
                 button: [
                     {
@@ -409,7 +409,7 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: (that) => { that.arrowHeightChange += 52; },
+                        f: (that) => { that.arrowHeightChange -= 52; },
                         draw: (w, h, c) => { return ArrowDrawer.pixel(w, h, "up", c); },
                         arrowUp: true,
                         enabled: false
@@ -419,7 +419,7 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: (that) => { that.arrowHeightChange -= 52; },
+                        f: (that) => { that.arrowHeightChange += 52; },
                         draw: (w, h, c) => { return ArrowDrawer.pixel(w, h, "down", c); },
                         arrowDown: true,
                         enabled: false
@@ -428,6 +428,62 @@ class GameMainInterface extends GameInterfaces {
                 focusedButton: 0,
                 sideButton: 0,
                 awaitInput: [0, 0]
+            },
+            {
+                name: "Kyrazail Account",
+                f: this.accountFct,
+                button: [
+                    {
+                        name: "Back",
+                        x: 0,
+                        y: 0,
+                        w: 0,
+                        h: 0,
+                        f: this.toMain,
+                        back: true
+                    }
+                ],
+                focusedButton: 0
+            }
+        ];
+        this.social = [
+            {
+                //TODO add a global var that save the account, if online server is setup one day
+                name: "Account",
+                x: 0,
+                y: 0,
+                w: 0,
+                h: 0,
+                f: this.toAccount,
+                //TODO download and load a account icon
+                icon: null
+            }, {
+                name: "Discord",
+                x: 0,
+                y: 0,
+                w: 0,
+                h: 0,
+                f: (scope) => { open(scope.constants.package.support); },
+                //TODO download and load a discord icon
+                icon: null
+            }, {
+                name: "Github",
+                x: 0,
+                y: 0,
+                w: 0,
+                h: 0,
+                f: (scope) => { open(scope.constants.package.homepage); },
+                //TODO download and load a github icon
+                icon: null
+            }, {
+                name: "Online game",
+                x: 0,
+                y: 0,
+                w: 0,
+                h: 0,
+                f: (scope) => { open(scope.constants.package.online); },
+                //TODO download and load a itch.io icon
+                icon: null
             }
         ];
         this.focusedMenu = 0;
@@ -460,25 +516,34 @@ class GameMainInterface extends GameInterfaces {
         }, 5000);
     }
 
-    toMain(scope, that) { that.focusedMenu = 0; } toLoad(scope, that) { that.focusedMenu = 1; } toGeneral(scope, that) { that.focusedMenu = 3; } toAudio(scope, that) { that.focusedMenu = 4; } toKeyBind(scope, that) { that.focusedMenu = 5; }
+    toAccount(scope, that) { that.focusedMenu = 6; } toMain(scope, that) { that.focusedMenu = 0; } toLoad(scope, that) { that.focusedMenu = 1; } toGeneral(scope, that) { that.focusedMenu = 3; } toAudio(scope, that) { that.focusedMenu = 4; } toKeyBind(scope, that) { that.focusedMenu = 5; }
     /**
      * 
      * @param {GameScope} scope 
      * @param {this} that 
      */
     toSettings(scope, that) {
-        that.focusedMenu = 2;
         if (that.awaitInput) {
             const currentMenu = that.menu[that.focusedMenu],
-                b = currentMenu.button[that.buttonToChange.id];
-            // cancel input
-            that.menu[that.focusedMenu].button[that.buttonToChange.id].key1 = that.oldKey.key1;
-            that.menu[that.focusedMenu].button[that.buttonToChange.id].key2 = that.oldKey.key2;
-            that.u();
+                bu = currentMenu.button[that.buttonToChange.id];
             that.awaitInput = false;
-            that.buttonToChange = { id: null, key: null };
+            currentMenu.button.forEach((b, idx) => {
+                if (idx == that.buttonToChange.id) {
+                    // cancel input
+                    b.key1 = that.oldKey.key1;
+                    b.key2 = that.oldKey.key2;
+                    that.buttonToChange = { id: null, key: null };
+                }
+            });
         }
+        that.focusedMenu = 2;
     }
+    /**
+     * @param {GameScope} scope 
+     * @param {this} that
+     */
+    accountFct(scope, that) { }
+
     /**
      * @param {GameScope} scope 
      * @param {this} that
@@ -795,7 +860,7 @@ class GameMainInterface extends GameInterfaces {
     }
 
     /**
-     * Correct key bing name for better visibility.
+     * Correct control name for better visibility.
      * @param {string} str 
      * @returns {string}
      */
@@ -1059,6 +1124,7 @@ class GameMainInterface extends GameInterfaces {
                 }
                 if (k.confirm.includes(ev.key) && !currentMenu.button[currentMenu.focusedButton].special) {
                     currentMenu.button[currentMenu.focusedButton].f(scope, that);
+                    that.u();
                 }
                 if (currentMenu.button[currentMenu.focusedButton].special) {
                     if (k.right.includes(ev.key)) { currentMenu.button[currentMenu.focusedButton].f(1); that.u(); }
@@ -1066,6 +1132,7 @@ class GameMainInterface extends GameInterfaces {
                 }
                 if (k.back.includes(ev.key) && currentMenu.button[currentMenu.button.length - 1].back) {
                     currentMenu.button[currentMenu.button.length - 1].f(scope, that);
+                    that.u();
                 }
             }
         };
@@ -1160,6 +1227,7 @@ class GameMainInterface extends GameInterfaces {
 
                 //TODO also add a go down method to show all key
                 //TODO add arrow that do that on click or on keyboard, also add if go down on keyboard, go down like arrow
+                //TODO add a checker so that the same key can't be put in key1 and key2
                 /*
                 ? So what's going on since last time:
                 - Arrow have been added, but no click limit
