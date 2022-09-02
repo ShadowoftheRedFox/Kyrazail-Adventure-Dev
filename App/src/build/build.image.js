@@ -50,7 +50,7 @@ GameLoadImage.structure = function (image, n) {
         image: image
     };
 
-    if (["Battlebacks1", "Battlebacks2", "Battlers", "Parallaxes", "Titles1", "Titles2", "Intro"].includes(folder)) return s;
+    if (["Battlebacks1", "Battlebacks2", "Battlers", "Parallaxes", "Titles1", "Titles2", "Intro", "Icon"].includes(folder)) return s;
     if (folder === "Tilesets") {
         s.tileW = 16;
         s.tileH = 16;
