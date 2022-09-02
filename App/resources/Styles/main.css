@@ -69,6 +69,14 @@ canvas {
     padding: 0;
 }
 
+h1 {
+    color: #fff;
+    font-family: "Azure";
+    font-size: 200%;
+    text-align: center;
+    margin: 0 auto;
+}
+
 
 /* width */
 
@@ -101,33 +109,33 @@ canvas {
 
 @font-face {
     font-family: "ComicSansMS";
-    src: url("../fonts/Comic Sans MS.ttf") format("truetype");
+    src: url("../Fonts/Comic Sans MS.ttf") format("truetype");
 }
 
 @font-face {
     font-family: "ComicSansMSBold";
-    src: url("../fonts/Comic Sans MS Bold.ttf") format("truetype"),
-        url("../fonts/Comic Sans MS.ttf") format("truetype");
+    src: url("../Fonts/Comic Sans MS Bold.ttf") format("truetype"),
+        url("../Fonts/Comic Sans MS.ttf") format("truetype");
     font-weight: bold;
 }
 
 @font-face {
     font-family: 'Azure';
-    src: url('../fonts/PixelAzureBonds-327Z.ttf') format("TrueType"),
-        url("../fonts/Comic Sans MS.ttf") format("truetype");
+    src: url('../Fonts/PixelAzureBonds-327Z.ttf') format("TrueType"),
+        url("../Fonts/Comic Sans MS.ttf") format("truetype");
     font-display: block;
 }
 
 @font-face {
     font-family: 'Takhi';
-    src: url('../fonts/PixelTakhisis-ZajJ.ttf') format("TrueType"),
-        url("../fonts/Comic Sans MS.ttf") format("truetype");
+    src: url('../Fonts/PixelTakhisis-ZajJ.ttf') format("TrueType"),
+        url("../Fonts/Comic Sans MS.ttf") format("truetype");
     font-display: block;
 }
 
 @font-face {
     font-family: 'Unreadable';
-    src: url('../fonts/Unreadable.ttf') format("TrueType"),
-        url("../fonts/Comic Sans MS.ttf") format("truetype");
+    src: url('../Fonts/Unreadable.ttf') format("TrueType"),
+        url("../Fonts/Comic Sans MS.ttf") format("truetype");
     font-display: block;
 }

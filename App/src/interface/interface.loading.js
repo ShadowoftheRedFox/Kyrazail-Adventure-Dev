@@ -58,6 +58,8 @@ LoadingScreenManager.init = function (callOnEqual) {
     if (callOnEqual && typeof callOnEqual !== "function") throw new TypeError("callOnEqual is not a function.");
     if (LoadingScreenManager.viewport) return console.warn("LoadingScreenManager has already been started.");
 
+    document.getElementById("textPreLoading").hidden = true;
+
     const $ = ConfigConst.MAINCONTAINER,
         $c = ConfigConst.CONTAINER;
 

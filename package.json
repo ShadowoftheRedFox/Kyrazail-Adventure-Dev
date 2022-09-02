@@ -16,7 +16,8 @@
     "scripts": {
         "debug": "nw App/ --remote-debugging-port=9222 --allow-file-access-from-files",
         "dev": "nw",
-        "prod": "nwbuild --zip false --buildDir dist/ ./",
+        "prod": "nwbuild -p win32 ./App/",
+        "allPlat": "nwbuild --platforms win64,win32,linux64,linux32,osx64,osx32 --o dist/ ./",
         "test": "node ./App/test/script.test.js"
     },
     "repository": {

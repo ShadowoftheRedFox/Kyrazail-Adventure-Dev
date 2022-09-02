@@ -1,6 +1,6 @@
 const StackLoadData = [{
     name: "Data",
-    path: "./resources/data/",
+    path: "./resources/Data/",
     status: true,
     parameters: {},
     description: "Data needed for the game.",
@@ -14,14 +14,14 @@ const StackLoadData = [{
     objPath: ""
 }, {
     name: "Update",
-    path: "./resources/data/",
+    path: "./resources/Data/",
     status: true,
     parameters: {},
     description: "Update information on last update check.",
     objPath: ""
 }, {
     name: "MapTest",
-    path: "./resources/data/map/",
+    path: "./resources/Data/map/",
     status: true,
     parameters: {},
     description: "Test map.",
