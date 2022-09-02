@@ -52,6 +52,12 @@ reactive and tell you if it's a known bug or not. If you need any help
 in the game, press **P** to open the pause menu and select the **Help**
 section. If you are still stuck, ask for help on Discord.
 
+Credits
+=======
+
+You can check our credits [here](./App/credits.html).
+It contains the Kyrazail Adventure team, the testers, and all external link needed that the game use.
+
 Contact us
 ==========
 
@@ -65,8 +71,8 @@ Customizing parameters
 **Please be aware that you can change the key bind in game, as well as
 most of those parameters, so prevent editing this file directly!**
 
-In *`Game -> www -> src`*, there is a file called
-[config.js](./src/src/config.js). The default file looks like this:
+In *`App -> src -> config`*, there is a file called
+[config.main.js](./App/src/config/config.main.js). The default file looks like this:
 
 ```js
 const GameConfig = {
