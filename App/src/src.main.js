@@ -1,4 +1,5 @@
 /// <reference path="../ts/type.d.ts"/>
+console.time("Started game in");
 
 console.log("%cKyrazail Adventure", `
 font-family: serif; 

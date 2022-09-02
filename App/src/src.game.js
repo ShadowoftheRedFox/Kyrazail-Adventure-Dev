@@ -7,7 +7,6 @@
  */
 class Game {
     constructor() {
-        console.time("Started game in");
         const $ = ConfigConst.MAINCONTAINER,
             $c = ConfigConst.CONTAINER;
 
