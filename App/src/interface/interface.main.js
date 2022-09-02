@@ -631,8 +631,14 @@ class GameMainInterface extends GameInterfaces {
         currentMenu.button.forEach((button, index) => {
             if (index == currentMenu.focusedButton) {
                 ctx.fillStyle = gradient;
-                if (index == currentMenu.button.reverseIndex()) that.createGradient(ctx, button);
-                ctx.fillRect(0, h / 1.8 + 52 * index - 16, w, 40);
+                if (index == currentMenu.button.reverseIndex()) {
+                    that.createGradient(ctx, button);
+                    const metrics = ctx.measureText(button.name);
+                    const actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+                    ctx.fillRect(0, h - actualHeight - 40, metrics.width + 40, + actualHeight + 40);
+                } else {
+                    ctx.fillRect(0, h / 1.8 + 52 * index - 16, w, 40);
+                }
             }
             ctx.fillStyle = that.choosen[2];
             //? back button will always be the last one in the array
@@ -694,7 +700,7 @@ class GameMainInterface extends GameInterfaces {
         button.x = 0;
         button.y = h - actualHeight - 40;
         button.w = metrics.width + 40;
-        button.h = h - button.y;
+        button.h = actualHeight + 40;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
     }
@@ -718,8 +724,14 @@ class GameMainInterface extends GameInterfaces {
         currentMenu.button.forEach((button, index) => {
             if (index == currentMenu.focusedButton) {
                 ctx.fillStyle = gradient;
-                if (index == currentMenu.button.reverseIndex()) that.createGradient(ctx, button);
-                ctx.fillRect(w / 2 - w / 4, h / 1.8 + 52 * index - 16, w, 40);
+                if (index == currentMenu.button.reverseIndex()) {
+                    that.createGradient(ctx, button);
+                    const metrics = ctx.measureText(button.name);
+                    const actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+                    ctx.fillRect(0, h - actualHeight - 40, metrics.width + 40, + actualHeight + 40);
+                } else {
+                    ctx.fillRect(w / 2 - w / 4, h / 1.8 + 52 * index - 16, w, 40);
+                }
             }
             ctx.fillStyle = that.choosen[2];
             //? back button will always be the last one in the array
@@ -781,7 +793,9 @@ class GameMainInterface extends GameInterfaces {
                 ctx.font = '150% Azure';
                 if (currentMenu.focusedButton == currentMenu.button.reverseIndex()) {
                     that.createGradient(ctx, button);
-                    // fine to not pre load coos because gradient is only for the back button, and he'll never be first
+                    const metrics = ctx.measureText(button.name);
+                    const actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+                    ctx.fillRect(0, h - actualHeight - 40, metrics.width + 40, + actualHeight + 40);
                     ctx.fillRect(button.x, button.y, button.w, button.h);
                 }
                 ctx.fillStyle = that.choosen[2];
@@ -915,8 +929,14 @@ class GameMainInterface extends GameInterfaces {
         currentMenu.button.forEach((button, index) => {
             if (index == currentMenu.focusedButton) {
                 ctx.fillStyle = gradient;
-                if (index == currentMenu.button.reverseIndex()) that.createGradient(ctx, button);
-                ctx.fillRect(w / 2 - 200, h / 1.8 + 52 * index - 16, 400, 40);
+                if (index == currentMenu.button.reverseIndex()) {
+                    that.createGradient(ctx, button);
+                    const metrics = ctx.measureText(button.name);
+                    const actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+                    ctx.fillRect(0, h - actualHeight - 40, metrics.width + 40, + actualHeight + 40);
+                } else {
+                    ctx.fillRect(w / 2 - 200, h / 1.8 + 52 * index - 16, 400, 40);
+                }
             }
             ctx.fillStyle = that.choosen[2];
             //? back button will always be the last one in the array
