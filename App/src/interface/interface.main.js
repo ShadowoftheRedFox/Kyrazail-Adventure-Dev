@@ -435,8 +435,7 @@ class GameMainInterface extends GameInterfaces {
                     }
                 ],
                 focusedButton: 0,
-                sideButton: 0,
-                awaitInput: [0, 0]
+                sideButton: 1
             },
             {
                 name: "Kyrazail Account",
@@ -505,6 +504,8 @@ class GameMainInterface extends GameInterfaces {
          */
         this.buttonToChange = { id: null, key: null };
         this.arrowHeightChange = 0;
+        /** The delay for the confirm key. Otherwise, it keeps getting the confirm key as the key to bind. */
+        this.keyboardConfirmDelay = 0;
     }
 
     startNewGame(scope, that) {
@@ -525,19 +526,19 @@ class GameMainInterface extends GameInterfaces {
         }, 5000);
     }
 
-    toAccount(scope, that) { that.focusedMenu = 6; } toMain(scope, that) { that.focusedMenu = 0; } toLoad(scope, that) { that.focusedMenu = 1; } toGeneral(scope, that) { that.focusedMenu = 3; } toAudio(scope, that) { that.focusedMenu = 4; } toKeyBind(scope, that) { that.focusedMenu = 5; } toSettings(scope, that) {
+    toAccount(scope, that) { that.focusedMenu = 6; } toMain(scope, that) { that.focusedMenu = 0; } toLoad(scope, that) { that.focusedMenu = 1; } toGeneral(scope, that) { that.focusedMenu = 3; } toAudio(scope, that) { that.focusedMenu = 4; } toKeyBind(scope, that) { that.focusedMenu = 5; }
+    toSettings(scope, that) {
         if (that.awaitInput) {
             const currentMenu = that.menu[that.focusedMenu],
                 bu = currentMenu.button[that.buttonToChange.id];
-            that.awaitInput = false;
             currentMenu.button.forEach((b, idx) => {
                 if (idx == that.buttonToChange.id) {
                     // cancel input
                     b.key1 = that.oldKey.key1;
                     b.key2 = that.oldKey.key2;
-                    that.buttonToChange = { id: null, key: null };
                 }
             });
+            that.endOfInput(that);
         }
         that.focusedMenu = 2;
     }
@@ -631,7 +632,7 @@ class GameMainInterface extends GameInterfaces {
             if (index == currentMenu.focusedButton) {
                 ctx.fillStyle = gradient;
                 if (index == currentMenu.button.reverseIndex()) that.createGradient(ctx, button);
-                ctx.fillRect(button.x, button.y, button.w, button.h);
+                ctx.fillRect(0, h / 1.8 + 52 * index - 16, w, 40);
             }
             ctx.fillStyle = that.choosen[2];
             //? back button will always be the last one in the array
@@ -653,9 +654,9 @@ class GameMainInterface extends GameInterfaces {
                     case 1:
                         ctx.textAlign = "left";
                         ctx.fillText(button.name, w / 10, h / 1.8 + 52 * index, w);
-                        button.x = w / 2 - w / 4;
+                        button.x = 0;
                         button.y = h / 1.8 + 52 * index - 16;
-                        button.w = w / 2;
+                        button.w = w;
                         button.h = 40;
                         ctx.textAlign = "center";
                         ctx.fillText(`${GameConfig.targetFps > 30 ? "-" : " "}    ${GameConfig.targetFps}    ${GameConfig.targetFps < 140 ? "+" : " "}`, w / 2, h / 1.8 + 52 * index);
@@ -718,7 +719,7 @@ class GameMainInterface extends GameInterfaces {
             if (index == currentMenu.focusedButton) {
                 ctx.fillStyle = gradient;
                 if (index == currentMenu.button.reverseIndex()) that.createGradient(ctx, button);
-                ctx.fillRect(button.x, button.y, button.w, button.h);
+                ctx.fillRect(w / 2 - w / 4, h / 1.8 + 52 * index - 16, w, 40);
             }
             ctx.fillStyle = that.choosen[2];
             //? back button will always be the last one in the array
@@ -732,7 +733,7 @@ class GameMainInterface extends GameInterfaces {
                         ctx.fillText(button.name, w / 10, h / 1.8 + 52 * index, w);
                         button.x = w / 2 - w / 4;
                         button.y = h / 1.8 + 52 * index - 16;
-                        button.w = w / 2;
+                        button.w = w;
                         button.h = 40;
                         ctx.textAlign = "center";
                         ctx.fillText(`${scope.soundsSettings.volumeBG > 0 ? "-" : " "}    ${Math.floor(scope.soundsSettings.volumeBG * 100)}%    ${scope.soundsSettings.volumeBG < 1 ? "+" : " "}`, w / 2, h / 1.8 + 52 * index);
@@ -742,7 +743,7 @@ class GameMainInterface extends GameInterfaces {
                         ctx.fillText(button.name, w / 10, h / 1.8 + 52 * index, w);
                         button.x = w / 2 - w / 4;
                         button.y = h / 1.8 + 52 * index - 16;
-                        button.w = w / 2;
+                        button.w = w;
                         button.h = 40;
                         ctx.textAlign = "center";
                         ctx.fillText(`${scope.soundsSettings.volumeEFX > 0 ? "-" : " "}    ${Math.floor(scope.soundsSettings.volumeEFX * 100)}%    ${scope.soundsSettings.volumeEFX < 1 ? "+" : " "}`, w / 2, h / 1.8 + 52 * index);
@@ -780,6 +781,7 @@ class GameMainInterface extends GameInterfaces {
                 ctx.font = '150% Azure';
                 if (currentMenu.focusedButton == currentMenu.button.reverseIndex()) {
                     that.createGradient(ctx, button);
+                    // fine to not pre load coos because gradient is only for the back button, and he'll never be first
                     ctx.fillRect(button.x, button.y, button.w, button.h);
                 }
                 ctx.fillStyle = that.choosen[2];
@@ -914,7 +916,7 @@ class GameMainInterface extends GameInterfaces {
             if (index == currentMenu.focusedButton) {
                 ctx.fillStyle = gradient;
                 if (index == currentMenu.button.reverseIndex()) that.createGradient(ctx, button);
-                ctx.fillRect(button.x, button.y, button.w, button.h);
+                ctx.fillRect(w / 2 - 200, h / 1.8 + 52 * index - 16, 400, 40);
             }
             ctx.fillStyle = that.choosen[2];
             //? back button will always be the last one in the array
@@ -971,13 +973,13 @@ class GameMainInterface extends GameInterfaces {
             currentMenu.button.forEach((button, index) => {
                 if (index == currentMenu.focusedButton) {
                     if (index == currentMenu.button.reverseIndex()) {
-                        gradient = ctx.createLinearGradient(button.x, button.y, button.x + button.w, button.y);
+                        gradient = ctx.createLinearGradient(w / 2 - 200, h / 1.8 + 52 * index - 16, w / 2 + 200, 40);
                         gradient.addColorStop(0, "#F3C126");
                         gradient.addColorStop(0.5, "#6FE0E181");
                         gradient.addColorStop(1, "#3C1EEE00");
                     }
                     ctx.fillStyle = gradient;
-                    ctx.fillRect(button.x, button.y, button.w, button.h);
+                    ctx.fillRect(w / 2 - 200, h / 1.8 + 52 * index - 16, 400, 40);
                 }
                 ctx.fillStyle = that.choosen[2];
                 //? back button will always be the last one in the array
@@ -1118,6 +1120,27 @@ class GameMainInterface extends GameInterfaces {
     }
 
     /**
+     * Check if the given key exists in the config in all parameters.
+     * If yes, then return false, otherwise, return true.
+     * @param {string} key
+     * @returns {boolean} 
+     */
+    checkNoDuplicateKey(key) {
+        let validation = false;
+        for (var keysCategory in GameConfig.keyBoard) {
+            if (GameConfig.keyBoard[keysCategory].includes(key)) { validation = true; break; }
+        }
+        return validation;
+    }
+
+    endOfInput(that) {
+        that.awaitInput = false;
+        that.buttonToChange = { id: null, key: null };
+        that.oldKey = { key1: "", key2: "" };
+        that.u();
+    }
+
+    /**
      * @param {GameScope} scope
      * @param {this} that 
      */
@@ -1125,6 +1148,26 @@ class GameMainInterface extends GameInterfaces {
         const that = this,
             k = GameConfig.keyBoard,
             currentMenu = this.menu[this.focusedMenu];
+
+        if (this.awaitInput && that.keyboardConfirmDelay + 150 < Date.now()) {
+            onkeydown = (ev) => {
+                // the current button
+                const b = that.menu[5].button[that.buttonToChange.id];
+                //TODO add a checker so that the same key can't be put in key1 and key2
+                if (that.buttonToChange.key == 1 && ev.key != b.key2 && !that.checkNoDuplicateKey(ev.key)) {
+                    b.key1 = ev.key;
+                    // change the correct data in the config
+                    b.f(0, b);
+                    that.endOfInput(that);
+                }
+                if (that.buttonToChange.key == 2 && b.key1 != ev.key && !that.checkNoDuplicateKey(ev.key)) {
+                    b.key2 = ev.key;
+                    // change the correct data in the config
+                    b.f(1, b);
+                    that.endOfInput(that);
+                }
+            };
+        }
 
         document.onkeydown = function (ev) {
             if (!that.awaitInput) {
@@ -1144,6 +1187,11 @@ class GameMainInterface extends GameInterfaces {
                 if (currentMenu.button[currentMenu.focusedButton].special) {
                     if (k.right.includes(ev.key)) { currentMenu.button[currentMenu.focusedButton].f(1); that.u(); }
                     if (k.left.includes(ev.key)) { currentMenu.button[currentMenu.focusedButton].f(0); that.u(); }
+                } else if (k.left.includes(ev.key) && currentMenu.button[currentMenu.button.reverseIndex()].back &&
+                    (!currentMenu.sideButton || currentMenu.sideButton == 1)) {
+                    // to focus on the back button
+                    currentMenu.focusedButton = currentMenu.button.reverseIndex();
+                    that.u();
                 }
                 if (k.back.includes(ev.key) && currentMenu.button[currentMenu.button.reverseIndex()].back) {
                     currentMenu.button[currentMenu.button.reverseIndex()].f(scope, that);
@@ -1153,9 +1201,72 @@ class GameMainInterface extends GameInterfaces {
                     if (k.right.includes(ev.key)) { currentMenu.sideButton = 2; that.u(); }
                     if (k.left.includes(ev.key)) { currentMenu.sideButton = 1; that.u(); }
                 }
-                if (k.confirm.includes(ev.key) && currentMenu.button[currentMenu.focusedButton].keyboard) {
-                    currentMenu.button[currentMenu.focusedButton].f(scope, that);
-                    that.u();
+            }
+            if (k.confirm.includes(ev.key) && currentMenu.button[currentMenu.focusedButton].keyboard &&
+                currentMenu.button[currentMenu.focusedButton].enabled) {
+                const b = currentMenu.button[currentMenu.focusedButton];
+                if (!that.awaitInput && that.keyboardConfirmDelay + 150 < Date.now()) {
+                    that.keyboardConfirmDelay = Date.now();
+                    // create input
+                    console.log("create");
+                    switch (currentMenu.sideButton) {
+                        case 1:
+                            that.oldKey = { key1: b.key1, key2: b.key2 };
+                            b.key1 = "Press a key...";
+                            that.awaitInput = true;
+                            that.buttonToChange = { id: currentMenu.focusedButton, key: 1 };
+                            that.u();
+                            break;
+                        case 2:
+                            that.oldKey = { key1: b.key1, key2: b.key2 };
+                            b.key2 = "Press a key...";
+                            that.awaitInput = true;
+                            that.buttonToChange = { id: currentMenu.focusedButton, key: 2 };
+                            that.u();
+                            break;
+                    }
+                } else {
+                    // cancel input
+                    // check if it's the same button
+                    if (currentMenu.focusedButton == that.buttonToChange.id && currentMenu.sideButton == that.buttonToChange.key && that.keyboardConfirmDelay + 150 < Date.now()) {
+                        console.log("cancel");
+                        that.keyboardConfirmDelay = Date.now();
+                        switch (currentMenu.sideButton) {
+                            case 1:
+                                b.key1 = that.oldKey.key1;
+                                that.endOfInput(that);
+                                break;
+                            case 2:
+                                b.key2 = that.oldKey.key2;
+                                that.endOfInput(that);
+                                break;
+                        }
+                    } else if (that.keyboardConfirmDelay + 150 < Date.now()) {
+                        // if not, cancel last button and prepare that one
+                        // create input for this current button
+                        that.keyboardConfirmDelay = Date.now();
+                        console.log("cancel then create");
+                        switch (currentMenu.sideButton) {
+                            case 1:
+                                currentMenu.button[that.buttonToChange.id].key1 = that.oldKey.key1;
+                                currentMenu.button[that.buttonToChange.id].key2 = that.oldKey.key2;
+                                that.oldKey = { key1: b.key1, key2: b.key2 };
+                                b.key1 = "Press a key...";
+                                that.awaitInput = true;
+                                that.buttonToChange = { id: currentMenu.focusedButton, key: 1 };
+                                that.u();
+                                break;
+                            case 2:
+                                currentMenu.button[that.buttonToChange.id].key1 = that.oldKey.key1;
+                                currentMenu.button[that.buttonToChange.id].key2 = that.oldKey.key2;
+                                that.oldKey = { key1: b.key1, key2: b.key2 };
+                                b.key2 = "Press a key...";
+                                that.awaitInput = true;
+                                that.buttonToChange = { id: currentMenu.focusedButton, key: 2 };
+                                that.u();
+                                break;
+                        }
+                    }
                 }
             }
         };
@@ -1223,7 +1334,7 @@ class GameMainInterface extends GameInterfaces {
                             that.buttonToChange = { id: null, key: null };
                             that.u();
                         }
-                    } else if (that.awaitInput) {
+                    } else {
                         // if not, cancel last button and prepare that one
                         // create input for this current button
                         if (MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time)) {
@@ -1246,32 +1357,13 @@ class GameMainInterface extends GameInterfaces {
                     }
                 }
             }
-
-            if (this.awaitInput) {
-                onkeydown = (ev) => {
-                    if (that.buttonToChange.key == 1) {
-                        that.menu[5].button[that.buttonToChange.id].key1 = ev.key;
-                        // change the correct data in the config
-                        that.menu[5].button[that.buttonToChange.id].f(0, that.menu[5].button[that.buttonToChange.id]);
-                    }
-                    if (that.buttonToChange.key == 2) {
-                        that.menu[5].button[that.buttonToChange.id].key2 = ev.key;
-                        // change the correct data in the config
-                        that.menu[5].button[that.buttonToChange.id].f(1, that.menu[5].button[that.buttonToChange.id]);
-                    }
-                    that.awaitInput = false;
-                    that.buttonToChange = { id: null, key: null };
-                    that.oldKey = { key1: "", key2: "" };
-                    that.u();
-                };
-            }
         });
         //TODO add arrow that do that on click or on keyboard, also add if go down on keyboard, go down like arrow
-        //TODO add a checker so that the same key can't be put in key1 and key2
         /*
         ? So what's going on since last time:
         - Didn't add keyboard navigation up and down scroll
-        - Also need to add a keyboard navigation left right method to switch between keys (that will aslo reach the arrows)
+        - Also need to add a keyboard navigation that will reach the arrows
+        - Keyboard bind bug after one bind, but click is fine anytime, idk where that come from, maybe a missing condition on start
         */
         if (currentMenu.arrow) currentMenu.arrow.forEach(a => {
             if (MouseTrackerManager.checkClick(a.x, a.y, a.w, a.h, time) && a.enabled) {
