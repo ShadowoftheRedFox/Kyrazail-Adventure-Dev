@@ -643,6 +643,10 @@ declare global {
                 x: number,
                 y: number
             }
+            old: {
+                x: number,
+                y: number
+            }
             click: { x: number, y: number, date: number }[]
         }
         /**
@@ -651,9 +655,10 @@ declare global {
          * @param y
          * @param w
          * @param h
+         * @param old If we include a check on old coordinates
          * @returns {boolean} If it's over ot not.
          */
-        checkOver(x: number, y: number, w: number, h: number): boolean
+        checkOver(x: number, y: number, w: number, h: number, old: boolean): boolean
 
         /**
          * Check whether or not there was a click in the given rectangle in the given past time.
