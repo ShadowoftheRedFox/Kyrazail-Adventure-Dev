@@ -56,6 +56,13 @@ class GameMainInterface extends GameInterfaces {
                         h: 0,
                         f: this.toSettings
                     }, {
+                        name: "Credits",
+                        x: 0,
+                        y: 0,
+                        w: 0,
+                        h: 0,
+                        f: () => { open("./credits.html"); }
+                    }, {
                         name: "Quit Game",
                         x: 0,
                         y: 0,
@@ -464,7 +471,7 @@ class GameMainInterface extends GameInterfaces {
                 h: 0,
                 f: this.toAccount,
                 //TODO download and load a account icon
-                icon: null
+                icon: "Icon/Account.png"
             }, {
                 name: "Discord",
                 x: 0,
@@ -473,16 +480,16 @@ class GameMainInterface extends GameInterfaces {
                 h: 0,
                 f: (scope) => { open(scope.constants.package.support); },
                 //TODO download and load a discord icon
-                icon: null
+                icon: "Icon/Discord.png"
             }, {
-                name: "Github",
+                name: "GitHub",
                 x: 0,
                 y: 0,
                 w: 0,
                 h: 0,
                 f: (scope) => { open(scope.constants.package.homepage); },
                 //TODO download and load a github icon
-                icon: null
+                icon: "Icon/Github.png"
             }, {
                 name: "Online game",
                 x: 0,
@@ -491,7 +498,7 @@ class GameMainInterface extends GameInterfaces {
                 h: 0,
                 f: (scope) => { open(scope.constants.package.online); },
                 //TODO download and load a itch.io icon
-                icon: null
+                icon: "Icon/Website.png"
             }
         ];
         this.focusedMenu = 0;
@@ -526,22 +533,7 @@ class GameMainInterface extends GameInterfaces {
         }, 5000);
     }
 
-    toAccount(scope, that) { that.focusedMenu = 6; } toMain(scope, that) { that.focusedMenu = 0; } toLoad(scope, that) { that.focusedMenu = 1; } toGeneral(scope, that) { that.focusedMenu = 3; } toAudio(scope, that) { that.focusedMenu = 4; } toKeyBind(scope, that) { that.focusedMenu = 5; }
-    toSettings(scope, that) {
-        if (that.awaitInput) {
-            const currentMenu = that.menu[that.focusedMenu],
-                bu = currentMenu.button[that.buttonToChange.id];
-            currentMenu.button.forEach((b, idx) => {
-                if (idx == that.buttonToChange.id) {
-                    // cancel input
-                    b.key1 = that.oldKey.key1;
-                    b.key2 = that.oldKey.key2;
-                }
-            });
-            that.endOfInput(that);
-        }
-        that.focusedMenu = 2;
-    }
+    toAccount(scope, that) { that.focusedMenu = 6; } toMain(scope, that) { that.focusedMenu = 0; } toLoad(scope, that) { that.focusedMenu = 1; } toGeneral(scope, that) { that.focusedMenu = 3; } toAudio(scope, that) { that.focusedMenu = 4; } toKeyBind(scope, that) { that.focusedMenu = 5; } toSettings(scope, that) { if (that.awaitInput) { const currentMenu = that.menu[that.focusedMenu], bu = currentMenu.button[that.buttonToChange.id]; currentMenu.button.forEach((b, idx) => { if (idx == that.buttonToChange.id) { b.key1 = that.oldKey.key1; b.key2 = that.oldKey.key2; } }); that.endOfInput(that); } that.focusedMenu = 2; }
     /**
      * @param {GameScope} scope 
      * @param {this} that
@@ -592,6 +584,7 @@ class GameMainInterface extends GameInterfaces {
         ctx.fillStyle = gradient;
         ctx.fillRect(w / 2 - 200, h / 1.8 + 52 * currentMenu.focusedButton - 16, 400, 40);
 
+        //TODO make a way to display all button at 400px height screen
         ctx.fillStyle = that.choosen[2];
         currentMenu.button.forEach((button, index) => {
             ctx.fillText(button.name, w / 2, h / 1.8 + 52 * index, w);
