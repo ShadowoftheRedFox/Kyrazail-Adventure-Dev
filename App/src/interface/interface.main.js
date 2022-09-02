@@ -22,7 +22,7 @@ class GameMainInterface extends GameInterfaces {
             asOwnCanvas: true,
             zindex: ConfigConst.ZINDEX.MAIN,
             canvasGroup: "GameMainGroup",
-            requiredImage: [GameMainInterfaceChoosen[0], GameMainInterfaceChoosen[1]],
+            requiredImage: [GameMainInterfaceChoosen[0], GameMainInterfaceChoosen[1], "Icon/Account", "Icon/Discord", "Icon/Github", "Icon/Website"],
             requiredAudio: ["MAIN/Adeste", "MAIN/Dramatic", "MAIN/Moon", "MAIN/Silence"],
             transitionLeave: true,
             transitionSpawn: true
@@ -464,23 +464,23 @@ class GameMainInterface extends GameInterfaces {
         this.social = [
             {
                 //TODO add a global var that save the account, if online server is setup one day
-                name: "Account",
+                name: "Coming soon!",//"Account",
                 x: 0,
                 y: 0,
                 w: 0,
                 h: 0,
-                f: this.toAccount,
-                //TODO download and load a account icon
-                icon: "Icon/Account.png"
+                f: () => { },//this.toAccount,
+                icon: "Icon/Account",
+                hover: false
             }, {
                 name: "Discord",
                 x: 0,
                 y: 0,
                 w: 0,
                 h: 0,
-                f: (scope) => { open(scope.constants.package.support); },
-                //TODO download and load a discord icon
-                icon: "Icon/Discord.png"
+                f: (scope) => { open(scope.constants.package.support.url); },
+                icon: "Icon/Discord",
+                hover: false
             }, {
                 name: "GitHub",
                 x: 0,
@@ -488,8 +488,8 @@ class GameMainInterface extends GameInterfaces {
                 w: 0,
                 h: 0,
                 f: (scope) => { open(scope.constants.package.homepage); },
-                //TODO download and load a github icon
-                icon: "Icon/Github.png"
+                icon: "Icon/Github",
+                hover: false
             }, {
                 name: "Online game",
                 x: 0,
@@ -497,8 +497,8 @@ class GameMainInterface extends GameInterfaces {
                 w: 0,
                 h: 0,
                 f: (scope) => { open(scope.constants.package.online); },
-                //TODO download and load a itch.io icon
-                icon: "Icon/Website.png"
+                icon: "Icon/Website",
+                hover: false
             }
         ];
         this.focusedMenu = 0;
@@ -538,7 +538,43 @@ class GameMainInterface extends GameInterfaces {
      * @param {GameScope} scope 
      * @param {this} that
      */
-    accountFct(scope, that) { }
+    accountFct(scope, that) {
+        const ctx = scope.cache.context[that.canvasGroup],
+            w = scope.w,
+            h = scope.h,
+            currentMenu = that.menu[that.focusedMenu];
+        that.drawTitle(ctx, currentMenu.name, that, scope.w, scope.h);
+
+        var gradient = ctx.createLinearGradient(w / 2 - 200, h / 1.8, w / 2 + 200, h / 1.8);
+        gradient.addColorStop(0, "#F3C12600");
+        gradient.addColorStop(0.5, "#6FE0E1");
+        gradient.addColorStop(1, "#3C1EEE00");
+
+        currentMenu.button.forEach((button, index) => {
+            if (index == currentMenu.focusedButton) {
+                ctx.fillStyle = gradient;
+                if (index == currentMenu.button.reverseIndex()) {
+                    that.createGradient(ctx, button);
+                    const metrics = ctx.measureText(button.name);
+                    const actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+                    ctx.fillRect(0, h - actualHeight - 40, metrics.width + 40, + actualHeight + 40);
+                } else {
+                    ctx.fillRect(w / 2 - 200, h / 1.8 + 52 * index - 16, 400, 40);
+                }
+            }
+            ctx.fillStyle = that.choosen[2];
+            //? back button will always be the last one in the array
+            if (index == currentMenu.button.reverseIndex()) {
+                that.createBackButton(ctx, button, w, h);
+            } else {
+                ctx.fillText(button.name, w / 2, h / 1.8 + 52 * index, w);
+                button.x = w / 2 - 200;
+                button.y = h / 1.8 + 52 * index - 16;
+                button.w = 400;
+                button.h = 40;
+            }
+        });
+    }
 
     /**
      * @param {GameScope} scope 
@@ -549,8 +585,6 @@ class GameMainInterface extends GameInterfaces {
             w = scope.w,
             h = scope.h,
             currentMenu = that.menu[that.focusedMenu];
-
-        //TODO add social network button (git and discord)
 
         ctx.fillStyle = "#fff";
         ctx.font = '300% Azure';
@@ -592,6 +626,25 @@ class GameMainInterface extends GameInterfaces {
             button.y = h / 1.8 + 52 * index - 16;
             button.w = 400;
             button.h = 40;
+        });
+
+        const socialImageSize = 50,
+            spaceBetweenButton = 10;
+        that.social.forEach((b, i) => {
+            b.x = w - (socialImageSize + spaceBetweenButton) * (i + 1);
+            b.y = h - (socialImageSize + spaceBetweenButton);
+            b.h = socialImageSize + spaceBetweenButton;
+            b.w = socialImageSize + spaceBetweenButton;
+            ctx.drawImage(scope.cache.image[b.icon].image, b.x + spaceBetweenButton / 2, b.y + spaceBetweenButton / 2, socialImageSize, socialImageSize);
+            if (b.hover) {
+                ctx.textAlign = "right";
+                ctx.font = "20px Azure";
+                ctx.textBaseline = "bottom";
+                ctx.fillText(b.name, b.x + socialImageSize + spaceBetweenButton / 2, b.y);
+                ctx.textAlign = "center";
+                ctx.font = "150% Azure";
+                ctx.textBaseline = "middle";
+            }
         });
     }
 
@@ -1381,6 +1434,22 @@ class GameMainInterface extends GameInterfaces {
         if (currentMenu.arrow) currentMenu.arrow.forEach(a => {
             if (MouseTrackerManager.checkClick(a.x, a.y, a.w, a.h, time) && a.enabled) {
                 a.f(that, currentMenu);
+                that.u();
+            }
+        });
+
+        var alreadyHovered = false;
+        if (that.focusedMenu == 0) that.social.forEach(a => {
+            if (MouseTrackerManager.checkOver(a.x, a.y, a.w, a.h, true) && !alreadyHovered) {
+                a.hover = true;
+                alreadyHovered = true;
+                that.u();
+            } else {
+                a.hover = false;
+                that.u();
+            }
+            if (MouseTrackerManager.checkClick(a.x, a.y, a.w, a.h, time)) {
+                a.f(scope, that);
                 that.u();
             }
         });
