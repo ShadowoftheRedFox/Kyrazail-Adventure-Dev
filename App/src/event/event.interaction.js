@@ -9,6 +9,11 @@ MouseTrackerManager.data = {
         x: -100,
         y: -100
     },
+    old: {
+        // init false coordinate to prevent bug
+        x: -100,
+        y: -100
+    },
     /**
      * @type {{x: number, y: number, date: number}[]}
      */
@@ -36,7 +41,10 @@ MouseTrackerManager.stopedMoved = function (old) {
     // so that you can freely use the keyboard even if the cursor is hover a button
     if (MouseTrackerManager.moving) {
         setTimeout(() => {
-            if (MouseTrackerManager.data.lastMove.x == old.x && MouseTrackerManager.data.lastMove.y == old.y) MouseTrackerManager.data.lastMove = { x: -10, y: -10 };
+            if (MouseTrackerManager.data.lastMove.x == old.x && MouseTrackerManager.data.lastMove.y == old.y) {
+                MouseTrackerManager.data.old = { x: old.x, y: old.y };
+                MouseTrackerManager.data.lastMove = { x: -10, y: -10 };
+            }
         }, 1000 / GameConfig.targetFps);
         MouseTrackerManager.moving = false;
     }
@@ -63,11 +71,14 @@ MouseTrackerManager.OnMouseClick = function (event) {
  * @param {number} y
  * @param {number} w
  * @param {number} h
+ * @param {boolean} old If we include check on old mouse coordinates
  * @returns {boolean}
  */
-MouseTrackerManager.checkOver = function (x, y, w, h) {
-    const o = MouseTrackerManager.data.lastMove;
-    if (o.x >= x && o.x <= x + w && o.y >= y && o.y <= y + h) return true;
+MouseTrackerManager.checkOver = function (x, y, w, h, old = false) {
+    const l = MouseTrackerManager.data.lastMove,
+        o = MouseTrackerManager.data.old;
+    if (l.x >= x && l.x <= x + w && l.y >= y && l.y <= y + h) return true;
+    else if (old == true && o.x >= x && o.x <= x + w && o.y >= y && o.y <= y + h) return true;
     else return false;
 };
 
