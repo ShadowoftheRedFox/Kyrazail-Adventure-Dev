@@ -109,7 +109,9 @@ LoadingScreenManager.end = function () {
 
 LoadingScreenManager.edit = function () {
     if (!LoadingScreenManager.ctx) return console.log("no ctx");
-    LoadingScreenManager.ctx.clearRect(0, 0, LoadingScreenManager.w, LoadingScreenManager.h);
+    // to hide anything behind the loading screen
+    LoadingScreenManager.ctx.fillStyle = "#000";
+    LoadingScreenManager.ctx.fillRect(0, 0, LoadingScreenManager.w, LoadingScreenManager.h);
 
     try {
         LoadingScreenManager.title();
