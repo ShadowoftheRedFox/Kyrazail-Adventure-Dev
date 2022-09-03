@@ -69,21 +69,21 @@ RectangleCreator.roundRect = function (ctx, x, y, width, height, radius, fill, s
 /**
  * Create a frame with the given parameters. Draw it like a stroke rectangle with shady background.
  * @param {GameScope} scope Scope.
+ * @param {CanvasRenderingContext2D} ctx The context to draw on.
  * @param {number} x Upper left corner x coordinate.
  * @param {number} y Upper left corner x coordinate.
  * @param {number} w Width of the rectangle.
  * @param {number} h Heigth of the rectangle.
  */
-RectangleCreator.frameRectangleTrans = function (scope, x, y, w, h) {
+RectangleCreator.frameRectangleTrans = function (scope, ctx, x, y, w, h) {
     if (!scope) throw new ReferenceError(`Scope is not defined.`);
-    if (!scope.context) throw new ReferenceError(`Context is not defined.`);
+    if (!ctx) throw new ReferenceError(`Context is not defined.`);
     if (!scope.cache) throw new ReferenceError(`Cache is not defined.`);
     if (isNaN(x) === true) throw new TypeError(`x is not a number.`);
     if (isNaN(y) === true) throw new TypeError(`y is not a number.`);
     if (isNaN(w) === true) throw new TypeError(`w is not a number.`);
     if (isNaN(h) === true) throw new TypeError(`h is not a number.`);
-    const i = scope.cache.image["System/Window"].image,
-        ctx = scope.context;
+    const i = scope.cache.image["System/Window"].image;
 
     //? since we can only scretch inside rectangle, we'll need to draw border one by one
     //draw the mist background first
@@ -114,6 +114,7 @@ RectangleCreator.frameRectangleTrans = function (scope, x, y, w, h) {
 /**
  * Create a frame with the given parameters. Draw it like a stroke rectangle.
  * @param {GameScope} scope Scope.
+ * @param {CanvasRenderingContext2D} ctx The context to draw on.
  * @param {number} x Upper left corner x coordinate.
  * @param {number} y Upper left corner x coordinate.
  * @param {number} w Width of the rectangle.
@@ -124,21 +125,20 @@ RectangleCreator.frameRectangleTrans = function (scope, x, y, w, h) {
  * @param {number} [iw] Width of the rectangle of the image. If imageToDraw is specified, must be defined.
  * @param {number} [ih] Heigth of the rectangle of the image. If imageToDraw is specified, must be defined.
  */
-RectangleCreator.frameRectangle = function (scope, x, y, w, h, imageToDraw, ix, iy, iw, ih) {
+RectangleCreator.frameRectangle = function (scope, ctx, x, y, w, h, imageToDraw, ix, iy, iw, ih) {
     if (!scope) throw new ReferenceError(`Scope is not defined.`);
-    if (!scope.context) throw new ReferenceError(`Context is not defined.`);
+    if (!ctx) throw new ReferenceError(`Context is not defined.`);
     if (!scope.cache) throw new ReferenceError(`Cache is not defined.`);
-    if (!imageToDraw) throw new ReferenceError(`imageToDraw is not defined.`);
     if (isNaN(x) === true) throw new TypeError(`x is not a number.`);
     if (isNaN(y) === true) throw new TypeError(`y is not a number.`);
     if (isNaN(w) === true) throw new TypeError(`w is not a number.`);
     if (isNaN(h) === true) throw new TypeError(`h is not a number.`);
-    if (isNaN(ix) === true) throw new TypeError(`ix is not a number.`);
-    if (isNaN(iy) === true) throw new TypeError(`iy is not a number.`);
-    if (isNaN(iw) === true) throw new TypeError(`iw is not a number.`);
-    if (isNaN(ih) === true) throw new TypeError(`ih is not a number.`);
-    const i = scope.cache.image["System/Window"].image,
-        ctx = scope.context;
+    if (imageToDraw && imageToDraw.tagName != "IMG") throw new ReferenceError(`imageToDraw is not a HTMLImageElement.`);
+    if (imageToDraw && isNaN(ix) === true) throw new TypeError(`ix is not a number.`);
+    if (imageToDraw && isNaN(iy) === true) throw new TypeError(`iy is not a number.`);
+    if (imageToDraw && isNaN(iw) === true) throw new TypeError(`iw is not a number.`);
+    if (imageToDraw && isNaN(ih) === true) throw new TypeError(`ih is not a number.`);
+    const i = scope.cache.image["System/Window"].image;
 
     //? we'll need to draw border one by one
     if (imageToDraw) ctx.drawImage(imageToDraw, ix, iy, iw, ih, x + 3, y + 3, w - 6, h - 6);
