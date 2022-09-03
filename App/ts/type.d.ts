@@ -849,8 +849,8 @@ declare global {
     type GameSaveObject = {
         content: {
 
-        },
-        crypted: boolean,
+        }
+        crypted: boolean
         version: string
     }
 }
