@@ -22,7 +22,7 @@ class GameMainInterface extends GameInterfaces {
             asOwnCanvas: true,
             zindex: ConfigConst.ZINDEX.MAIN,
             canvasGroup: "GameMainGroup",
-            requiredImage: [GameMainInterfaceChoosen[0], GameMainInterfaceChoosen[1], "Icon/Account", "Icon/Discord", "Icon/Github", "Icon/Website"],
+            requiredImage: ["System/Window", GameMainInterfaceChoosen[0], GameMainInterfaceChoosen[1], "Icon/Account", "Icon/Discord", "Icon/Github", "Icon/Website"],
             requiredAudio: ["MAIN/Adeste", "MAIN/Dramatic", "MAIN/Moon", "MAIN/Silence"],
             transitionLeave: true,
             transitionSpawn: true
@@ -84,6 +84,14 @@ class GameMainInterface extends GameInterfaces {
                         w: 0,
                         h: 0,
                         f: this.loadSaveFileRetry
+                    }, {
+                        name: "Load",
+                        x: 0,
+                        y: 0,
+                        w: 0,
+                        h: 0,
+                        f: this.loadSave,
+                        loader: true
                     },
                     {
                         name: "Back",
@@ -513,6 +521,36 @@ class GameMainInterface extends GameInterfaces {
         this.arrowHeightChange = 0;
         /** The delay for the confirm key. Otherwise, it keeps getting the confirm key as the key to bind. */
         this.keyboardConfirmDelay = 0;
+
+        //TODO makes it an array
+        this.loadSaveFile = {
+            /**
+             * @type {File}
+             */
+            file: null,
+            /**
+             * @type {string}
+             */
+            name: null,
+            /**
+             * @type {string}
+             */
+            contentString: null,
+            /**
+             * @type {GameSaveObject}
+             */
+            contentObject: null,
+            /**
+             * @type {Date | string}
+             */
+            lastEditDate: null,
+            failed: false,
+            /**
+             * @type {string[]}
+             */
+            error: [],
+            try: 0
+        };
     }
 
     startNewGame(scope, that) {
@@ -549,6 +587,8 @@ class GameMainInterface extends GameInterfaces {
         gradient.addColorStop(0, "#F3C12600");
         gradient.addColorStop(0.5, "#6FE0E1");
         gradient.addColorStop(1, "#3C1EEE00");
+
+        //TODO add a distant server where you can load/save your data online (mongodb?)
 
         currentMenu.button.forEach((button, index) => {
             if (index == currentMenu.focusedButton) {
@@ -612,21 +652,24 @@ class GameMainInterface extends GameInterfaces {
         ctx.font = '200% Azure';
 
         //? black gradient if colored one is not okay
-        // gradient = ctx.createLinearGradient(w / 2 - 200, h / 1.8, w / 2 + 200, h / 1.8); gradient.addColorStop(0, "#00000000"); gradient.addColorStop(0.5, "#000000"); gradient.addColorStop(1, "#00000000"); ctx.fillStyle = gradient;
+        // gradient = ctx.createLinearGradient(w / 2 - 200, h / 2.5, w / 2 + 200, h / 2.5); gradient.addColorStop(0, "#00000000"); gradient.addColorStop(0.5, "#000000"); gradient.addColorStop(1, "#00000000"); ctx.fillStyle = gradient;
         //? colored gradient
-        gradient = ctx.createLinearGradient(w / 2 - 200, h / 1.8, w / 2 + 200, h / 1.8); gradient.addColorStop(0, "#F3C12600"); gradient.addColorStop(0.5, "#6FE0E1"); gradient.addColorStop(1, "#3C1EEE00");
+        gradient = ctx.createLinearGradient(w / 2 - 200, h / 2.5, w / 2 + 200, h / 2.5); gradient.addColorStop(0, "#F3C12600"); gradient.addColorStop(0.5, "#6FE0E1"); gradient.addColorStop(1, "#3C1EEE00");
         ctx.fillStyle = gradient;
-        ctx.fillRect(w / 2 - 200, h / 1.8 + 52 * currentMenu.focusedButton - 16, 400, 40);
+        ctx.fillRect(w / 2 - 200, h - 45 * currentMenu.button.reverseIndex(currentMenu.focusedButton) - 66, 400, 40);
 
-        //TODO make a way to display all button at 400px height screen
         ctx.fillStyle = that.choosen[2];
         currentMenu.button.forEach((button, index) => {
-            ctx.fillText(button.name, w / 2, h / 1.8 + 52 * index, w);
             button.x = w / 2 - 200;
-            button.y = h / 1.8 + 52 * index - 16;
+            button.y = h - 45 * currentMenu.button.reverseIndex(index) - 66;
             button.w = 400;
             button.h = 40;
+            ctx.fillText(button.name, w / 2, h - 45 * currentMenu.button.reverseIndex(index) - 50, w);
         });
+
+        //draw the frame around button
+        RectangleCreator.frameRectangle(scope, ctx, currentMenu.button[0].x - 10, currentMenu.button[0].y - 10,
+            currentMenu.button[0].w + 20, 45 * currentMenu.button.length + 15);
 
         const socialImageSize = 50,
             spaceBetweenButton = 10;
@@ -1011,6 +1054,7 @@ class GameMainInterface extends GameInterfaces {
 
         //if in app
         if (scope.constants.isNwjs) {
+            //TODO if distant servis set up, load online save on local
             const fs = require("fs"),
                 path = require("path");
             that.savePath = path.resolve(path.resolve(), "save");
@@ -1029,32 +1073,33 @@ class GameMainInterface extends GameInterfaces {
             if (that.files.length == 0) ctx.fillText("Loading files...", w / 2, h / 2);
         } else {
             //if online
-            ctx.fillText("Choose a save file:", w / 2, h / 2);
 
-            var gradient = ctx.createLinearGradient(w / 2 - 200, h / 1.8, w / 2 + 200, h / 1.8);
+            var gradient = ctx.createLinearGradient(w / 2 - 200, h / 3, w / 2 + 200, h / 3);
             gradient.addColorStop(0, "#F3C12600");
             gradient.addColorStop(0.5, "#6FE0E1");
             gradient.addColorStop(1, "#3C1EEE00");
 
             currentMenu.button.forEach((button, index) => {
                 if (index == currentMenu.focusedButton) {
-                    if (index == currentMenu.button.reverseIndex()) {
-                        gradient = ctx.createLinearGradient(w / 2 - 200, h / 1.8 + 52 * index - 16, w / 2 + 200, 40);
-                        gradient.addColorStop(0, "#F3C126");
-                        gradient.addColorStop(0.5, "#6FE0E181");
-                        gradient.addColorStop(1, "#3C1EEE00");
-                    }
                     ctx.fillStyle = gradient;
-                    ctx.fillRect(w / 2 - 200, h / 1.8 + 52 * index - 16, 400, 40);
+                    if (index == currentMenu.button.reverseIndex()) {
+                        that.createGradient(ctx, button);
+                        const metrics = ctx.measureText(button.name);
+                        const actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+                        ctx.fillRect(0, h - actualHeight - 40, metrics.width + 40, + actualHeight + 40);
+                    } else {
+                        ctx.fillRect(w / 2 - 200, h / 3 + 52 * index - 16, 400, 40);
+                    }
                 }
                 ctx.fillStyle = that.choosen[2];
                 //? back button will always be the last one in the array
                 if (index == currentMenu.button.reverseIndex()) {
                     that.createBackButton(ctx, button, w, h);
                 } else {
-                    ctx.fillText(button.name, w / 2, h / 1.8 + 52 * index, w);
+                    ctx.fillText("Choose a save file:", w / 2, h / 3 - 40);
+                    ctx.fillText(button.name, w / 2, h / 3 + 52 * index, w);
                     button.x = w / 2 - 200;
-                    button.y = h / 1.8 + 52 * index - 16;
+                    button.y = h / 3 + 52 * index - 16;
                     button.w = 400;
                     button.h = 40;
                 }
@@ -1062,44 +1107,75 @@ class GameMainInterface extends GameInterfaces {
 
             if (!that.checkSaveFile) {
                 that.checkSaveFile = true;
-                //add a input element and check it
-                let inputs = document.createElement('input');
-                inputs.type = 'file';
-                inputs.hidden = true;
-                inputs.accept = ".kyraadv,.kyraadvsave";
-                inputs.id = "GameSaveInput";
-                inputs.name = "GameSaveInput";
-                // we want only one file
-                inputs.multiple = false;
-
-                inputs.click();
-                inputs.onchange = ev => {
-                    console.log(ev);
-                    //file inputed
-                    that.files = inputs.files[0]; //the first file inputed only
-                    console.log(that.files);
-
-                    //get the name and the ext of the file
-                    const fileName = ev.target.value.split('\\').pop();
-                    console.log(fileName);
-
-                    const saveReader = new FileReader();
-                    saveReader.readAsText(that.files, "UTF-8");
-                    saveReader.onload = function (evt) {
-                        // content of the file
-                        console.log(evt.target.result);
-                    };
-                    saveReader.onerror = function (evt) {
-                        console.log("error reading file");
-                        console.log(evt);
-                    };
-                };
+                that.loadSaveFileRetry(scope, that);
             }
 
+            const metrics = ctx.measureText("TMWBpqliyQKL"),
+                heightDiff = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent + 10;
+
             //TODO display data relative to the saved data, and change the retry name button in "Load another file"
+            if (that.loadSaveFile.file && !that.loadSaveFile.failed) {
+                currentMenu.button[0].name = "Load another file";
+
+                ctx.textAlign = "left";
+                ctx.font = "100% Azure";
+
+                ctx.fillText("Name: " + that.loadSaveFile.name.split(".")[0], w / 4, h / 3 + 100);
+                ctx.fillText("Last Update: " + Utils.convertDate(Date.now() - that.loadSaveFile.lastEditDate), w / 4, h / 3 + 100 + heightDiff);
+
+                ctx.font = "150% Azure";
+                ctx.textAlign = "center";
+            } else if (that.loadSaveFile.file && that.loadSaveFile.failed) {
+                currentMenu.button[0].name = "Retry";
+
+                ctx.textAlign = "left";
+                ctx.font = "100% Azure";
+
+                ctx.fillText("Error: " + that.loadSaveFile.error[0], w / 4, h / 3 + 100);
+                ctx.fillText("Try loading a file again.", w / 4, h / 3 + 100 + heightDiff);
+                if (that.loadSaveFile.try > 2) ctx.fillText("You can call for help on our support if needed.", w / 4, h / 3 + 100 + heightDiff * 2);
+
+                ctx.font = "150% Azure";
+                ctx.textAlign = "center";
+            }
         }
     }
 
+    //TODO add the load method when save object is ready
+    /**
+     * @param {GameScope} scope 
+     * @param {this} that 
+     * @param {GameSaveObject} save 
+     */
+    loadSave(scope, that) {
+        const currentMenu = that.menu[that.focusedMenu],
+            b = currentMenu.button[currentMenu.focusedButton];
+        if ((!that.loadSaveFile.file || !that.loadSaveFile.failed) && b.name != "Load a file before!") {
+            const o = b.name;
+            b.name = "Load a file before!";
+            that.u();
+            setTimeout(() => {
+                b.name = o;
+                that.u();
+            }, 5000);
+        } else {
+            //TODO enable the loading screen, saying "Loading your save"
+            that.activated = false;
+            LoadingScreenManager.init();
+            LoadingScreenManager.setMaxProgress(1);
+            LoadingScreenManager.message = "Loading your save";
+            setTimeout(() => {
+                LoadingScreenManager.end();
+                that.activated = true;
+            }, 5000);
+            console.log(that.loadSaveFile);
+        }
+    }
+
+    /**
+     * @param {GameScope} scope 
+     * @param {this} that 
+     */
     loadSaveFileRetry(scope, that) {
         //add a input element and check it
         let inputs = document.createElement('input');
@@ -1113,24 +1189,35 @@ class GameMainInterface extends GameInterfaces {
 
         inputs.click();
         inputs.onchange = ev => {
-            console.log(ev);
-            //file inputed
-            that.files = inputs.files[0]; //the first file inputed only
-            console.log(that.files);
-
+            // the first file inputed only
+            that.loadSaveFile.file = inputs.files[0];
             //get the name and the ext of the file
-            const fileName = ev.target.value.split('\\').pop();
-            console.log(fileName);
+            that.loadSaveFile.name = ev.target.value.split('\\').pop();
+            that.loadSaveFile.lastEditDate = inputs.files[0].lastModified;
 
             const saveReader = new FileReader();
-            saveReader.readAsText(that.files, "UTF-8");
+            saveReader.readAsText(that.loadSaveFile.file, "UTF-8");
             saveReader.onload = function (evt) {
                 // content of the file
-                console.log(evt.target.result);
+                that.loadSaveFile.contentString = evt.target.result;
+                try {
+                    that.loadSaveFile.contentObject = JSON.parse(that.loadSaveFile.contentString);
+                    that.u();
+                } catch (e) {
+                    that.loadSaveFile.failed = true;
+                    that.loadSaveFile.error = ["Failed to load the content. File may be corrupted.", e];
+                    that.loadSaveFile.try++;
+                    that.u();
+                }
+                console.log(that.loadSaveFile);
             };
             saveReader.onerror = function (evt) {
                 console.log("error reading file");
                 console.log(evt);
+                that.loadSaveFile.failed = true;
+                that.loadSaveFile.error = ["Failed to load the content. File may be corrupted.", e];
+                that.loadSaveFile.try++;
+                that.u();
             };
         };
     }
@@ -1446,7 +1533,6 @@ class GameMainInterface extends GameInterfaces {
                 that.u();
             } else {
                 a.hover = false;
-                that.u();
             }
             if (MouseTrackerManager.checkClick(a.x, a.y, a.w, a.h, time)) {
                 a.f(scope, that);
