@@ -315,7 +315,7 @@ declare global {
                 releaseType: "Dev/Alpha" | "Dev/Beta" | "Release"
                 changelog: string[]
                 /** Discord server link. */
-                support: string
+                support: { url: string }
                 /** Github repo readme link. */
                 homepage: string
                 /** Online game link. */
@@ -368,6 +368,9 @@ declare global {
         }
     }
 
+    /**
+     * Event handler for the game.
+     */
     const GameGlobalEvent: {
         /** Will launch the given function when the given event is emited somewhere.*/
         on(event: string | any, listener: (...any: any[]) => {} | any): () => void
@@ -628,6 +631,11 @@ declare global {
          * @return {Boolean} True if the platform is NW.js
          */
         isNwjs(): boolean
+        /** 
+         * Convert an amount of ms in a string.
+         * @param ms The amount of ms to convert.
+         */
+        convertDate(ms: number): string
     }
 
     const KeyboardTrackerManager: {
@@ -836,5 +844,13 @@ declare global {
          * @returns the arrow image on the canvas
          */
         pixel(w: number | 20, h: number | 20, a: ("up" | "down" | "right" | "left") | "right", c: (string | CanvasGradient | CanvasPattern) | "black"): HTMLCanvasElement
+    }
+
+    type GameSaveObject = {
+        content: {
+
+        },
+        crypted: boolean,
+        version: string
     }
 }

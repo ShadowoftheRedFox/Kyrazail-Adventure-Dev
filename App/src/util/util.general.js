@@ -196,6 +196,38 @@ Utils.getExactDate = function () {
 };
 
 /**
+ * @param {number} mls
+ * @returns {string} 
+ */
+Utils.convertDate = function (mls) {
+    if (!mls || isNaN(mls) || mls <= 1000) return "now";
+    var ms = mls % (1000),
+        s = Math.floor(mls / 1000) % (60),
+        min = Math.floor(mls / (60 * 1000)) % (60),
+        hour = Math.floor(mls / (60 * 60 * 1000)) % (24),
+        day = Math.floor(mls / (24 * 60 * 60 * 1000)) % (31),
+        month = Math.floor(mls / (31 * 24 * 60 * 60 * 1000)) % (12),
+        year = Math.floor(mls / (12 * 31 * 24 * 60 * 60 * 1000));
+
+    if (year == 1) return "last year";
+    else if (year > 1) return `${year} years ago`;
+
+    if (month == 1) return "last month";
+    else if (month > 1) return `${month} months ago`;
+
+    if (day == 1) return "yesterday";
+    if (day >= 7 && day < 14) return "last week";
+    else if (day >= 14) return `${Math.floor(day / 7)} weeks ago`;
+
+    if (hour == 1) return "last hour";
+    else if (hour > 1) return `${hour} hours ago`;
+
+    if (min == 1) return "last minute";
+    else if (min > 1) return `${min} minutes${s > 0 ? ` and ${s} seconds ago` : ""}`;
+    else { return `${s} seconds ago`; }
+};
+
+/**
  * Remove any duplicate from the array, so it has every item once.
  * 
  * @method RemoveDuplicate
