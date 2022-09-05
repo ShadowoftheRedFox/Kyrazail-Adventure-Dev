@@ -7,7 +7,7 @@
     "license": "ISC",
     "window": {
         "title": "Kyrazail Adventure",
-        "icon": "App/resources/Image/Intro/icon.png",
+        "icon": "App/resources/Image/Intro/Icon.png",
         "toolbar": false,
         "width": 800,
         "height": 400,
@@ -17,10 +17,10 @@
     "chromium-args": "--enable-node-worker --allow-file-access-from-files",
     "scripts": {
         "dev": "nw",
-        "prod": "nwbuild --mode build --zip false --platforms win32 win64 linux32 linux64 --o dist/ App/",
-        "force": "nwbuild --mode build --zip false --forceDownload --platforms win32 win64 linux32 linux64 --o dist/ App/",
-        "osprod": "nwbuild --mode build --zip false --platforms osx64 --o dist/ App/",
-        "osforce": "nwbuild --mode build --zip false --forceDownload --platforms osx64 --o dist/ App/"
+        "prod": "nwbuild App/ --mode build --platforms win32 win64 linux32 linux64",
+        "force": "nwbuild App/ --mode build --forceDownload --platforms win32 win64 linux32 linux64",
+        "osprod": "nwbuild App/ --mode build --platforms osx64",
+        "osforce": "nwbuild App/ --mode build --forceDownload --platforms osx64"
     },
     "repository": {
         "type": "git",

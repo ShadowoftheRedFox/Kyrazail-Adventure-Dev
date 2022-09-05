@@ -3,7 +3,11 @@
     "version": "1.1.0.8",
     "description": "Kyrazail adventure game. Maybe a real description soon, who knows?",
     "main": "index.html",
-    "keywords": ["game","2d","rpg"],
+    "keywords": [
+        "game",
+        "2d",
+        "rpg"
+    ],
     "author": "Shadow of the Red Fox#5881",
     "license": "ISC",
     "lastUpdate": "5/09/2022",
@@ -19,7 +23,7 @@
     ],
     "window": {
         "title": "Kyrazail Adventure",
-        "icon": "resources/Image/Intro/icon.png",
+        "icon": "resources/Image/Intro/Icon.png",
         "toolbar": false,
         "width": 800,
         "height": 400,
