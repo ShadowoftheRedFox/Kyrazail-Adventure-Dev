@@ -1,17 +1,13 @@
 {
     "name": "kyrazail-adventure",
-    "version": "1.1.0.7",
-    "lastUpdate": "4/09/2022",
-    "releaseType": "Dev/Alpha",
+    "version": "1.1.0.8",
     "description": "Kyrazail adventure game. Maybe a real description soon, who knows?",
-    "main": "./index.html",
-    "keywords": [
-        "game",
-        "2d",
-        "rpg"
-    ],
+    "main": "index.html",
+    "keywords": ["game","2d","rpg"],
     "author": "Shadow of the Red Fox#5881",
     "license": "ISC",
+    "lastUpdate": "5/09/2022",
+    "releaseType": "Dev/Alpha",
     "changelog": [
         "Changed the font text style.",
         "Available on windows, linux and os!",
@@ -21,6 +17,15 @@
         "You can now customise your control!",
         "Added social media button!"
     ],
+    "window": {
+        "title": "Kyrazail Adventure",
+        "icon": "resources/Image/Intro/icon.png",
+        "toolbar": false,
+        "width": 800,
+        "height": 400,
+        "min-width": 800,
+        "min-height": 400
+    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/ShadowoftheRedFox/Kyrazail-Adventure-Dev.git"

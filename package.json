@@ -1,7 +1,9 @@
 {
     "name": "kyrazail-adventure",
-    "main": "./App/index.html",
+    "main": "App/index.html",
+    "description": "",
     "author": "Shadow of the Red Fox#5881",
+    "version": "1.0.0",
     "license": "ISC",
     "window": {
         "title": "Kyrazail Adventure",
@@ -14,11 +16,11 @@
     },
     "chromium-args": "--enable-node-worker --allow-file-access-from-files",
     "scripts": {
-        "debug": "nw App/ --remote-debugging-port=9222 --allow-file-access-from-files",
         "dev": "nw",
-        "prod": "nwbuild -p win32 ./App/",
-        "allPlat": "nwbuild --platforms win64,win32,linux64,linux32,osx64,osx32 --o dist/ ./",
-        "test": "node ./App/test/script.test.js"
+        "prod": "nwbuild --mode build --zip false --platforms win32 win64 linux32 linux64 --o dist/ App/",
+        "force": "nwbuild --mode build --zip false --forceDownload --platforms win32 win64 linux32 linux64 --o dist/ App/",
+        "osprod": "nwbuild --mode build --zip false --platforms osx64 --o dist/ App/",
+        "osforce": "nwbuild --mode build --zip false --forceDownload --platforms osx64 --o dist/ App/"
     },
     "repository": {
         "type": "git",
