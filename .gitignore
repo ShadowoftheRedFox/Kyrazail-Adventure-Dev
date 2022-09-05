@@ -3,3 +3,4 @@ cache/
 dist/
 *.bat
 build/
+*-lock.json
