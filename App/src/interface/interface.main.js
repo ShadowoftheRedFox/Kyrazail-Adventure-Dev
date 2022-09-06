@@ -130,8 +130,14 @@ class GameMainInterface extends GameInterfaces {
                         w: 0,
                         h: 0,
                         f: this.toKeyBind
-                    },
-                    {
+                    }, {
+                        name: "Language",
+                        x: 0,
+                        y: 0,
+                        w: 0,
+                        h: 0,
+                        f: this.toLanguage
+                    }, {
                         name: "Back",
                         x: 0,
                         y: 0,
@@ -467,6 +473,37 @@ class GameMainInterface extends GameInterfaces {
                     }
                 ],
                 focusedButton: 0
+            },
+            {
+                name: "Language",
+                f: this.accountFct,
+                button: [
+                    {
+                        name: "English",
+                        x: 0,
+                        y: 0,
+                        w: 0,
+                        h: 0,
+                        f: () => { ConfigConst.LANGUAGE = "en"; }
+                    }, {
+                        name: "Français",
+                        x: 0,
+                        y: 0,
+                        w: 0,
+                        h: 0,
+                        f: () => { ConfigConst.LANGUAGE = "fr"; }
+                    },
+                    {
+                        name: "Back",
+                        x: 0,
+                        y: 0,
+                        w: 0,
+                        h: 0,
+                        f: this.toSettings,
+                        back: true
+                    }
+                ],
+                focusedButton: 0
             }
         ];
         this.social = [
@@ -522,8 +559,7 @@ class GameMainInterface extends GameInterfaces {
         /** The delay for the confirm key. Otherwise, it keeps getting the confirm key as the key to bind. */
         this.keyboardConfirmDelay = 0;
 
-        //TODO makes it an array
-        this.loadSaveFile = {
+        this.loadSaveFile = [{
             /**
              * @type {File}
              */
@@ -550,28 +586,30 @@ class GameMainInterface extends GameInterfaces {
              */
             error: [],
             try: 0
-        };
+        }];
     }
 
+    /**
+     * 
+     * @param {GameScope} scope 
+     * @param {this} that 
+     */
     startNewGame(scope, that) {
-        //TODO save the game in an auto save if a game is currently being played
+        GameEvent.emit("StartNewGame");
+        scope.cache.context[that.canvasGroup].clearRect(0, 0, scope.w, scope.h);
 
-        //TODO launch a new game
-
-        //TODO also create on start 2 auto save files
-
-        //! remove this once all todo are done :p
-        const c = that.menu[0].button[0],
-            o = c.name;
-        c.name = "Coming soon!";
-        that.u();
-        setTimeout(() => {
-            c.name = o;
-            that.u();
-        }, 5000);
+        //TODO remove this once all todo are done :p
+        // const c = that.menu[0].button[0],
+        //     o = c.name;
+        // c.name = "Coming soon!";
+        // that.u();
+        // setTimeout(() => {
+        //     c.name = o;
+        //     that.u();
+        // }, 5000);
     }
 
-    toAccount(scope, that) { that.focusedMenu = 6; } toMain(scope, that) { that.focusedMenu = 0; } toLoad(scope, that) { that.focusedMenu = 1; } toGeneral(scope, that) { that.focusedMenu = 3; } toAudio(scope, that) { that.focusedMenu = 4; } toKeyBind(scope, that) { that.focusedMenu = 5; } toSettings(scope, that) { if (that.awaitInput) { const currentMenu = that.menu[that.focusedMenu], bu = currentMenu.button[that.buttonToChange.id]; currentMenu.button.forEach((b, idx) => { if (idx == that.buttonToChange.id) { b.key1 = that.oldKey.key1; b.key2 = that.oldKey.key2; } }); that.endOfInput(that); } that.focusedMenu = 2; }
+    toLanguage(scope, that) { that.focusedMenu = 7; } toAccount(scope, that) { that.focusedMenu = 6; } toMain(scope, that) { that.focusedMenu = 0; } toLoad(scope, that) { that.focusedMenu = 1; } toGeneral(scope, that) { that.focusedMenu = 3; } toAudio(scope, that) { that.focusedMenu = 4; } toKeyBind(scope, that) { that.focusedMenu = 5; } toSettings(scope, that) { if (that.awaitInput) { const currentMenu = that.menu[that.focusedMenu], bu = currentMenu.button[that.buttonToChange.id]; currentMenu.button.forEach((b, idx) => { if (idx == that.buttonToChange.id) { b.key1 = that.oldKey.key1; b.key2 = that.oldKey.key2; } }); that.endOfInput(that); } that.focusedMenu = 2; }
     /**
      * @param {GameScope} scope 
      * @param {this} that
@@ -1054,7 +1092,7 @@ class GameMainInterface extends GameInterfaces {
 
         //if in app
         if (scope.constants.isNwjs) {
-            //TODO if distant servis set up, load online save on local
+            //TODO if distant server is set up, load online save on local
             const fs = require("fs"),
                 path = require("path");
             that.savePath = path.resolve(path.resolve(), "save");
@@ -1114,26 +1152,26 @@ class GameMainInterface extends GameInterfaces {
                 heightDiff = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent + 10;
 
             //TODO display data relative to the saved data, and change the retry name button in "Load another file"
-            if (that.loadSaveFile.file && !that.loadSaveFile.failed) {
+            if (that.loadSaveFile[0].file && !that.loadSaveFile[0].failed) {
                 currentMenu.button[0].name = "Load another file";
 
                 ctx.textAlign = "left";
                 ctx.font = "100% Azure";
 
-                ctx.fillText("Name: " + that.loadSaveFile.name.split(".")[0], w / 4, h / 3 + 100);
-                ctx.fillText("Last Update: " + Utils.convertDate(Date.now() - that.loadSaveFile.lastEditDate), w / 4, h / 3 + 100 + heightDiff);
+                ctx.fillText("Name: " + that.loadSaveFile[0].name.split(".")[0], w / 4, h / 3 + 100);
+                ctx.fillText("Last Update: " + Utils.convertDate(Date.now() - that.loadSaveFile[0].lastEditDate), w / 4, h / 3 + 100 + heightDiff);
 
                 ctx.font = "150% Azure";
                 ctx.textAlign = "center";
-            } else if (that.loadSaveFile.file && that.loadSaveFile.failed) {
+            } else if (that.loadSaveFile[0].file && that.loadSaveFile[0].failed) {
                 currentMenu.button[0].name = "Retry";
 
                 ctx.textAlign = "left";
                 ctx.font = "100% Azure";
 
-                ctx.fillText("Error: " + that.loadSaveFile.error[0], w / 4, h / 3 + 100);
+                ctx.fillText("Error: " + that.loadSaveFile[0].error[0], w / 4, h / 3 + 100);
                 ctx.fillText("Try loading a file again.", w / 4, h / 3 + 100 + heightDiff);
-                if (that.loadSaveFile.try > 2) ctx.fillText("You can call for help on our support if needed.", w / 4, h / 3 + 100 + heightDiff * 2);
+                if (that.loadSaveFile[0].try > 2) ctx.fillText("You can call for help on our support if needed.", w / 4, h / 3 + 100 + heightDiff * 2);
 
                 ctx.font = "150% Azure";
                 ctx.textAlign = "center";
@@ -1145,30 +1183,32 @@ class GameMainInterface extends GameInterfaces {
     /**
      * @param {GameScope} scope 
      * @param {this} that 
-     * @param {GameSaveObject} save 
      */
     loadSave(scope, that) {
-        const currentMenu = that.menu[that.focusedMenu],
-            b = currentMenu.button[currentMenu.focusedButton];
-        if ((!that.loadSaveFile.file || !that.loadSaveFile.failed) && b.name != "Load a file before!") {
-            const o = b.name;
-            b.name = "Load a file before!";
-            that.u();
-            setTimeout(() => {
-                b.name = o;
+        if (!scope.constants.isNwjs) {
+            const currentMenu = that.menu[that.focusedMenu],
+                b = currentMenu.button[currentMenu.focusedButton];
+            console.log(!that.loadSaveFile[0].file, that.loadSaveFile[0].failed == false, b.name != "Load a file before!");
+            if ((!that.loadSaveFile[0].file || that.loadSaveFile[0].failed == false) && b.name != "Load a file before!") {
+                const o = b.name;
+                b.name = "Load a file before!";
                 that.u();
-            }, 5000);
-        } else {
-            //TODO enable the loading screen, saying "Loading your save"
-            that.activated = false;
-            LoadingScreenManager.init();
-            LoadingScreenManager.setMaxProgress(1);
-            LoadingScreenManager.message = "Loading your save";
-            setTimeout(() => {
-                LoadingScreenManager.end();
-                that.activated = true;
-            }, 5000);
-            console.log(that.loadSaveFile);
+                setTimeout(() => {
+                    b.name = o;
+                    that.u();
+                }, 5000);
+            } else {
+                //TODO enable the loading screen, saying "Loading your save"
+                that.activated = false;
+                LoadingScreenManager.init();
+                LoadingScreenManager.setMaxProgress(1);
+                LoadingScreenManager.message = "Loading your save";
+                setTimeout(() => {
+                    LoadingScreenManager.end();
+                    that.activated = true;
+                }, 5000);
+                console.log(that.loadSaveFile);
+            }
         }
     }
 
@@ -1190,23 +1230,23 @@ class GameMainInterface extends GameInterfaces {
         inputs.click();
         inputs.onchange = ev => {
             // the first file inputed only
-            that.loadSaveFile.file = inputs.files[0];
+            that.loadSaveFile[0].file = inputs.files[0];
             //get the name and the ext of the file
-            that.loadSaveFile.name = ev.target.value.split('\\').pop();
-            that.loadSaveFile.lastEditDate = inputs.files[0].lastModified;
+            that.loadSaveFile[0].name = ev.target.value.split('\\').pop();
+            that.loadSaveFile[0].lastEditDate = inputs.files[0].lastModified;
 
             const saveReader = new FileReader();
-            saveReader.readAsText(that.loadSaveFile.file, "UTF-8");
+            saveReader.readAsText(that.loadSaveFile[0].file, "UTF-8");
             saveReader.onload = function (evt) {
                 // content of the file
-                that.loadSaveFile.contentString = evt.target.result;
+                that.loadSaveFile[0].contentString = evt.target.result;
                 try {
-                    that.loadSaveFile.contentObject = JSON.parse(that.loadSaveFile.contentString);
+                    that.loadSaveFile[0].contentObject = JSON.parse(that.loadSaveFile[0].contentString);
                     that.u();
                 } catch (e) {
-                    that.loadSaveFile.failed = true;
-                    that.loadSaveFile.error = ["Failed to load the content. File may be corrupted.", e];
-                    that.loadSaveFile.try++;
+                    that.loadSaveFile[0].failed = true;
+                    that.loadSaveFile[0].error = ["Failed to load the content. File may be corrupted.", e];
+                    that.loadSaveFile[0].try++;
                     that.u();
                 }
                 console.log(that.loadSaveFile);
@@ -1214,9 +1254,9 @@ class GameMainInterface extends GameInterfaces {
             saveReader.onerror = function (evt) {
                 console.log("error reading file");
                 console.log(evt);
-                that.loadSaveFile.failed = true;
-                that.loadSaveFile.error = ["Failed to load the content. File may be corrupted.", e];
-                that.loadSaveFile.try++;
+                that.loadSaveFile[0].failed = true;
+                that.loadSaveFile[0].error = ["Failed to load the content. File may be corrupted.", e];
+                that.loadSaveFile[0].try++;
                 that.u();
             };
         };
