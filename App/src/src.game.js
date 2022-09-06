@@ -78,6 +78,7 @@ class Game {
             this.state.menu = this.state.menu || {};
             this.state.menu.transition = new GameTransitionInterface(this);
             this.state.menu.intro = new GameIntroductionInterface(this);
+            this.state.menu.dialog = new GameDialogInterface(this);
             this.state.menu.main = new GameMainInterface(this);
             // this.state.menu.pause = new Pause(this);
             // this.state.menu.gameOver = new GameOver(this);
