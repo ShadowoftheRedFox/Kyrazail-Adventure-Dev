@@ -20,7 +20,8 @@
         "prod": "nwbuild App/ --mode build --platforms win32 win64 linux32 linux64",
         "force": "nwbuild App/ --mode build --forceDownload --platforms win32 win64 linux32 linux64",
         "osprod": "nwbuild App/ --mode build --platforms osx64",
-        "osforce": "nwbuild App/ --mode build --forceDownload --platforms osx64"
+        "osforce": "nwbuild App/ --mode build --forceDownload --platforms osx64",
+        "p":"node build.js"
     },
     "repository": {
         "type": "git",
@@ -34,7 +35,7 @@
     },
     "homepage": "https://github.com/ShadowoftheRedFox/Kyrazail-Adventure-Dev#readme",
     "devDependencies": {
-        "nw": "^0.44.1-sdk",
-        "nw-builder": "^3.8.0"
+        "nw": "0.62.1-sdk",
+        "nw-builder": "^3.8.3"
     }
 }
