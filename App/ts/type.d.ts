@@ -278,6 +278,12 @@ declare global {
                 [name: string]: GameInterfaces
                 intro: GameInterfaces
                 main: GameInterfaces
+                dialog: GameInterfaces
+                entity: GameInterfaces
+                introduction: GameInterfaces
+                map: GameInterfaces
+                over: GameInterfaces
+                pause: GameInterfaces
             }
         }
         /** Handle errors and corrupted data. */
@@ -371,7 +377,7 @@ declare global {
     /**
      * Event handler for the game.
      */
-    const GameGlobalEvent: {
+    class GameEvent {
         /** Will launch the given function when the given event is emited somewhere.*/
         on(event: string | any, listener: (...any: any[]) => {} | any): () => void
         /** Will launch the given function when the given event is emited somewhere, one time.*/
@@ -852,5 +858,14 @@ declare global {
         }
         crypted: boolean
         version: string
+    }
+
+    type GameEvents = {
+        type: number
+        /**Depends the type of the event. Check your reminder.*/
+        list: any[]
+        end: string | (() => {}) | null
+        stop: string[]
+        start: string[] | []
     }
 }
