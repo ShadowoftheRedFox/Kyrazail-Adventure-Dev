@@ -88,7 +88,7 @@ LoadingScreenManager.init = function (callOnEqual) {
         if (LoadingScreenManager.progress == LoadingScreenManager.progressMax && LoadingScreenManager.calledEqual === false) {
             if (callOnEqual && typeof callOnEqual == "function") {
                 callOnEqual();
-                GameGlobalEvent.emit("LoadingScreenFinishProgress");
+                GameEvent.emit("LoadingScreenFinishProgress");
                 console.log("called");
             }
             LoadingScreenManager.calledEqual = true;
