@@ -705,9 +705,12 @@ class GameMainInterface extends GameInterfaces {
             ctx.fillText(button.name, w / 2, h - 45 * currentMenu.button.reverseIndex(index) - 50, w);
         });
 
+        // prevent the canvas from getting unwanted pixel
+        ctx.imageSmoothingEnabled = false;
         //draw the frame around button
         RectangleCreator.frameRectangle(scope, ctx, currentMenu.button[0].x - 10, currentMenu.button[0].y - 10,
             currentMenu.button[0].w + 20, 45 * currentMenu.button.length + 15);
+        ctx.imageSmoothingEnabled = true;
 
         const socialImageSize = 50,
             spaceBetweenButton = 10;
