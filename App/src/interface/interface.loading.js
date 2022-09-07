@@ -263,7 +263,9 @@ LoadingScreenManager.title = function () {
     ctx.textAlign = "center";
     ctx.fillText(`${LoadingScreenManager.message}${trailing}`, w / 2, h / 2);
     ctx.font = "1px Unreadable";
-    ctx.fillText(".", 0, 0); // pre load unreadble font
+    ctx.fillText(".", 0, 0); // pre load Unreadble font
+    ctx.font = "1px Takhi";
+    ctx.fillText(".", 0, 0); // pre load Takhi font, for places names
 };
 
 LoadingScreenManager.addProgress = function (n) {
