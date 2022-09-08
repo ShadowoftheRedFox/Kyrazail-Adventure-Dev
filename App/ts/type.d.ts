@@ -14,7 +14,8 @@ declare global {
             MAPEFFECT: 5
             FIGHT: 6
             PLAYERQUIPEMENT: 7
-            PAUSE: 8
+            DIALOGUE: 8
+            PAUSE: 9
             MAIN: 900
             MAINSUBMENU: 901
             INTRODUCTION: 950
@@ -278,7 +279,7 @@ declare global {
                 [name: string]: GameInterfaces
                 intro: GameInterfaces
                 main: GameInterfaces
-                dialog: GameInterfaces
+                dialogue: GameInterfaces
                 entity: GameInterfaces
                 introduction: GameInterfaces
                 map: GameInterfaces

@@ -12,7 +12,7 @@ const ConfigConst = {
         MAPEFFECT: 5,
         FIGHT: 6,
         PLAYERQUIPEMENT: 7,
-        DIALOG: 8,
+        DIALOGUE: 8,
         PAUSE: 9,
         MAIN: 900,
         MAINSUBMENU: 901,

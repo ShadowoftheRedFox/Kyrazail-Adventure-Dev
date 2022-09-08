@@ -1548,12 +1548,12 @@ class GameMainInterface extends GameInterfaces {
                 }
             }
         });
-        //TODO add arrow that do that on click or on keyboard, also add if go down on keyboard, go down like arrow
+        
         /*
         ? So what's going on since last time:
-        - Didn't add keyboard navigation up and down scroll
-        - Also need to add a keyboard navigation that will reach the arrows
-        - Keyboard bind bug after one bind, but click is fine anytime, idk where that come from, maybe a missing condition on start
+        TODO Didn't add keyboard navigation up and down scroll
+        TODO Also need to add a keyboard navigation that will reach the arrows
+        BUG if key1 == key2, stuck on Awaiting key even if we can move freely
         */
         if (currentMenu.arrow) currentMenu.arrow.forEach(a => {
             if (MouseTrackerManager.checkClick(a.x, a.y, a.w, a.h, time) && a.enabled) {

@@ -45,7 +45,7 @@ const TestEvents = {
         }],
         end: () => { GameEvent.emit("MainCharacterName"); },
         stop: ["main"],
-        start: ["dialog"]
+        start: ["dialogue"]
     }
 };
 
@@ -67,8 +67,8 @@ GameEventHandler.handle = function (event) {
 
     switch (event.type) {
         case 1:
-            scope.state.menu.dialog.textList = event.list;
-            scope.state.menu.dialog.callback = event.end;
+            scope.state.menu.dialogue.textList = event.list;
+            scope.state.menu.dialogue.callback = event.end;
             break;
         default:
             WindowManager.fatal(new ReferenceError(`${key} is an inkown event key.`));

@@ -34,8 +34,8 @@ const StackLoadInterface = [{
     status: true,
     description: "The pause menu."
 }, {
-    name: "interface.dialog",
+    name: "interface.dialogue",
     path: "./src/interface/",
     status: true,
-    description: "Dialog menu."
+    description: "Dialogue menu."
 }];

@@ -1,14 +1,14 @@
 /// <reference path="../../ts/type.d.ts"/>
 
-class GameDialogInterface extends GameInterfaces {
+class GameDialogueInterface extends GameInterfaces {
     /**
      * @param {GameScope} scope
      */
     constructor(scope) {
         super({
             asOwnCanvas: true,
-            zindex: ConfigConst.ZINDEX.DIALOG,
-            canvasGroup: "GameDialogGroup"
+            zindex: ConfigConst.ZINDEX.DIALOGUE,
+            canvasGroup: "GameDialogueGroup"
         }, scope);
         /**
          * @type {GameEventsListType1}
@@ -59,7 +59,7 @@ class GameDialogInterface extends GameInterfaces {
         } else if (currentItem.fullscreen) {
             // print full screen (1/1)
         } else {
-            // normal dialog (1/4)
+            // normal dialogue (1/4)
 
             // prevent the canvas from getting unwanted pixel
             ctx.imageSmoothingEnabled = false;
