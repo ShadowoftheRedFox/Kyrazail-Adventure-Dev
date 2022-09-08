@@ -680,10 +680,10 @@ declare global {
          * @param y
          * @param w
          * @param h
-         * @param time How long should we look for a click, in ms. Default is 100ms.
+         * @param time How long should we look for a click, in ms. Default is 1000 / GameConfig.targetFps, if it's 60fps, time is 16.6ms.
          * @returns {boolean} If there was a click or not.
          */
-        checkClick(x: number, y: number, w: number, h: number, time?: number | 100): boolean
+        checkClick(x: number, y: number, w: number, h: number, time?: number | 16.6): boolean
 
         updated: boolean
         waitTimeUpdate: number
@@ -737,26 +737,38 @@ declare global {
         /**
          * Create a frame with the given parameters. Draw it like a stroke rectangle with shady background.
          * @param scope Scope.
+         * @param ctx The context to draw on to.
          * @param x Upper left corner x coordinate.
          * @param y Upper left corner x coordinate.
          * @param w Width of the rectangle.
          * @param h Heigth of the rectangle.
          */
-        frameRectangleTrans(scope: any, x: number, y: number, w: number, h: number): void
+        frameRectangleTrans(scope: any, ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number): void
         /**
          * Create a frame with the given parameters. Draw it like a stroke rectangle.
          * @param scope Scope.
+         * @param ctx The context to draw on to.
          * @param x Upper left corner x coordinate.
          * @param y Upper left corner x coordinate.
          * @param w Width of the rectangle.
          * @param h Heigth of the rectangle.
-         * @param imageToDraw The image you want to draw inside the frame. Optionnal.
-         * @param ix Upper left corner x coordinate of the image. If imageToDraw is specified, must be defined.
-         * @param iy Upper left corner x coordinate of the image. If imageToDraw is specified, must be defined.
-         * @param iw Width of the rectangle of the image. If imageToDraw is specified, must be defined.
-         * @param ih Heigth of the rectangle of the image. If imageToDraw is specified, must be defined.
          */
-        frameRectangle(scope: any, x: number, y: number, w: number, h: number, imageToDraw?: HTMLImageElement, ix?: number, iy?: number, iw?: number, ih?: number): void
+        frameRectangle(scope: any, ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number): void
+        /**
+         * Create a frame with the given parameters. Draw it like a stroke rectangle with an image inside.
+         * @param scope Scope.
+         * @param ctx The context to draw on to.
+         * @param x Upper left corner x coordinate.
+         * @param y Upper left corner x coordinate.
+         * @param w Width of the rectangle.
+         * @param h Heigth of the rectangle.
+         * @param imageToDraw The image you want to draw inside the frame.
+         * @param ix Upper left corner x coordinate of the image.
+         * @param iy Upper left corner x coordinate of the image.
+         * @param iw Width of the rectangle of the image.
+         * @param ih Heigth of the rectangle of the image.
+         */
+        frameRectangle(scope: any, ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, imageToDraw: HTMLImageElement, ix: number, iy: number, iw: number, ih: number): void
     }
 
     function TransitionEffectBuild(scope: GameScope, duration: number): void
@@ -843,13 +855,18 @@ declare global {
     const ArrowDrawer: {
         /**
          * Draw a pixelised arrow.
-         * @param w width
-         * @param h height
          * @param a direction the arrow is pointing
          * @param c color of the arrow
          * @returns the arrow image on the canvas
          */
-        pixel(w: number | 20, h: number | 20, a: ("up" | "down" | "right" | "left") | "right", c: (string | CanvasGradient | CanvasPattern) | "black"): HTMLCanvasElement
+        pixel(a: ("up" | "down" | "right" | "left") | "right", c: (string | CanvasGradient | CanvasPattern) | "black"): HTMLCanvasElement
+        /**
+         * Draw an arrow hat.
+         * @param a direction the arrow is pointing
+         * @param c color of the arrow
+         * @returns the arrow image on the canvas
+         */
+        hat(a: ("up" | "down" | "right" | "left") | "right", c: (string | CanvasGradient | CanvasPattern) | "black"): HTMLCanvasElement
     }
 
     type GameSaveObject = {
@@ -868,4 +885,53 @@ declare global {
         stop: string[]
         start: string[] | []
     }
+
+    type GameEventsListType1 = {
+        /**
+         * Font for, in order, the name, then the text.
+         */
+        font: [string, string]
+        /**
+         * Name of the character speaking.
+         */
+        name: string
+        /**
+         * Text to display.
+         */
+        text: string
+        /**
+         * Image of the character speaking. If null, no image.
+         * String is the name of the image.
+         * Numbers are in order col then row.
+         */
+        image: [string, number, number] | null
+        /**
+         * Side to draw the image if there is one. 0 is left, 1 is right.
+         */
+        side: 0 | 1
+        /**
+         * If the message triger the end function of the event.
+         */
+        next: boolean
+        /**
+         * If the precedents message needs to be cleared.
+         */
+        skipable: boolean
+        /**
+         * The text speed display in letters/s.
+         */
+        textSpeed: number
+        /**
+         * If true, when the dialog get to the end of the string, await user input. Else continue to the next item.
+         */
+        stop: boolean
+        /**
+         * If the dialog should take all the screen, and not just the bottom.
+         */
+        fullscreen: boolean
+        /**
+         * If it's an announcement, meaning that the text is short, big, and centered. 
+         */
+        announcement: boolean
+    }[]
 }
