@@ -87,7 +87,7 @@ MouseTrackerManager.checkOver = function (x, y, w, h, old = false) {
  * @param {number} y
  * @param {number} w
  * @param {number} h
- * @param {number | 100} time
+ * @param {number | 16.6} time
  * @returns {boolean}
  */
 MouseTrackerManager.checkClick = function (x, y, w, h, time) {
@@ -95,7 +95,7 @@ MouseTrackerManager.checkClick = function (x, y, w, h, time) {
     let c = MouseTrackerManager.data.click[MouseTrackerManager.data.click.length - 1];
 
     //check if click is new enough, under 100 ms [default]
-    if (!time) time = 100;
+    if (!time) time = 1000 / GameConfig.targetFps;
     if (Date.now() - c.date <= time) {
         if (c.x >= x && c.x <= x + w && c.y >= y && c.y <= y + h) {
             return true;
