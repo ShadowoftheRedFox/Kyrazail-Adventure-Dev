@@ -7,13 +7,41 @@ const TestEvents = {
     StartNewGame: {
         type: 1,
         list: [{
-            id: 1,
-            text: "You are a new soul that just felt from the soul tree.",
-            image: null
+            text: "You are a new soul that just felt from the soul tree. ",
+            name: "Unknown Goddess",
+            font: ["Unreadable", "Azure"],
+            image: null,
+            side: 0,
+            next: false,
+            skipable: true,
+            textSpeed: 5,
+            stop: false,
+            fullscreen: false,
+            announcement: false
         }, {
-            id: 1,
-            text: "What is your name, young one?",
-            image: null
+            text: "You will get a new existence in this world. ",
+            name: "Unknown Goddess",
+            font: ["Unreadable", "Azure"],
+            image: null,
+            side: 0,
+            next: false,
+            skipable: true,
+            textSpeed: 5,
+            stop: true,
+            fullscreen: false,
+            announcement: false
+        }, {
+            text: "\n \nChoose your name carefully, young one.",
+            name: "Unknown Goddess",
+            font: ["Unreadable", "Azure"],
+            image: null,
+            side: 0,
+            next: true,
+            skipable: true,
+            textSpeed: 5,
+            stop: true,
+            fullscreen: false,
+            announcement: false
         }],
         end: () => { GameEvent.emit("MainCharacterName"); },
         stop: ["main"],
