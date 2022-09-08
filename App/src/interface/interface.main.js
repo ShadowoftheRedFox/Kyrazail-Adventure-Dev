@@ -22,7 +22,12 @@ class GameMainInterface extends GameInterfaces {
             asOwnCanvas: true,
             zindex: ConfigConst.ZINDEX.MAIN,
             canvasGroup: "GameMainGroup",
-            requiredImage: ["System/Window", GameMainInterfaceChoosen[0], GameMainInterfaceChoosen[1], "Icon/Account", "Icon/Discord", "Icon/Github", "Icon/Website"],
+            requiredImage: [
+                "System/Window",
+                GameMainInterfaceChoosen[0], GameMainInterfaceChoosen[1],
+                "Icon/Account", "Icon/Discord", "Icon/Github", "Icon/Website",
+                "Faces/Spiritual"
+            ],
             requiredAudio: ["MAIN/Adeste", "MAIN/Dramatic", "MAIN/Moon", "MAIN/Silence"],
             transitionLeave: true,
             transitionSpawn: true
@@ -440,7 +445,7 @@ class GameMainInterface extends GameInterfaces {
                         w: 0,
                         h: 0,
                         f: (that, f) => { that.arrowHeightChange += 52;/*f is the button focused var*/f++; },
-                        draw: (w, h, c) => { return ArrowDrawer.pixel(w, h, "up", c); },
+                        draw: (c) => { return ArrowDrawer.pixel("up", c); },
                         arrowUp: true,
                         enabled: false
                     }, {
@@ -450,7 +455,7 @@ class GameMainInterface extends GameInterfaces {
                         w: 0,
                         h: 0,
                         f: (that, f) => { that.arrowHeightChange -= 52;/*f is the button focused var*/f--; },
-                        draw: (w, h, c) => { return ArrowDrawer.pixel(w, h, "down", c); },
+                        draw: (c) => { return ArrowDrawer.pixel("down", c); },
                         arrowDown: true,
                         enabled: false
                     }
@@ -597,16 +602,6 @@ class GameMainInterface extends GameInterfaces {
     startNewGame(scope, that) {
         GameEvent.emit("StartNewGame");
         scope.cache.context[that.canvasGroup].clearRect(0, 0, scope.w, scope.h);
-
-        //TODO remove this once all todo are done :p
-        // const c = that.menu[0].button[0],
-        //     o = c.name;
-        // c.name = "Coming soon!";
-        // that.u();
-        // setTimeout(() => {
-        //     c.name = o;
-        //     that.u();
-        // }, 5000);
     }
 
     toLanguage(scope, that) { that.focusedMenu = 7; } toAccount(scope, that) { that.focusedMenu = 6; } toMain(scope, that) { that.focusedMenu = 0; } toLoad(scope, that) { that.focusedMenu = 1; } toGeneral(scope, that) { that.focusedMenu = 3; } toAudio(scope, that) { that.focusedMenu = 4; } toKeyBind(scope, that) { that.focusedMenu = 5; } toSettings(scope, that) { if (that.awaitInput) { const currentMenu = that.menu[that.focusedMenu], bu = currentMenu.button[that.buttonToChange.id]; currentMenu.button.forEach((b, idx) => { if (idx == that.buttonToChange.id) { b.key1 = that.oldKey.key1; b.key2 = that.oldKey.key2; } }); that.endOfInput(that); } that.focusedMenu = 2; }
@@ -1004,7 +999,7 @@ class GameMainInterface extends GameInterfaces {
                     ctx.fillStyle = "red";
                     ctx.fillRect(a.x, a.y, a.w, a.h);
                 }
-                ctx.drawImage(a.draw(arrowSize, arrowSize, that.choosen[2]), w - 10 - arrowOffset, h / 6 + metrics.actualBoundingBoxDescent + arrowOffset);
+                ctx.drawImage(a.draw(that.choosen[2]), w - 10 - arrowOffset, h / 6 + metrics.actualBoundingBoxDescent + arrowOffset, arrowSize, arrowSize);
             } else if (i == 1 && (a.enabled || ConfigConst.DEBUG)) {
                 a.w = arrowSize + arrowOffset;
                 a.h = arrowSize + arrowOffset;
@@ -1014,7 +1009,7 @@ class GameMainInterface extends GameInterfaces {
                     ctx.fillStyle = "red";
                     ctx.fillRect(a.x, a.y, a.w, a.h);
                 }
-                ctx.drawImage(a.draw(arrowSize, arrowSize, that.choosen[2]), w - 10 - arrowOffset, h - 10 - arrowOffset);
+                ctx.drawImage(a.draw(that.choosen[2]), w - 10 - arrowOffset, h - 10 - arrowOffset, arrowSize, arrowSize);
             }
         });
     }
@@ -1349,7 +1344,6 @@ class GameMainInterface extends GameInterfaces {
             onkeydown = (ev) => {
                 // the current button
                 const b = that.menu[5].button[that.buttonToChange.id];
-                //TODO add a checker so that the same key can't be put in key1 and key2
                 if (that.buttonToChange.key == 1 && ev.key != b.key2 && !that.checkNoDuplicateKey(ev.key)) {
                     b.key1 = ev.key;
                     // change the correct data in the config
