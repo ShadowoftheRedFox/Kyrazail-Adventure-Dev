@@ -1,6 +1,7 @@
 /* Event reminders
 type:
     1: something to display in the dialog interface
+    2: string input
 */
 
 const TestEvents = {
@@ -46,6 +47,19 @@ const TestEvents = {
         end: () => { GameEvent.emit("MainCharacterName"); },
         stop: ["main"],
         start: ["dialogue"]
+    },
+    MainCharacterName: {
+        type: 2,
+        end: () => { GameEvent.emit(""); },
+        list: [{
+            text: "Your first name is:",
+            param: []
+        }, {
+            text: "Your last name is:",
+            param: []
+        }],
+        stop: [],
+        start: ["dialogue"]
     }
 };
 
@@ -69,9 +83,15 @@ GameEventHandler.handle = function (event) {
         case 1:
             scope.state.menu.dialogue.textList = event.list;
             scope.state.menu.dialogue.callback = event.end;
+            scope.state.menu.dialogue.eventType = event.type;
+            break;
+        case 2:
+            scope.state.menu.dialogue.inputList = event.list;
+            scope.state.menu.dialogue.callback = event.end;
+            scope.state.menu.dialogue.eventType = event.type;
             break;
         default:
-            WindowManager.fatal(new ReferenceError(`${key} is an inkown event key.`));
+            WindowManager.fatal(new ReferenceError(`${event.type} is an inkown event type.`));
             break;
     }
 
@@ -88,4 +108,12 @@ GameEvent.on("StartNewGame", () => {
     //TODO also create on start 2 auto save files
 
     GameEventHandler.handle(TestEvents.StartNewGame);
+});
+
+
+GameEvent.on("MainCharacterName", () => {
+    const scope = window.game,
+        events = scope.cache.data.event;
+
+    GameEventHandler.handle(TestEvents.MainCharacterName);
 });
