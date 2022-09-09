@@ -709,6 +709,7 @@ class GameMainInterface extends GameInterfaces {
 
         const socialImageSize = 50,
             spaceBetweenButton = 10;
+        //TODO if last button draw is over the frame, draw it upside the first button
         that.social.forEach((b, i) => {
             b.x = w - (socialImageSize + spaceBetweenButton) * (i + 1);
             b.y = h - (socialImageSize + spaceBetweenButton);
@@ -867,8 +868,8 @@ class GameMainInterface extends GameInterfaces {
                 switch (index) {
                     case 0:
                         ctx.textAlign = "left";
-                        ctx.fillText(button.name, w / 10, h / 1.8 + 52 * index, w);
-                        button.x = w / 2 - w / 4;
+                        ctx.fillText(button.name, w / 18, h / 1.8 + 52 * index, w);
+                        button.x = 0;
                         button.y = h / 1.8 + 52 * index - 16;
                         button.w = w;
                         button.h = 40;
@@ -877,8 +878,8 @@ class GameMainInterface extends GameInterfaces {
                         break;
                     case 1:
                         ctx.textAlign = "left";
-                        ctx.fillText(button.name, w / 10, h / 1.8 + 52 * index, w);
-                        button.x = w / 2 - w / 4;
+                        ctx.fillText(button.name, w / 18, h / 1.8 + 52 * index, w);
+                        button.x = 0;
                         button.y = h / 1.8 + 52 * index - 16;
                         button.w = w;
                         button.h = 40;
