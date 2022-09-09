@@ -106,7 +106,7 @@ MouseTrackerManager.checkClick = function (x, y, w, h, time) {
 };
 
 MouseTrackerManager.updated = false;
-MouseTrackerManager.waitTimeUpdate = 100;
+MouseTrackerManager.waitTimeUpdate = 1000 / GameConfig.targetFps;
 
 MouseTrackerManager.update = function () {
     MouseTrackerManager.updated = true;
