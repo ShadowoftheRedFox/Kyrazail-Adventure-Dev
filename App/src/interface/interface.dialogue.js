@@ -178,20 +178,20 @@ class GameDialogueInterface extends GameInterfaces {
             ],
             [
                 {
-                    key: " ", 
+                    key: " ",
                     name: "Space", hover: false, x: 0, y: 0, w: 0, h: 0,
                     auto: true,
                     f: (str) => { return str + " "; }
                 }, {
-                    key: "Backspace", 
+                    key: "Backspace",
                     name: "Delete", hover: false, x: 0, y: 0, w: 0, h: 0,
                     f: (str) => { str.slice(0, -1); return str; }
                 }, {
-                    key: "Shift", 
+                    key: "Shift",
                     name: "Shift", hover: false, x: 0, y: 0, w: 0, h: 0,
                     f: () => { }
                 }, {
-                    key: "Enter", 
+                    key: "Enter",
                     name: "Confirm", hover: false, x: 0, y: 0, w: 0, h: 0,
                     //TODO may need to be edited to trigger next item?
                     f: () => { }
@@ -200,6 +200,8 @@ class GameDialogueInterface extends GameInterfaces {
         ];
         this.keyboardShift = false;
         this.inputUser = "";
+        /**@type {string[]} */
+        this.saveInput = [];
     }
 
     /**
@@ -487,12 +489,22 @@ class GameDialogueInterface extends GameInterfaces {
                     }
                     if (MouseTrackerManager.checkClick(key.x, key.y, key.w, key.h)) {
                         if (key.key == "Shift") {
+                            // reverse the boolean
                             this.keyboardShift = !this.keyboardShift;
-                        } else if (key.key == "Enter") {
-                            // call the callback function
-                            this.eventType = 0;
-                            this.itemProgress = 0;
-                            return this.callback(this.inputUser);
+                        } else if (key.key == "Enter" && this.inputUser.length > 0) {
+                            // check if there is an item after
+                            if (this.inputList[this.itemProgress + 1]) {
+                                // if yes, switch to next item and save the last input
+                                this.itemProgress++;
+                                this.saveInput.push(this.inputUser.slice());
+                                this.inputUser = "";
+                            }
+                            else {
+                                // call the callback function
+                                this.eventType = 0;
+                                this.itemProgress = 0;
+                                return this.callback(this.inputUser);
+                            }
                         } else if (key.key == "Backspace") {
                             this.inputUser = this.inputUser.replace(/.$/, '');
                         } else if (key.auto) {
@@ -502,6 +514,30 @@ class GameDialogueInterface extends GameInterfaces {
                     }
                 });
             });
+
+            // get letters directly from keyboard
+            document.onkeydown = (ev) => {
+                // isNaN to remove numbers from names, like, who call themself R2D2?
+                if (ev.key.length == 1 && isNaN(ev.key)) this.inputUser += (this.keyboardShift ? ev.key.toUpperCase() : ev.key.toLowerCase());
+                else if (ev.key == "Backspace") this.inputUser = this.inputUser.replace(/.$/, '');
+                else if (ev.key == "Shift") this.keyboardShift = !this.keyboardShift;
+                // check if user input is filled
+                else if (ev.key == "Enter" && this.inputUser.length > 0) {
+                    // check if there is an item after
+                    if (this.inputList[this.itemProgress + 1]) {
+                        this.itemProgress++; 
+                        this.saveInput.push(this.inputUser.slice());
+                        this.inputUser = "";
+                    }
+                    else {
+                        // call the callback function
+                        this.eventType = 0;
+                        this.itemProgress = 0;
+                        return this.callback(this.inputUser);
+                    }
+                }
+                this.needsUpdate = true;
+            };
         } else if (this.eventType == 1 && currentItemText.announcement) {
             // do announcement (center, Takhi)
         } else if (this.eventType == 1 && currentItemText.fullscreen) {
