@@ -881,7 +881,7 @@ declare global {
     type GameEvents = {
         type: number
         /**Depends the type of the event. Check your reminder.*/
-        list: any[]
+        list: GameEventsListType1[] | GameEventsListType2[] | any[]
         end: string | (() => {}) | null
         stop: string[]
         start: string[] | []
@@ -934,5 +934,17 @@ declare global {
          * If it's an announcement, meaning that the text is short, big, and centered. 
          */
         announcement: boolean
-    }[]
+    }
+
+    type GameEventsListType2 = {
+        /** 
+         * The text before the input 
+         */
+        text: string
+        /**
+         * Parameters of the input
+         * In order: min length, max length
+         */
+        param: [number, number]
+    }
 }
