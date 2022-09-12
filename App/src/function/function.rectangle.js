@@ -83,11 +83,20 @@ RectangleCreator.frameRectangleTrans = function (scope, ctx, x, y, w, h) {
     if (isNaN(y) === true) throw new TypeError(`y is not a number.`);
     if (isNaN(w) === true) throw new TypeError(`w is not a number.`);
     if (isNaN(h) === true) throw new TypeError(`h is not a number.`);
-    const i = scope.cache.image["System/Window"].image;
+    const i = scope.cache.image["System/Window"].image,
+        oldAlpha = ctx.globalAlpha,
+        oldFillStyle = ctx.fillStyle;
 
     //? since we can only scretch inside rectangle, we'll need to draw border one by one
     //draw the mist background first
-    ctx.drawImage(i, 68, 68, 24, 24, x + 2, y + 2, w - 4, h - 4);
+    //! old version: we get the mist from the image and scretch it
+    // ctx.drawImage(i, 68, 68, 24, 24, x + 2, y + 2, w - 4, h - 4);
+    //! new version: we just draw a grey rectangle at 0.2 globalAlpha
+    ctx.fillStyle = "grey";
+    ctx.globalAlpha = 0.2;
+    ctx.fillRect(x + 2, y + 2, w - 4, h - 4);
+    ctx.fillStyle = oldFillStyle;
+    ctx.globalAlpha = oldAlpha;
 
     //? then draw border
     //upper left corner
