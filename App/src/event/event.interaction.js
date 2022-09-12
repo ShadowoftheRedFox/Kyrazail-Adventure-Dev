@@ -8,6 +8,11 @@ MouseTrackerManager.data = {
         // init false coordinate to prevent bug
         x: -100,
         y: -100
+    }, 
+    lastMoveTrue: {
+        // init false coordinate to prevent bug
+        x: -100,
+        y: -100
     },
     old: {
         // init false coordinate to prevent bug
@@ -30,6 +35,7 @@ MouseTrackerManager.init = function () {
  */
 MouseTrackerManager.OnMouseMove = function (event) {
     MouseTrackerManager.data.lastMove = { x: event.clientX, y: event.clientY };
+    MouseTrackerManager.data.lastMoveTrue = { x: event.clientX, y: event.clientY };
     MouseTrackerManager.moving = true;
     MouseTrackerManager.update();
     MouseTrackerManager.stopedMoved({ x: event.clientX, y: event.clientY });
@@ -80,6 +86,12 @@ MouseTrackerManager.checkOver = function (x, y, w, h, old = false) {
     if (l.x >= x && l.x <= x + w && l.y >= y && l.y <= y + h) return true;
     else if (old == true && o.x >= x && o.x <= x + w && o.y >= y && o.y <= y + h) return true;
     else return false;
+};
+
+MouseTrackerManager.trueCheckOver = function (x, y, w, h) {
+    const l = MouseTrackerManager.data.lastMoveTrue;
+    if (l.x >= x && l.x <= x + w && l.y >= y && l.y <= y + h) return true;
+    return false;
 };
 
 /**
