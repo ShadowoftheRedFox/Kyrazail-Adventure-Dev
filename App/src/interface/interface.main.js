@@ -489,14 +489,14 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: () => { ConfigConst.LANGUAGE = "en"; }
+                        f: (scope, that) => { scope.language = "en"; ConfigConst.LANGUAGE = "en"; }
                     }, {
                         name: "Français",
                         x: 0,
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: () => { ConfigConst.LANGUAGE = "fr"; }
+                        f: (scope, that) => { scope.language = "fr"; ConfigConst.LANGUAGE = "fr"; }
                     },
                     {
                         name: "Back",
@@ -709,15 +709,26 @@ class GameMainInterface extends GameInterfaces {
 
         const socialImageSize = 50,
             spaceBetweenButton = 10;
-        //TODO if last button draw is over the frame, draw it upside the first button
+
+        // to know how much buttons are on the left side of teh screen
+        let socialButtonCorrected = 0;
+
         that.social.forEach((b, i) => {
-            b.x = w - (socialImageSize + spaceBetweenButton) * (i + 1);
+            //if the social button is not hover the frame
+            if (currentMenu.button[0].x + currentMenu.button[0].w + 10 < w - (socialImageSize + spaceBetweenButton) * (i + 1)) {
+                b.x = w - (socialImageSize + spaceBetweenButton) * (i + 1);
+            } else {
+                // else, draw them on the other side
+                b.x = (socialImageSize + spaceBetweenButton) * socialButtonCorrected;
+                socialButtonCorrected++;
+            }
+            
             b.y = h - (socialImageSize + spaceBetweenButton);
             b.h = socialImageSize + spaceBetweenButton;
             b.w = socialImageSize + spaceBetweenButton;
             ctx.drawImage(scope.cache.image[b.icon].image, b.x + spaceBetweenButton / 2, b.y + spaceBetweenButton / 2, socialImageSize, socialImageSize);
             if (b.hover) {
-                ctx.textAlign = "right";
+                ctx.textAlign = (b.x < currentMenu.button[0].x ? "left" : "right");
                 ctx.font = "20px Azure";
                 ctx.textBaseline = "bottom";
                 ctx.fillText(b.name, b.x + socialImageSize + spaceBetweenButton / 2, b.y);
@@ -1549,7 +1560,7 @@ class GameMainInterface extends GameInterfaces {
                 }
             }
         });
-        
+
         /*
         ? So what's going on since last time:
         TODO Didn't add keyboard navigation up and down scroll
