@@ -7,9 +7,6 @@
  */
 class Game {
     constructor() {
-        const $ = ConfigConst.MAINCONTAINER,
-            $c = ConfigConst.CONTAINER;
-
         // Instantiate an empty state object
         this.state = {};
 
@@ -68,7 +65,6 @@ class Game {
         };
 
         try {
-
             // TODO add a share method so that every rendering object in their creating function share the same canavs
             //add every rendering object to their current object
             this.state.entities = this.state.entities || {};
