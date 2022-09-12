@@ -18,4 +18,9 @@ const StackLoadManager = [{
     path: "./src/manager/",
     status: true,
     description: "Manage sound and music, as well as transition between them."
+}, {
+    name: "manager.save",
+    path: "./src/manager/",
+    status: true,
+    description: "Manage saves and auto saves. Also manage the load of saves."
 }];
