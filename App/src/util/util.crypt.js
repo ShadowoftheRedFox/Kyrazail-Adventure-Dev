@@ -1,58 +1,31 @@
 /// <reference path="../../ts/type.d.ts"/>
-/**
- * Generate a save token.
- * @param {any} data data the game, that will be encrypted.
- * @returns {string} the token;
- */
-function tokenGeneration(data) {
-    var encrypted = CryptoJS.AES.encrypt(JSON.stringify(data, data, 5), key);
-    //4d657373616765
-    return encrypted;
+function GameEncryptData(data) {
+    return CryptoJS.AES.encrypt(JSON.stringify(data), ConfigConst.KEY).toString();
 }
 
-/**
- * Decrypt a token, and verify its integrity
- * @param {string} token a token to decript 
- * @returns {object | boolean} object if the token is healthy, false if the token is unhealthy
- */
-function tokenDecrypt(token) {
-    var decrypted = CryptoJS.AES.decrypt(token, key).toString(CryptoJS.enc.Utf8);
-    try {
-        decrypted = JSON.parse(decrypted);
-    } catch (e) { return false; }
-    if (typeof (decrypted) !== "object") {
-        return false;
-    }
-    return decrypted;
+function GameDecrytpData(data) {
+    return  CryptoJS.AES.decrypt(data, ConfigConst.KEY).toString(CryptoJS.enc.Utf8);
 }
 
-/**
- * Check if the given string is a json format.
- * @param {string} str 
- * @returns 
- */
-function IsJsonString(str) {
-    try {
-        JSON.parse(str);
-    } catch (e) {
-        return false;
-    }
-    return true;
-}
+function GameTestCryptInsecure() {
+    var text = 'US0378331005-USD-US-en';
+    var key = ConfigConst.KEY;
 
-/**
- * Check if the given string is a game state
- * @param {string} str The string to test.
- * @returns {boolean}
- */
-function isGameState(str) {
-    console.log("Starting the verification of the game state...");
-    if (IsJsonString(str) == false) return false;
-    /**
-     * @type {import("../../game").globalGame}
-     */
-    const obj = JSON.parse(str);
-    console.log(obj);
-    if (obj instanceof globalGame) return false;
-    return true;
+    console.log('text:', text);
+
+    // Fix: Use the Utf8 encoder
+    text = CryptoJS.enc.Utf8.parse(text);
+    // Fix: Use the Utf8 encoder (or apply in combination with the hex encoder a 32 hex digit key for AES-128)
+    key = CryptoJS.enc.Utf8.parse(key);
+
+    // Fix: Apply padding (e.g. Zero padding). Note that PKCS#7 padding is more reliable and that ECB is insecure
+    var encrypted = CryptoJS.AES.encrypt(text, key, { mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.ZeroPadding });
+    encrypted = encrypted.ciphertext.toString(CryptoJS.enc.Hex);
+    console.log('encrypted', encrypted);
+
+    // Fix: Pass a CipherParams object (or the Base64 encoded ciphertext)
+    var decrypted = CryptoJS.AES.decrypt({ ciphertext: CryptoJS.enc.Hex.parse(encrypted) }, key, { mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.ZeroPadding });
+
+    // Fix: Utf8 decode the decrypted data
+    console.log('decrypted', decrypted.toString(CryptoJS.enc.Utf8));
 }
