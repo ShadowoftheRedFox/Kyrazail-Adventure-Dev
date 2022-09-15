@@ -391,6 +391,8 @@ class GameDialogueInterface extends GameInterfaces {
         if (this.eventType == 2) {
             // it's a input event
             this.input(scope);
+        } else if (this.eventType == 3) {
+            // choice between multiple options
         } else if (this.eventType == 1 && currentItemText.announcement) {
             // do announcement (center, Takhi)
         } else if (this.eventType == 1 && currentItemText.fullscreen) {
@@ -473,16 +475,13 @@ class GameDialogueInterface extends GameInterfaces {
             return this.callback();
         }
 
-        //TODO also create a responsive keyboard (just the alphabet and basic interaction, such as space, delete, numbers...)
         if (this.eventType == 2) {
             // input event
-            var alreadyHover = false;
             this.keyboard.forEach((line, idxLine) => {
                 line.forEach((key, idxKey) => {
-                    if (MouseTrackerManager.checkOver(key.x, key.y, key.w, key.h, true) && !alreadyHover) {
+                    if (MouseTrackerManager.trueCheckOver(key.x, key.y, key.w, key.h)) {
                         key.hover = true;
                         this.needsUpdate = true;
-                        alreadyHover = true;
                     } else if (key.hover) {
                         key.hover = false;
                         this.needsUpdate = true;
@@ -503,7 +502,9 @@ class GameDialogueInterface extends GameInterfaces {
                                 // call the callback function
                                 this.eventType = 0;
                                 this.itemProgress = 0;
-                                return this.callback(this.inputUser);
+                                //add the names in the global object
+
+                                return this.callback();
                             }
                         } else if (key.key == "Backspace") {
                             this.inputUser = this.inputUser.replace(/.$/, '');
@@ -525,19 +526,21 @@ class GameDialogueInterface extends GameInterfaces {
                 else if (ev.key == "Enter" && this.inputUser.length > 0) {
                     // check if there is an item after
                     if (this.inputList[this.itemProgress + 1]) {
-                        this.itemProgress++; 
-                        this.saveInput.push(this.inputUser.slice());
+                        this.itemProgress++;
+                        this.saveInput.push(this.inputUser);
                         this.inputUser = "";
-                    }
-                    else {
+                    } else {
                         // call the callback function
                         this.eventType = 0;
                         this.itemProgress = 0;
-                        return this.callback(this.inputUser);
+                        this.saveInput.push(this.inputUser);
+                        return this.callback(this.saveInput);
                     }
                 }
                 this.needsUpdate = true;
             };
+        } else if (this.eventType == 3) {
+            // choice between multiple options
         } else if (this.eventType == 1 && currentItemText.announcement) {
             // do announcement (center, Takhi)
         } else if (this.eventType == 1 && currentItemText.fullscreen) {
