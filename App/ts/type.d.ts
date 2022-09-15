@@ -567,4 +567,16 @@ declare global {
          */
         param: [number, number]
     }
+
+    type GameSaveLoadObject = {
+        error: string[] | null
+        files: {
+            name: string
+            path: string
+            rawContent: string
+            content: GameSaveObject
+            error: string[] | null
+            lastEditDate: number
+        }[]
+    }
 }
