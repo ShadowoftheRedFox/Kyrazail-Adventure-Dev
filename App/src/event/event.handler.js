@@ -2,6 +2,7 @@
 type:
     1: something to display in the dialog interface
     2: string input
+    3: choice between multiple choices
 */
 
 const TestEvents = {
@@ -44,13 +45,13 @@ const TestEvents = {
             fullscreen: false,
             announcement: false
         }],
-        end: () => { GameEvent.emit("MainCharacterName"); },
+        end: (scope, ...args) => { GameEvent.emit("MainCharacterName"); },
         stop: ["main"],
-        start: ["dialogue"]
+        start: ["dialogue"],
+        init: (scope, ...args) => { GameGlobalObject.newGame(scope); }
     },
     MainCharacterName: {
         type: 2,
-        end: () => { GameEvent.emit(""); },
         list: [{
             text: "Your first name is:",
             param: []
@@ -58,8 +59,50 @@ const TestEvents = {
             text: "Your last name is:",
             param: []
         }],
+        end: (scope, ...args) => {
+            scope.global.player.firstName = args[0];
+            scope.global.player.lastName = args[1];
+            GameEvent.emit("MainCharacterSpeacies");
+        },
         stop: [],
-        start: ["dialogue"]
+        start: ["dialogue"],
+        init: () => { }
+    },
+    MainCharacterSpeacies: {
+        type: 3,
+        list: [{
+            //first item is always the question
+            text: "You're not a soul anymore, but %1 %2. But you still need a body. Choose your species %1:",
+            param: [["global", "player", "firstName"], ["global", "player", "lastName"]]
+        }, {
+            text: "Elf",
+            param: []
+        }, {
+            text: "Dwarf",
+            param: []
+        }, {
+            text: "Demon",
+            param: []
+        }, {
+            text: "Human",
+            param: []
+        }, {
+            text: "Vampire",
+            param: []
+        }, {
+            text: "Angel",
+            param: []
+        }, {
+            text: "Fairy",
+            param: []
+        }],
+        end: (scope, ...args) => {
+            scope.global.player.species = args[0].toLowerCase();
+            GameEvent.emit("");
+        },
+        stop: [],
+        start: ["dialogue"],
+        init: () => { }
     }
 };
 
@@ -78,6 +121,8 @@ GameEventHandler.handle = function (event) {
     if (event.stop.length > 0) event.stop.forEach(s => { scope.state.menu[s].activated = false; });
     // start all given interface
     if (event.start.length > 0) event.start.forEach(s => { scope.state.menu[s].activated = true; });
+
+    if (event.init) event.init(scope);
 
     switch (event.type) {
         case 1:
