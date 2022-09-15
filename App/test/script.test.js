@@ -1,77 +1,49 @@
-const string = [
-    "a",
-    "b",
-    "c",
-    "d",
-    "e",
-    "f",
-    "g",
-    "h",
-    "i",
-    "j",
-    "k",
-    "l",
-    "m",
-    "n",
-    "o",
-    "p",
-    "q",
-    "r",
-    "s",
-    "t",
-    "u",
-    "v",
-    "w",
-    "x",
-    "y",
-    "z",
-    "0",
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    ",",
-    ";",
-    ":",
-    "!",
-    "?",
-    ".",
-    "/",
-    "§",
-    "ù",
-    "%",
-    "$",
-    "£",
-    "*",
-    "+",
-    "-",
-    "(",
-    ")",
-    "=",
-    "{",
-    "}",
-    "[",
-    "]",
-    "@",
-    "&",
-    "<",
-    ">",
-    "'"
-];
+const load = new Promise((resolve, reject) => {
+    const fs = require("fs"),
+        path = require("path");
 
-let pass = "";
-for (let tries = 0; tries < 5; tries++) {
-    for (let c = 0; c < 200; c++) {
-        let char = string[Math.floor(string.length * Math.random())];
-        if (Math.random() < 0.5) char = char.toUpperCase();
-        pass += char;
-    }
-    console.log(pass.toString());
-    console.log("\n");
-    pass = "";
-}
+    const pathToSaveFolder = path.join(path.dirname(__dirname), "/save");
+    const loadResponse = {
+        error: null,
+        files: []
+    };
+
+    fs.readdir(pathToSaveFolder, (err, files) => {
+        if (err) {
+            loadResponse.error = ["ERROR", err];
+            return reject(loadResponse);
+        }
+
+        // check if there is files in here
+        if (files.length > 0) {
+            files.forEach(file => {
+                const pathToFile = path.join(pathToSaveFolder, file);
+                const fileData = {
+                    name: file,
+                    path: pathToFile,
+                    rawContent: null,
+                    content: null,
+                    error: null
+                };
+                fs.stat(pathToFile, (err, stats) => {
+                    if (err) return;
+                    console.log(stats);
+                });
+                loadResponse.files.push(fileData);
+            });
+            return resolve(loadResponse);
+        } else {
+            // if not, reject
+            loadResponse.error = ["EMPTY", "No save files in the directory."];
+            return reject(loadResponse);
+        }
+    });
+});
+
+load.then(r => {
+    console.log("\nResponse RESOLVE");
+    console.log(r);
+}).catch(e => {
+    console.log("\nResponse ERROR");
+    console.error(e);
+});
