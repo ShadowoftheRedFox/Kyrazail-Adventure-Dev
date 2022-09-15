@@ -5,11 +5,11 @@
 This game is made by Shadow of the Red Fox\#5881 and the Kyrazail
 Adventure Team. 
 
-For any support, join us on Discord [here](https://discord.gg/5mF5AHnRCr).
+For any support, join us on [Discord](https://discord.gg/5mF5AHnRCr).
 
 ------------------------------------------------------------------------
 
-What is it about
+#What is it about
 ================
 
 This repository is the main sources of changes. All versions are made from this one, and the online version on itch.io is a replica of the **App** folder.
@@ -17,7 +17,7 @@ This repository is the main sources of changes. All versions are made from this 
 You will be able to downlaod all file version from [itch.io](https://shadowoftheredfox.itch.io/kyrazail-adventure).
 
 
-Update
+#Update
 ======
 
 If you have an internet connection, the game will check during the
@@ -31,17 +31,17 @@ If a bug occurs, or the update is not effective, plase download a new
 version online. (You can get the link of the game on our [Discord
 server](https://discord.gg/5mF5AHnRCr)).
 
-Uninstalling
+#Uninstalling
 ============
 
-We are sorry if you wan to uninstall our game. But happily, this is
+We are sorry if you want to uninstall our game. But happily, this is
 easy. Just erase [this folder](./) and the game is gone! 
 
 We would be
 very happy if you could send us the reason of the uninstalation. You can
 contact us [here](./README.html#contact-us).
 
-Bug and Support
+#Bug and Support
 ===============
 
 Known bug and future updates announcements can be found on our [Discord server](https://discord.gg/5mF5AHnRCr). You can report bug via Discord
@@ -52,24 +52,26 @@ reactive and tell you if it's a known bug or not. If you need any help
 in the game, press **P** to open the pause menu and select the **Help**
 section. If you are still stuck, ask for help on Discord.
 
-Credits
+#Credits
 =======
 
 You can check our credits [here](./App/credits.html).
 It contains the Kyrazail Adventure team, the testers, and all external link needed that the game use.
 
-Contact us
+#Contact us
 ==========
 
 You can contact us on ****kyra.devs\@gmail.com**** or on our [Discord server](https://discord.gg/5mF5AHnRCr).
 
 ------------------------------------------------------------------------
 
-Customizing parameters
+#Customizing parameters
 ======================
 
 **Please be aware that you can change the key bind in game, as well as
 most of those parameters, so prevent editing this file directly!**
+
+If by any reasons, you need to edit it, please just copy paste the code below.
 
 In *`App -> src -> config`*, there is a file called
 [config.main.js](./App/src/config/config.main.js). The default file looks like this:
@@ -95,11 +97,11 @@ const GameConfig = {
 
 You can manually edit those data, even if it's better to changes them via the game.
 
-**willUpdate** is a reminder that the game can update himself. Do not touch it. *Even if you do, it wouldn't change anything. ¯\\_(ツ)_/¯*
+**willUpdate** is a reminder that the game can update himself. Do not touch it. *Even if you do, it wouldn't change anything.* ¯\\_(ツ)_/¯
 
 **targetFps** is the wanted frame per second to reach. You can make him lower or higher.
 Lower than 30 may make the game look laggy.
-Over 60 (or your screen refresh rate), the game can be hard to run or not work properly.
+Over 60 (or your screen refresh rate), the game can be hard to run or not work properly. `number` value only. Default is ``60``.
 
 **alwaysRun** is to make your character run even if you don't press the run key. If it's enabled, the run key is now the walk key, and vice versa. `true` or `false` value only. Default is ``false``.
 
@@ -107,3 +109,18 @@ Over 60 (or your screen refresh rate), the game can be hard to run or not work p
 If you want to manually edit them, check the key sintax [here](https://www.freecodecamp.org/news/javascript-keycode-list-keypress-event-key-codes/#a-full-list-of-key-event-values). 
 
 It is not recommended to put same keys at two different functionnality, or it could cause bugged interactions.
+
+------------------------------------------------------------------------
+
+#Tips
+=====
+
+Oh, you read until here? You really like reading README files, don't you? *cough*
+
+Anyway, here are some tips to help you in the game:
+- The more expensive item is not always the best! Look for the one that suit your character the most.
+- It's okay to retreat in a battle. You won't win or lose anything.
+- Farming mobs is a good idea. You get Dinarks, loots and experiences.
+- Are you sure you can take this boss? Save your game before doing anything stupid.
+- The map is pretty bug, do you think some treasures are hidden? Heck yeah!
+- You don't understand a quest? Maybe the help in the pause menu will unstuck you.
