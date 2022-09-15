@@ -564,7 +564,13 @@ class GameMainInterface extends GameInterfaces {
         /** The delay for the confirm key. Otherwise, it keeps getting the confirm key as the key to bind. */
         this.keyboardConfirmDelay = 0;
 
-        this.loadSaveFile = [{
+        /**
+         * @type {GameSaveLoadObject}
+         */
+        this.loadSaveFileApp = null;
+        this.loadSaveFileAppMessage = "Loading files...";
+
+        this.loadSaveFile = {
             /**
              * @type {File}
              */
@@ -591,7 +597,7 @@ class GameMainInterface extends GameInterfaces {
              */
             error: [],
             try: 0
-        }];
+        };
     }
 
     /**
@@ -722,7 +728,7 @@ class GameMainInterface extends GameInterfaces {
                 b.x = (socialImageSize + spaceBetweenButton) * socialButtonCorrected;
                 socialButtonCorrected++;
             }
-            
+
             b.y = h - (socialImageSize + spaceBetweenButton);
             b.h = socialImageSize + spaceBetweenButton;
             b.w = socialImageSize + spaceBetweenButton;
@@ -1103,22 +1109,68 @@ class GameMainInterface extends GameInterfaces {
         //if in app
         if (scope.constants.isNwjs) {
             //TODO if distant server is set up, load online save on local
-            const fs = require("fs"),
-                path = require("path");
-            that.savePath = path.resolve(path.resolve(), "save");
-            that.files = [];
-
-            if (!that.checkSaveFile) {
-                fs.readdir(that.savePath, (err, f) => {
-                    //handling error
-                    if (err) {
-                        that.files = [err];
+            // await the function to laod all the files
+            if (!that.loadSaveFileApp) {
+                GameSaveManager.load().then(result => {
+                    that.loadSaveFileApp = result;
+                    //TODO create new buttons for each saves
+                    console.log(result);
+                    let tempButton = [];
+                    result.files.forEach(file => {
+                        tempButton.push({
+                            name: file.name.CapitalizeFirstLetterSentence(),
+                            lastEditDate: file.lastEditDate,
+                            x: 0,
+                            y: 0,
+                            w: 0,
+                            h: 0,
+                            f: () => { GameGlobalObject.loadGame(file.content); }
+                            //TODO add infos relativ to the game, like current map, player name, wealth etc...
+                        });
+                    });
+                    // also push the back button inside the new button list
+                    tempButton.push(currentMenu.button.last());
+                    currentMenu.button = tempButton;
+                    that.u();
+                }).catch(error => {
+                    console.error(error);
+                    // make the game stop looping this part
+                    that.loadSaveFileApp = true;
+                    if (error[0] == "EMPTY") {
+                        that.loadSaveFileAppMessage = error[1];
+                    } else {
+                        that.loadSaveFileAppMessage = "A problem happened when loading files.";
                     }
-                    that.files = f;
+                    that.u();
                 });
-                that.checkSaveFile = true;
+            } else {
+                currentMenu.button.forEach((b, i) => {
+                    b.x = 20;
+                    b.w = w - 40;
+                    b.y = 2 * h / 6 + i * 45;
+                    b.h = 40;
+
+                    ctx.fillStyle = "#b8b8b8";
+                    ctx.strokeStyle = "#4d4b4b";
+                    ctx.lineWidth = 4;
+                    ctx.globalAlpha = (i == currentMenu.focusedButton ? 0.7 : 0.5);
+                    RectangleCreator.roundRect(ctx, b.x, b.y, b.w, b.h, 10, true, true);
+                    ctx.globalAlpha = 1;
+                });
             }
-            if (that.files.length == 0) ctx.fillText("Loading files...", w / 2, h / 2);
+
+            //if it fails, create a back button
+            if (!that.loadSaveFileApp || that.loadSaveFileApp === true) {
+                that.createGradient(ctx, currentMenu.button.last());
+                const metrics = ctx.measureText(currentMenu.button.last().name);
+                const actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+                ctx.fillRect(0, h - actualHeight - 40, metrics.width + 40, + actualHeight + 40);
+                ctx.fillStyle = that.choosen[2];
+                currentMenu.focusedButton = currentMenu.button.reverseIndex();
+                that.createBackButton(ctx, currentMenu.button.last(), w, h);
+                ctx.fillText(that.loadSaveFileAppMessage, w / 2, h / 2, w);
+                that.loadSaveFileApp = null;
+            }
         } else {
             //if online
 
@@ -1127,6 +1179,7 @@ class GameMainInterface extends GameInterfaces {
             gradient.addColorStop(0.5, "#6FE0E1");
             gradient.addColorStop(1, "#3C1EEE00");
 
+            ctx.fillText("Choose a save file:", w / 2, h / 3 - 40);
             currentMenu.button.forEach((button, index) => {
                 if (index == currentMenu.focusedButton) {
                     ctx.fillStyle = gradient;
@@ -1144,7 +1197,6 @@ class GameMainInterface extends GameInterfaces {
                 if (index == currentMenu.button.reverseIndex()) {
                     that.createBackButton(ctx, button, w, h);
                 } else {
-                    ctx.fillText("Choose a save file:", w / 2, h / 3 - 40);
                     ctx.fillText(button.name, w / 2, h / 3 + 52 * index, w);
                     button.x = w / 2 - 200;
                     button.y = h / 3 + 52 * index - 16;
@@ -1162,26 +1214,26 @@ class GameMainInterface extends GameInterfaces {
                 heightDiff = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent + 10;
 
             //TODO display data relative to the saved data, and change the retry name button in "Load another file"
-            if (that.loadSaveFile[0].file && !that.loadSaveFile[0].failed) {
+            if (that.loadSaveFile.file && !that.loadSaveFile.failed) {
                 currentMenu.button[0].name = "Load another file";
 
                 ctx.textAlign = "left";
                 ctx.font = "100% Azure";
 
-                ctx.fillText("Name: " + that.loadSaveFile[0].name.split(".")[0], w / 4, h / 3 + 100);
-                ctx.fillText("Last Update: " + Utils.convertDate(Date.now() - that.loadSaveFile[0].lastEditDate), w / 4, h / 3 + 100 + heightDiff);
+                ctx.fillText("Name: " + that.loadSaveFile.name.split(".")[0], w / 4, h / 3 + 100);
+                ctx.fillText("Last Update: " + Utils.convertDate(Date.now() - that.loadSaveFile.lastEditDate), w / 4, h / 3 + 100 + heightDiff);
 
                 ctx.font = "150% Azure";
                 ctx.textAlign = "center";
-            } else if (that.loadSaveFile[0].file && that.loadSaveFile[0].failed) {
+            } else if (that.loadSaveFile.file && that.loadSaveFile.failed) {
                 currentMenu.button[0].name = "Retry";
 
                 ctx.textAlign = "left";
                 ctx.font = "100% Azure";
 
-                ctx.fillText("Error: " + that.loadSaveFile[0].error[0], w / 4, h / 3 + 100);
+                ctx.fillText("Error: " + that.loadSaveFile.error[0], w / 4, h / 3 + 100);
                 ctx.fillText("Try loading a file again.", w / 4, h / 3 + 100 + heightDiff);
-                if (that.loadSaveFile[0].try > 2) ctx.fillText("You can call for help on our support if needed.", w / 4, h / 3 + 100 + heightDiff * 2);
+                if (that.loadSaveFile.try > 2) ctx.fillText("You can call for help on our support if needed.", w / 4, h / 3 + 100 + heightDiff * 2);
 
                 ctx.font = "150% Azure";
                 ctx.textAlign = "center";
@@ -1198,8 +1250,7 @@ class GameMainInterface extends GameInterfaces {
         if (!scope.constants.isNwjs) {
             const currentMenu = that.menu[that.focusedMenu],
                 b = currentMenu.button[currentMenu.focusedButton];
-            console.log(!that.loadSaveFile[0].file, that.loadSaveFile[0].failed == false, b.name != "Load a file before!");
-            if ((!that.loadSaveFile[0].file || that.loadSaveFile[0].failed == false) && b.name != "Load a file before!") {
+            if ((!that.loadSaveFile.file || that.loadSaveFile.failed == false) && b.name != "Load a file before!") {
                 const o = b.name;
                 b.name = "Load a file before!";
                 that.u();
@@ -1227,49 +1278,52 @@ class GameMainInterface extends GameInterfaces {
      * @param {this} that 
      */
     loadSaveFileRetry(scope, that) {
-        //add a input element and check it
-        let inputs = document.createElement('input');
-        inputs.type = 'file';
-        inputs.hidden = true;
-        inputs.accept = ".kyraadv,.kyraadvsave";
-        inputs.id = "GameSaveInput";
-        inputs.name = "GameSaveInput";
-        // we want only one file
-        inputs.multiple = false;
+        if (!scope.constants.isNwjs) {
+            //add a input element and check it
+            let inputs = document.createElement('input');
+            inputs.type = 'file';
+            inputs.hidden = true;
+            inputs.accept = ".kyraadv,.kyraadvsave";
+            inputs.id = "GameSaveInput";
+            inputs.name = "GameSaveInput";
+            // we want only one file
+            inputs.multiple = false;
 
-        inputs.click();
-        inputs.onchange = ev => {
-            // the first file inputed only
-            that.loadSaveFile[0].file = inputs.files[0];
-            //get the name and the ext of the file
-            that.loadSaveFile[0].name = ev.target.value.split('\\').pop();
-            that.loadSaveFile[0].lastEditDate = inputs.files[0].lastModified;
+            inputs.click();
+            inputs.onchange = ev => {
+                // the first file inputed only
+                that.loadSaveFile.file = inputs.files[0];
+                //get the name and the ext of the file
+                that.loadSaveFile.name = ev.target.value.split('\\').pop();
+                that.loadSaveFile.lastEditDate = inputs.files[0].lastModified;
 
-            const saveReader = new FileReader();
-            saveReader.readAsText(that.loadSaveFile[0].file, "UTF-8");
-            saveReader.onload = function (evt) {
-                // content of the file
-                that.loadSaveFile[0].contentString = evt.target.result;
-                try {
-                    that.loadSaveFile[0].contentObject = JSON.parse(that.loadSaveFile[0].contentString);
+                const saveReader = new FileReader();
+                saveReader.readAsText(that.loadSaveFile.file, "UTF-8");
+                saveReader.onload = function (evt) {
+                    // content of the file
+                    that.loadSaveFile.contentString = evt.target.result;
+                    const decrypt = GameDecrytpData(that.loadSaveFile.contentString);
+                    try {
+                        that.loadSaveFile.contentObject = JSON.parse(decrypt);
+                        that.u();
+                    } catch (e) {
+                        that.loadSaveFile.failed = true;
+                        that.loadSaveFile.error = ["Failed to load the content. File may be corrupted.", e];
+                        that.loadSaveFile.try++;
+                        that.u();
+                    }
+                    console.log(that.loadSaveFile);
+                };
+                saveReader.onerror = function (evt) {
+                    console.log("error reading file");
+                    console.log(evt);
+                    that.loadSaveFile.failed = true;
+                    that.loadSaveFile.error = ["Failed to load the content. File may be corrupted.", e];
+                    that.loadSaveFile.try++;
                     that.u();
-                } catch (e) {
-                    that.loadSaveFile[0].failed = true;
-                    that.loadSaveFile[0].error = ["Failed to load the content. File may be corrupted.", e];
-                    that.loadSaveFile[0].try++;
-                    that.u();
-                }
-                console.log(that.loadSaveFile);
+                };
             };
-            saveReader.onerror = function (evt) {
-                console.log("error reading file");
-                console.log(evt);
-                that.loadSaveFile[0].failed = true;
-                that.loadSaveFile[0].error = ["Failed to load the content. File may be corrupted.", e];
-                that.loadSaveFile[0].try++;
-                that.u();
-            };
-        };
+        }
     }
 
     /**
