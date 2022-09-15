@@ -10,14 +10,15 @@
         "toolbar": false,
         "width": 800,
         "height": 400,
-        "min-width": 800,
-        "min-height": 400
+        "min_width": 800,
+        "min_height": 400
     },
     "chromium-args": "--enable-node-worker --allow-file-access-from-files",
     "scripts": {
         "dev": "nw App/",
         "prod": "nwbuild --mode build --zip false --platforms win32 win64 linux32 linux64 --buildDir build/ App/**",
-        "prodos": "nwbuild --mode build --platforms osx64 --buildDir build/ App/**"
+        "prodos": "nwbuild --mode build --platforms osx64 --buildDir build/ App/**",
+        "test": "node App/test/script.test.js"
     },
     "repository": {
         "type": "git",
