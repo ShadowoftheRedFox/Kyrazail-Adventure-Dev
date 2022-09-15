@@ -1,273 +1,5 @@
 export { }
 declare global {
-    const ConfigConst: {
-        KEY: "9z$C&E)H@McQfTjWnZr4u7x!A%D*G-JaNdRgUkXp2s5v8y/B?E(H+MbPeShVmYq3t6w9z$C&F)J@NcRfTjWnZr4u7x!A%D*G-KaPdSgVkXp2s5v8y/B?E(H+MbQeThWmZq3t6w9z$C&F)J@NcRfUjXn2r5u7x!A%D*G-KaPdSgVkYp3s6v9y/B?E(H+MbQeThWmZq4t7w!z%C&F)J@NcRfUjXn2r5u8x/A?D(G-KaPdSgVkYp3s6v9y$B&E)H@MbQeThWmZq4t7w!z%C*F-JaNdRfUjXn2r5u8x/A?D(G+KbPeShVkYp3s6v9y$B&E)H@McQfTjWnZq4t7w!z%C*F-JaNdRgUkXp2s5u8x/A?D(G+KbPeShVmYq3t6w9y$B&E)H@McQfTjWnZr4u7x!A%C*F-JaNdRgUkXp2s5v8y/B?E(G+KbPeShVmYq3t6w9z$C&F)J@McQfTjWnZr4u7x!A%D*G-KaPdRgUkXp2s5v8y/B?E(H+MbQeThVmYq3t6"
-        DISCORD: "https://discord.gg/5mF5AHnRCr"
-        GITHUB: "https://github.com/ShadowoftheRedFox/Kyrazail-Adventure-Dev.git"
-        LANGUAGE: GameLanguage
-        ZINDEX: {
-            UNKNOWN: 0
-            MAP: 1
-            MAPANIMATED: 2
-            ENTITIES: 3
-            MAPOVER: 4
-            MAPEFFECT: 5
-            FIGHT: 6
-            PLAYERQUIPEMENT: 7
-            DIALOGUE: 8
-            PAUSE: 9
-            MAIN: 900
-            MAINSUBMENU: 901
-            INTRODUCTION: 950
-            TRANSITION: 998
-            LOADING: 999
-            ERROR: 1000
-        }
-        TIP: string[]
-        TITLE: string[]
-        CONTAINER: HTMLElement | null
-        MAINCONTAINER: HTMLElement | null
-        DEBUG: boolean
-    }
-
-    const GameConfig: {
-        willUpdate: false
-        targetFps: 60
-        alwaysRun: false
-        /**
-         * Combine KEYs name to a functionnality.
-         * @see [all KEY name here](https://www.freecodecamp.org/news/javascript-keycode-list-keypress-event-key-codes/#a-full-list-of-key-event-values)
-         * @warn It is strongly not recommended to put same keys at two different functionnality, it may cause unexpected behaviors.
-         */
-        keyBoard: {
-            up: string[]
-            down: string[]
-            right: string[]
-            left: string[]
-            run: string[]
-            debug: string[]
-            pause: string[]
-            back: string[]
-            confirm: string[]
-            inventory: string[]
-        }
-    }
-
-    const LoadingScreenManager: {
-        w: number
-        h: number
-
-        progress: number
-        interval: number
-        progressMax: number
-        progressLast: number
-        refreshSpeed: number
-        progressSmooth: number
-        progressAnimation: number
-        message: string
-
-        ctx: CanvasRenderingContext2D | null
-        viewport: HTMLCanvasElement | null
-
-        trailingStep: number
-        trailingCount: number
-        trailingSpeed: number
-
-        tipIndex: number
-        tipCount: number
-        tipSpeed: number
-
-        stripeStep: number
-        stripeSpeed: number
-        stripeAlpha: number
-        stripeColor: string
-
-        animationW: number
-        animationH: number
-        animationStep: number
-        animationImage: null
-        animationMargin: number
-        animationLastStep: number
-        animationStepCount: number
-        animationStepSpeed: number
-        animationStepSpeedDistance: number
-        animationPositionSpeed(w: number): number
-        animationPosition: number
-        calledEqual: false
-
-        init(callWhenEqual: () => void): void
-        end(): void
-        edit(): void
-        bar(): void
-        animate(): void
-        tip(): void
-        title(): void
-        addProgress(n: number): void
-        setMaxProgress(n: number): void
-        createPattern(color: string | "grey", alpha: number | 1): CanvasPattern
-        progressFunction(): void
-    }
-
-    var GameAudiosToLoad: []
-    var GameImagesToLoad: []
-
-    type GameEntitiesOptions = {
-        name: string | GameLanguageObject
-        /** If type is "hostile".*/
-        stats: GameEntitiesStats
-        /** If type is marchand.*/
-        shop: {
-            canPlayerSell: boolean
-            canPlayerBuy: boolean
-            canPlayerEquip: boolean
-            items: GameItemName[]
-            welcomeMessage: GameLanguageCodedString[]
-        }
-        /** If type is npc.*/
-        dialog: GameLanguageCodedString[] | ["..."]
-
-        type: "hostile" | "npc" | "marchand" | "player"
-        pattern: "follow" | "merge" | "idle" | "custom" | "player"
-
-        spawnX: number | 0
-        spawnY: number | 0
-        spawnOrientation: GameOrientation | "south"
-
-        character: {
-            invisible: boolean | true
-            image: string | null
-            col: number | null
-            row: number | null
-        }
-
-        movementSpeed: number | 0
-
-        speakImage: string | null
-        speakRow: number | null
-        speakCol: number | null
-    }
-
-    type GameStatusEffect = {
-        /** In round.*/
-        duration: number
-        /** Add the number for the target on his pv.*/
-        pv: number
-        /** Add the number for the target on his mp.*/
-        mp: number
-        /** Add the number for the target on his sp.*/
-        sp: number
-        /** If the effect can cause death.*/
-        canKill: boolean
-        /** The image displayed in the status.*/
-        effectImage: string
-        effectRow: number
-        effectCol: number
-        /** If there is an animation each time the effect is inflicted.*/
-        animationEffect: boolean
-        animationImage: string
-    }
-
-    type GameItem = {
-        name: GameLanguageObject
-        image: string
-        col: number
-        rown: number
-        description: GameLanguageCodedString
-        special: boolean
-        usable: boolean
-        /** How many times can we use this item.*/
-        usageAmount: number
-        helmet: boolean
-        torso: boolean
-        legging: boolean
-        boot: boolean
-        singleHanded: boolean
-        twoHanded: boolean
-        type: GameItemType[]
-    }
-
-    type GameRecipe = {
-        name: GameLanguageObject
-        description: GameLanguageCodedString
-        /** Array of items names */
-        recipeList: {
-            /** Refers to an item name.*/
-            item: string
-            amount: number
-        }[]
-        usageAmount: number | null
-        result: {
-            /** Refers to an item name.*/
-            item: string
-            amount: number
-        }
-    }
-
-    type GameAttackType = "physical" | "magic" | "fire" | "water" | "ice" | "electricity" | "dark" | "holy"
-
-    type GameOrientation = "east" | "south" | "west" | "north"
-
-    /** A code that will be used in the language module to return the true string but translated in the wanted language.*/
-    type GameLanguageCodedString = string
-
-    /** Refers to the name of an item. */
-    type GameItemName = string
-
-    type GameItemType = "resource" | "equipement" | "potion"
-
-
-    /**
-     * Remove any duplicate from the array, so it has every item once.
-     */
-    function RemoveDuplicate(a: any[]): any[]
-
-    type GameEntitiesStats = {
-        pv: number
-        mp: number
-        sp: number
-
-        def: number
-        magicdef: number
-        atk: number
-        magicatk: number
-        agi: number
-        luck: number
-
-        special: GameSpecialAbility[]
-
-        /** Regenerate by himself.*/
-        regeneration: number
-
-        /** Reduce by 2 the damage taken.*/
-        resistance: GameAttackType[]
-        /** Increase by 2 the damage taken.*/
-        weakness: GameAttackType[]
-
-        status: GameStatusEffect[]
-        loots: { item: GameItemName, amount: number }[]
-        gold: number
-        exp: number
-
-        boss: boolean
-        bossLoot: { item: GameItemName, amount: number }[]
-    }
-
-    type GameSpecialAbility = {
-        name: GameLanguageObject
-        mpCost: number
-        hpCost: number
-        spCost: number
-        /** When attacking. */
-        animationImage: string | null
-        /** In menu. */
-        skillImage: string | null
-        type: GameAttackType
-        /** Delay before using the skill again, in rounds.*/
-        delay: number
-        /** If there is a max amount of user per battle.*/
-        usePerBattle: number | null
-    }
-
     type GameScope = {
         /**Width of the game screen.*/
         w: number
@@ -373,22 +105,300 @@ declare global {
             }
             context: { [name: string]: CanvasRenderingContext2D }
         }
+
+        /**
+         * Where all data that needs to be saved are stocked.
+         * If we load a save, that's here that the data are fully changed.
+         */
+        global: {
+            version: string
+            player: {
+                firstName: string
+                lastName: string
+
+                /** 
+                 * We calculate the player level with xp. So there is no need for an level object. 
+                 * Same goes for mana and special point. It also depends the species
+                 */
+                xp: number
+                species: GameSpeciesBase | GameSpeciesAdvanced
+                advancedSpecies: boolean
+
+                face: GameIcon
+                character: GameIcon
+
+                stats: {
+                    pv: number
+                    mp: number
+                    sp: number
+
+                    def: number
+                    magicdef: number
+                    atk: number
+                    magicatk: number
+                    agi: number
+                    luck: number
+
+                    special: GameSpecialAbility[]
+
+                    /** Regenerate by himself.*/
+                    regeneration: number
+
+                    /** Reduce by 2 the damage taken.*/
+                    resistance: GameAttackType[]
+                    /** Increase by 2 the damage taken.*/
+                    weakness: GameAttackType[]
+
+                    status: GameStatusEffect[]
+                }
+                equipment: GameEntitiesEquipment
+            }
+            party: {}
+            inventory: {}
+            map: {}
+            quest: {
+                finished: GameQuest[]
+                ongoing: GameQuest[]
+                failed: GameQuest[]
+            }
+            knowledge: {
+                totalSkillPoint: number
+                availableSkillPoint: number
+                skillTree: number[]
+            }
+            adventure: {}
+        }
     }
 
-    /**
-     * Event handler for the game.
-     */
-    class GameEvent {
-        /** Will launch the given function when the given event is emited somewhere.*/
-        on(event: string | any, listener: (...any: any[]) => {} | any): () => void
-        /** Will launch the given function when the given event is emited somewhere, one time.*/
-        once(event: string | any, listener: (...any: any[]) => {} | any): void
-        /** Emit the given event, if there is a listener somewhere of the given event, he will fire.*/
-        emit(event: string | any, ...args: any[]): void
-        /** Remove a listener from an event.*/
-        removeListener(event: string | any, listener: () => {} | any): void
-        /** Remove all listener from an event is the event parameter is found, otherwise, delete all event.*/
-        removeAllListener(event: string | any): void
+    type GameSpeciesBase = "elf" | "dwarf" | "demon" | "human" | "vampire" | "angel" | "fairy"
+
+    type GameSpeciesAdvanced = "high elf" | "ancient dwarf" | "archi demon" | "ancient vampire" | "archangel" | "high fairy" | "human heroe"
+
+    type GameQuest = {
+        name: string
+        description: string
+        reward: GameItemName[]
+        requirement: {
+            name: string
+            max: number
+            progression: number
+            finished: boolean
+            failed: boolean
+            /** If important is true, this requirement msut be finished for teh quest to be valid. */
+            important: boolean
+        }[]
+        /** Condition to enable the quest. */
+        condition: {
+            /** Name of the condition. */
+            name: string[]
+            /** Value for the given condition name. */
+            value: (number | boolean | string)[]
+        }
+        status: {
+            enabled: boolean
+            newQuest: boolean
+            finished: boolean
+            failed: boolean
+        }
+    }
+
+    type GameEntitiesOptions = {
+        name: string | GameLanguageObject
+        /** If type is "hostile".*/
+        stats: GameEntitiesStats | undefined
+        /** If type is marchand.*/
+        shop: {
+            canPlayerSell: boolean
+            canPlayerBuy: boolean
+            canPlayerEquip: boolean
+            items: GameItemName[]
+            welcomeMessage: GameLanguageCodedString[]
+        } | undefined
+        /** If type is npc.*/
+        dialog: GameLanguageCodedString[] | ["..."]
+
+        type: "hostile" | "npc" | "marchand" | "player"
+        pattern: "follow" | "merge" | "idle" | "custom" | "player"
+
+        spawnX: number | 0
+        spawnY: number | 0
+        spawnOrientation: GameOrientation | "south"
+
+        character: GameIcon
+
+        movementSpeed: number | 0
+
+        speakImage: string | null
+        speakRow: number | null
+        speakCol: number | null
+    }
+
+    type GameStatusEffect = {
+        /** In round.*/
+        duration: number
+        /** Add the number for the target on his pv.*/
+        pv: number
+        /** Add the number for the target on his mp.*/
+        mp: number
+        /** Add the number for the target on his sp.*/
+        sp: number
+        /** If the effect can cause death.*/
+        canKill: boolean
+        /** The image displayed in the status.*/
+        effectImage: string
+        effectRow: number
+        effectCol: number
+        /** If there is an animation each time the effect is inflicted.*/
+        animationEffect: boolean
+        animationImage: string
+    }
+
+    type GameItem = {
+        name: GameLanguageObject
+        image: string
+        col: number
+        rown: number
+        description: GameLanguageCodedString
+        special: boolean
+        usable: boolean
+        /** How many times can we use this item.*/
+        usageAmount: number
+        helmet: boolean
+        torso: boolean
+        legging: boolean
+        boot: boolean
+        singleHanded: boolean
+        twoHanded: boolean
+        type: GameItemType[]
+    }
+
+    type GameRecipe = {
+        name: GameLanguageObject
+        description: GameLanguageCodedString
+        /** Array of items names */
+        recipeList: {
+            /** Refers to an item name.*/
+            item: string
+            amount: number
+        }[]
+        usageAmount: number | null
+        result: {
+            /** Refers to an item name.*/
+            item: string
+            amount: number
+        }
+    }
+
+    type GameAttackType = "physical" | "magic" | "fire" | "water" | "ice" | "electricity" | "dark" | "holy"
+
+    type GameOrientation = "east" | "south" | "west" | "north"
+
+    /** A code that will be used in the language module to return the true string but translated in the wanted language.*/
+    type GameLanguageCodedString = string
+
+    /** Refers to the name of an item. */
+    type GameItemName = string
+
+    type GameItemType = "resource" | "equipement" | "potion"
+
+    type GameEntitiesStats = {
+        pv: number
+        mp: number
+        sp: number
+
+        def: number
+        magicdef: number
+        atk: number
+        magicatk: number
+        agi: number
+        luck: number
+
+        special: GameSpecialAbility[]
+
+        /** Regenerate by himself.*/
+        regeneration: number
+
+        /** Reduce by 2 the damage taken.*/
+        resistance: GameAttackType[]
+        /** Increase by 2 the damage taken.*/
+        weakness: GameAttackType[]
+
+        status: GameStatusEffect[]
+        loots: { item: GameItemName, amount: number }[]
+        gold: number
+        exp: number
+
+        boss: boolean
+        bossLoot: { item: GameItemName, amount: number }[]
+    }
+
+    type GamePartyMember = {
+        name: string
+        species: GameSpeciesBase | GameSpeciesAdvanced
+        face: GameIcon
+        character: GameIcon
+        exp: number
+        description: string
+
+        stats: {
+            pv: number
+            mp: number
+            sp: number
+
+            def: number
+            magicdef: number
+            atk: number
+            magicatk: number
+            agi: number
+            luck: number
+
+            special: GameSpecialAbility[]
+
+            /** Regenerate by himself.*/
+            regeneration: number
+
+            /** Reduce by 2 the damage taken.*/
+            resistance: GameAttackType[]
+            /** Increase by 2 the damage taken.*/
+            weakness: GameAttackType[]
+
+            status: GameStatusEffect[]
+        }
+
+        equipment: GameEntitiesEquipment
+    }
+
+    type GameEntitiesEquipment = {
+        head: GameItemName
+        torso: GameItemName
+        foot: GameItemName
+        weapon1: GameItemName
+        weapon2: GameItemName
+        jewel1: GameItemName
+        jewel2: GameItemName
+    }
+
+    type GameIcon = {
+        invisible: boolean
+        row?: number
+        col?: number
+        src?: string
+    }
+
+    type GameSpecialAbility = {
+        name: GameLanguageObject
+        mpCost: number
+        hpCost: number
+        spCost: number
+        /** When attacking. */
+        animationImage: string | null
+        /** In menu. */
+        skillImage: string | null
+        type: GameAttackType
+        /** Delay before using the skill again, in rounds.*/
+        delay: number
+        /** If there is a max amount of user per battle.*/
+        usePerBattle: number | null
     }
 
     type GameLanguage = "fr" | "en"
@@ -440,67 +450,6 @@ declare global {
         colision: number[][]
     }
 
-    /**
-     * Edit the canvas element on the html page to the new dimension.
-     * @param canvas canvas element
-     * @param neww width of the canvas
-     * @param newh heigth of the canvas
-     */
-    function regenerateCanvas(canvas: HTMLCanvasElement, neww: number, newh: number): void
-
-    /**
-     * Edit the canvas element on the html page to the new dimension.
-     * @param canvas canvas element
-     * @param neww width of the canvas
-     * @param newh heigth of the canvas
-     */
-    function regenerateCanvas(canvas: HTMLCanvasElement, neww: number, newh: number): void
-
-    /**
-     * Create a canvas element on the html page.
-     * @param w width of the canvas
-     * @param h heigth of the canvas
-     * @param i z-index of the canvas
-     */
-    function generateCanvas(w: number, h: number, i?: number): HTMLCanvasElement
-
-    /**
-     * Get the pixel ratio depending of the current device.
-     * @param context the wanted context ration
-     */
-    function getPixelRatio(context: CanvasRenderingContext2D): number
-
-    /**
-     * Regenerate all canvas element to the given dimension.
-     * @param neww The new window width
-     * @param newh The new window height
-     */
-    function regenerateAllCanvas(neww: number, newh: number): void
-
-    /**
-     * Remove an element off the dom.
-     * @param id The id of the element to remove
-     * @returns The success or not of the operation
-     */
-    function removeElement(id: string): boolean
-
-    const WindowManager: {
-        data: {
-            viewport: null
-            ctx: CanvasRenderingContext2D
-            created: boolean
-        }
-        init(): void
-        beforeUnloadSetup(): void
-        closeGame(): boolean
-        reloadGame(): void
-        /**
-         * Show error on screen and stops the game.
-         * @param error The error.
-         */
-        fatal(error: Error): void
-    }
-
     type GameScriptPreLoad = {
         name: string
         path: string
@@ -515,179 +464,6 @@ declare global {
         parameters: object
         description: string
         objPath: string
-    }
-
-    const ScriptLoaderManager: {
-        setup(plugins: GameScriptPreLoad[], number: number, call: () => {}): Promise<() => {}>
-        parameters(name: string): object | {}
-        _scripts: string[]
-        _errorUrls: string[]
-        _parameters: object
-    }
-
-    const DataLoaderManager: {
-        setup(plugins: GameScriptPreLoad[], number: number, call: () => {}): Promise<() => {}>
-        _datas: string[]
-        _errorUrls: string[]
-        _dataLoaded: object
-    }
-
-    /**
-     * Translate a code message and return the translated message.
-     * 
-     * Arguments must be passed in the correct order, and translated before if needed. (Maybe it will be done automatically).
-     * @param messageCode The code message to translate.
-     * @param args The arguments if needed.
-     * @returns The translated message.
-     * @example GameTranslate("CheckPlayerNameCorrect", "Kyra")
-     * // if the game is in language "en":
-     * => "Your name is Kyra, is that correct?"
-     * @since v1.0.2.5
-     */
-    function GameTranslate(messageCode: string, args?: any[] | undefined): string
-
-    class GameInterfaces {
-        /**
-         * @param {GameInterfacesOptions} options
-         * @param {GameScope} scope 
-         */
-        constructor(options: GameInterfacesOptions, scope: GameScope)
-        asOwnCanvas: Boolean
-        canvasGroup: string
-        interfaceCanvas: HTMLCanvasElement | undefined
-
-        zindex: number
-
-        requiredImage: string[]
-        requiredAudio: string[]
-
-        transitionSpawnDuration: number
-        transitionLeaveDuration: number
-        transitionSpawn: boolean
-        transitionLeave: boolean
-
-        activated: boolean
-        spawned: boolean
-        needsUpdate: boolean
-
-        validateOptions(options: GameInterfacesOptions, scope: GameScope): void
-        render(scope: GameScope): void
-        update(scope: GameScope): object
-    }
-
-    const Utils: {
-        /**
-         * Return current date using the language format.
-         * 
-         * @method getDate
-         * @static
-         * @example "19/09/2009"
-         */
-        getDate(): string
-
-        /**
-         * Return the exact date in dd/mm/yyyy hh:mm:ss format.
-         * 
-         * @method getExactDate
-         * @static
-         * @example '05/17/2012 10:52:21'
-         */
-        getExactDate(): string
-
-        /**
-         * Remove any duplicate from the array, so it has every item once.
-         * 
-         * @method RemoveDuplicate
-         * @param a The array we want to remove duplicates.
-         * @since v1.0.2.5
-         */
-        RemoveDuplicate(a: any[]): any[]
-
-        /**
-         * Checks whether the browser is Android Chrome.
-         *
-         * @static
-         * @method isAndroidChrome
-         * @return {Boolean} True if the browser is Android Chrome
-         */
-        isAndroidChrome(): boolean
-
-        /**
-         * Checks whether the browser is Mobile Safari.
-         *
-         * @static
-         * @method isMobileSafari
-         * @return {Boolean} True if the browser is Mobile Safari
-         */
-        isMobileSafari(): boolean
-
-        /**
-         * Checks whether the platform is a mobile device.
-         *
-         * @static
-         * @method isMobileDevice
-         * @return {Boolean} True if the platform is a mobile device
-         */
-        isMobileDevice(): boolean
-
-        /**
-         * Checks whether the platform is NW.js.
-         *
-         * @static
-         * @method isNwjs
-         * @return {Boolean} True if the platform is NW.js
-         */
-        isNwjs(): boolean
-        /** 
-         * Convert an amount of ms in a string.
-         * @param ms The amount of ms to convert.
-         */
-        convertDate(ms: number): string
-    }
-
-    const KeyboardTrackerManager: {
-        init(): void
-        array: string[]
-        map: { [name: string]: boolean }
-    }
-
-    const MouseTrackerManager: {
-        init(): void
-        data: {
-            lastMove: {
-                x: number,
-                y: number
-            }
-            old: {
-                x: number,
-                y: number
-            }
-            click: { x: number, y: number, date: number }[]
-        }
-        /**
-         * Check whether or not the mouse is over the given rectangle.
-         * @param x
-         * @param y
-         * @param w
-         * @param h
-         * @param old If we include a check on old coordinates
-         * @returns {boolean} If it's over ot not.
-         */
-        checkOver(x: number, y: number, w: number, h: number, old: boolean): boolean
-
-        /**
-         * Check whether or not there was a click in the given rectangle in the given past time.
-         * @param x
-         * @param y
-         * @param w
-         * @param h
-         * @param time How long should we look for a click, in ms. Default is 1000 / GameConfig.targetFps, if it's 60fps, time is 16.6ms.
-         * @returns {boolean} If there was a click or not.
-         */
-        checkClick(x: number, y: number, w: number, h: number, time?: number | 16.6): boolean
-
-        updated: boolean
-        waitTimeUpdate: number
     }
 
     type GameMenuBuilderOptions = {
@@ -713,163 +489,6 @@ declare global {
         align: "horizontal" | "vertical"
     }
 
-    /**
-     * All rectangle are created centered by the given x y coordinates.
-     */
-    const RectangleCreator: {
-        /**
-         * Draws a rounded rectangle using the current state of the canvas.
-         * If you omit the last three params, it will draw a rectangle
-         * outline with a 5 pixel border radius
-         * @param {CanvasRenderingContext2D} ctx
-         * @param {Number} x The top left x coordinate
-         * @param {Number} y The top left y coordinate
-         * @param {Number} width The width of the rectangle
-         * @param {Number} height The height of the rectangle
-         * @param {Number} [radius = 5] The corner radius. It can also be an object to specify different radius for corners
-         * @param {Number} [radius.tl = 0] Top left
-         * @param {Number} [radius.tr = 0] Top right
-         * @param {Number} [radius.br = 0] Bottom right
-         * @param {Number} [radius.bl = 0] Bottom left
-         * @param {Boolean} [fill = false] Whether to fill the rectangle.
-         * @param {Boolean} [stroke = true] Whether to stroke the rectangle.
-         */
-        roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius?: number, fill?: boolean, stroke?: boolean): void
-        /**
-         * Create a frame with the given parameters. Draw it like a stroke rectangle with shady background.
-         * @param scope Scope.
-         * @param ctx The context to draw on to.
-         * @param x Upper left corner x coordinate.
-         * @param y Upper left corner x coordinate.
-         * @param w Width of the rectangle.
-         * @param h Heigth of the rectangle.
-         */
-        frameRectangleTrans(scope: any, ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number): void
-        /**
-         * Create a frame with the given parameters. Draw it like a stroke rectangle.
-         * @param scope Scope.
-         * @param ctx The context to draw on to.
-         * @param x Upper left corner x coordinate.
-         * @param y Upper left corner x coordinate.
-         * @param w Width of the rectangle.
-         * @param h Heigth of the rectangle.
-         */
-        frameRectangle(scope: any, ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number): void
-        /**
-         * Create a frame with the given parameters. Draw it like a stroke rectangle with an image inside.
-         * @param scope Scope.
-         * @param ctx The context to draw on to.
-         * @param x Upper left corner x coordinate.
-         * @param y Upper left corner x coordinate.
-         * @param w Width of the rectangle.
-         * @param h Heigth of the rectangle.
-         * @param imageToDraw The image you want to draw inside the frame.
-         * @param ix Upper left corner x coordinate of the image.
-         * @param iy Upper left corner x coordinate of the image.
-         * @param iw Width of the rectangle of the image.
-         * @param ih Heigth of the rectangle of the image.
-         */
-        frameRectangle(scope: any, ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, imageToDraw: HTMLImageElement, ix: number, iy: number, iw: number, ih: number): void
-    }
-
-    function TransitionEffectBuild(scope: GameScope, duration: number): void
-    function TransitionEffectFade(scope: GameScope, duration: number): void
-    function TransitionEffectCancel(scope: GameScope): void
-
-    /**
-     * Draw an underline under a given text and position.
-     * @param context The context to draw onto.
-     * @param text The text that will be underlined.
-     * @param x The text x position.
-     * @param y The text y position.
-     * @param color The underline line color.
-     * @param textSize The size of the text.
-     * @param align The alignment of the text.
-     */
-    function underline(context: CanvasRenderingContext2D, text: string, x: number, y: number, color: string | CanvasGradient | CanvasPattern, textSize: string, align: CanvasTextAlign): void
-
-    interface Window {
-        /** The game object. */
-        game: GameScope
-    }
-
-    interface Array<T> {
-        /** 
-         * Return a random element of the array. 
-         */
-        random(): T | undefined
-        /**
-         * Check whether the two arrays are the same.
-         * @param array The array to compare to.
-         */
-        equals(array: any[]): boolean
-        /**
-         * Return the element starting by the end of the array.
-         * @param n The index starting from the end. Default is 0.
-         */
-        last(n: number | 0): T
-
-        /**
-         * Return the index of the element starting from the end.
-         * @param n the index starting from the end. Default is 0.
-         */
-        reverseIndex(n: number | 0): number
-
-        [n: number]: T
-    }
-
-    interface String {
-        /**
-         * Check whether the string contains a given string.
-         * Basically the same as inclides, but has a wider support range.
-         * @param string The string ti search for.
-         */
-        contains(string: string): boolean
-        /**
-         * Replaces %1, %2 and so on in the string to the arguments.
-         * Return a formatted string.
-         * @param args The value to replace, in order.
-         * @example
-         * "%1 %2 and %3".format("0", "8", "7") => "0 8 and 7"
-         * "%3 %2 and %1".format("0", "8", "7") => "7 8 and 0"
-         */
-        format(...args: any): string
-        /**
-         * Put a capital letter on the first character of each words.
-         */
-        CapitalizeFirstLetterSentence(): string
-        /** 
-         * Put a capital letter on the first character of the string.
-         */
-        CapitalizeFirstLetterWord(): string
-    }
-
-    interface Number {
-        /**
-         * Return a number between the given range.
-         * @param min The lower boundary.
-         * @param max The upper boundary.
-         */
-        clamp(min: number, max: number): number
-    }
-
-    const ArrowDrawer: {
-        /**
-         * Draw a pixelised arrow.
-         * @param a direction the arrow is pointing
-         * @param c color of the arrow
-         * @returns the arrow image on the canvas
-         */
-        pixel(a: ("up" | "down" | "right" | "left") | "right", c: (string | CanvasGradient | CanvasPattern) | "black"): HTMLCanvasElement
-        /**
-         * Draw an arrow hat.
-         * @param a direction the arrow is pointing
-         * @param c color of the arrow
-         * @returns the arrow image on the canvas
-         */
-        hat(a: ("up" | "down" | "right" | "left") | "right", c: (string | CanvasGradient | CanvasPattern) | "black"): HTMLCanvasElement
-    }
-
     type GameSaveObject = {
         content: {
 
@@ -883,6 +502,7 @@ declare global {
         /**Depends the type of the event. Check your reminder.*/
         list: GameEventsListType1[] | GameEventsListType2[] | any[]
         end: string | (() => {}) | null
+        init: string | (() => {}) | null
         stop: string[]
         start: string[] | []
     }
