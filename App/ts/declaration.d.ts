@@ -21,7 +21,6 @@ declare global {
             DIALOGUE: 8
             PAUSE: 9
             MAIN: 900
-            MAINSUBMENU: 901
             INTRODUCTION: 950
             TRANSITION: 998
             LOADING: 999
@@ -363,6 +362,20 @@ declare global {
          * @returns the arrow image on the canvas
          */
         hat(a: ("up" | "down" | "right" | "left") | "right", c: (string | CanvasGradient | CanvasPattern) | "black"): HTMLCanvasElement
+    }
+
+    const GameSaveManager: {
+        /**
+         * Create a save file and download it.
+         * @param SaveFileName The name of the file that will be downloaded.
+         */
+        save(SaveFileName: string): void
+
+        /**
+         * Load when on the app all the files in the save folder.
+         * Return string[] on reject.
+         */
+        load(): Promise<GameSaveLoadObject>
     }
 
     /**
