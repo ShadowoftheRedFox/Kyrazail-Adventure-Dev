@@ -13,6 +13,7 @@ ScriptLoaderManager.setup = async function (plugins, number, call) {
     if (typeof call !== "function") throw new TypeError(`Call is not a function, got ${typeof call}`);
     if (number >= plugins.length) return call();
     const plugin = plugins[number];
+    if (!plugin.status) return ScriptLoaderManager.setup(plugins, number + 1, call);
     ScriptLoaderManager._scripts.push(plugin.name);
     ScriptLoaderManager.setParameters(plugin.name, plugin.parameters);
     var url = plugin.path + plugin.name + ".js";
@@ -51,6 +52,7 @@ DataLoaderManager.setup = function (plugins, number, call) {
     if (typeof call !== "function") throw new TypeError(`Call is not a function, got ${typeof call}`);
     if (number >= plugins.length) return call();
     const plugin = plugins[number];
+    if (!plugin.status) return DataLoaderManager.setup(plugins, number + 1, call);
     DataLoaderManager._datas.push(plugin.name);
     var url = plugin.path + plugin.name + ".json";
     let httpRequest = new XMLHttpRequest(); // asynchronous request
