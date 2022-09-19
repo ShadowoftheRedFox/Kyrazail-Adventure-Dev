@@ -111,7 +111,6 @@ declare global {
          * If we load a save, that's here that the data are fully changed.
          */
         global: {
-            version: string
             player: {
                 firstName: string
                 lastName: string

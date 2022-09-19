@@ -4,16 +4,6 @@
     "main": "App/index.html",
     "version": "1.0.0",
     "license": "ISC",
-    "window": {
-        "title": "Kyrazail Adventure",
-        "icon": "App/resources/Image/Intro/Icon.png",
-        "toolbar": false,
-        "width": 800,
-        "height": 400,
-        "min_width": 800,
-        "min_height": 400
-    },
-    "chromium-args": "--enable-node-worker --allow-file-access-from-files",
     "scripts": {
         "dev": "nw App/",
         "prod": "nwbuild --mode build --zip false --platforms win32 win64 linux32 linux64 --buildDir build/ App/**",

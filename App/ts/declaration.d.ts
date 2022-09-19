@@ -366,7 +366,7 @@ declare global {
 
     const GameSaveManager: {
         /**
-         * Create a save file and download it.
+         * Create a save file and download it if online, write a file if on app.
          * @param SaveFileName The name of the file that will be downloaded.
          */
         save(SaveFileName: string): void
@@ -376,20 +376,30 @@ declare global {
          * Return string[] on reject.
          */
         load(): Promise<GameSaveLoadObject>
+
+        /**
+         * Get the amount of save file in the save folder.
+         * If error, reject error.
+         * If online, or no savae file, return 0.
+         * Doesn't count autosave files.
+         */
+        getSaveNumber(): Promise<number | 0>
+
+        /**
+         * Where the last autosave has been made.
+         */
+        lastAutoSave: 1 | 2
+
+        /**
+         * Create an auto save file and save in the lastAutoSave.
+         */
+        autoSave(): void
     }
 
     /**
      * Remove any duplicate from the array, so it has every item once.
      */
     function RemoveDuplicate(a: any[]): any[]
-
-    /**
-     * Edit the canvas element on the html page to the new dimension.
-     * @param canvas canvas element
-     * @param neww width of the canvas
-     * @param newh heigth of the canvas
-     */
-    function regenerateCanvas(canvas: HTMLCanvasElement, neww: number, newh: number): void
 
     /**
      * Edit the canvas element on the html page to the new dimension.

@@ -1,24 +1,21 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
 
 <head>
-    <title>Gradient</title>
-    <meta charset="UTF-8" />
-
-    <style>
-        canvas {
-            border: 1px solid red;
-            margin-left: 50%
-        }
-    </style>
+    <title>HTA Test</title>
+    <hta:application applicationname="HTA Test" scroll="yes" singleinstance="yes">
+        <script type="text/javascript">
+            function openURL() {
+                var shell = new ActiveXObject("WScript.Shell");
+                shell.run("http://www.google.com");
+            }
+        </script>
 </head>
 
 <body>
-    <canvas id="canvas" width="32px" height="32px">
-        <script src="./script.test.js"></script>
-        <script>
-            window.onload = main;
-        </script>
+
+    <input type="button" onclick="openURL()" value="Open Google">
+
 </body>
 
 </html>

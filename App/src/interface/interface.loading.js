@@ -225,7 +225,7 @@ LoadingScreenManager.tip = function () {
         LoadingScreenManager.tipIndex = Math.floor(ConfigConst.TIP.length * Math.random());
     }
 
-    ctx.fillText(ConfigConst.TIP[LoadingScreenManager.tipIndex], w / 2, h * 9 / 10 - 20);
+    ctx.fillText(ConfigConst.TIP[LoadingScreenManager.tipIndex], w / 2, h * 9 / 10 - 20, w);
 };
 
 LoadingScreenManager.title = function () {

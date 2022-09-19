@@ -31,6 +31,8 @@ class GameDialogueInterface extends GameInterfaces {
         this.awaitUserInput = false;
 
         this.fullText = "";
+        /** @type {{n:number,e:boolean}[]} */
+        this.fullTextItemLength = [];
 
         /**
          * @type {GameEventsListType2[]}
@@ -193,7 +195,6 @@ class GameDialogueInterface extends GameInterfaces {
                 }, {
                     key: "Enter",
                     name: "Confirm", hover: false, x: 0, y: 0, w: 0, h: 0,
-                    //TODO may need to be edited to trigger next item?
                     f: () => { }
                 }
             ]
@@ -216,10 +217,56 @@ class GameDialogueInterface extends GameInterfaces {
     }
 
     /**
+     * Create lines so any text fit nicely in the given width.
+     * @param {string} string The string to separate
+     * @param {number} w The width allowed to print the string.
+     * @param {CanvasRenderingContext2D} ctx The context to get the measureTex method.
+     * @returns {string[]} The array of line.
+     */
+    wordSeparate(string, w, ctx) {
+        // split the text in words
+        const words = string.split(" ");
+
+        // current line
+        let textLine = "";
+        // where all lines are saved
+        /**@type {string[]}*/
+        let result = [];
+        // temporary line when we add each words
+        let temp = "";
+
+        // set each word to a line
+        words.forEach(word => {
+            // check if the word isn't out of the frame
+            temp = textLine + " " + word;
+            const tempMetrics = ctx.measureText(temp);
+            // check if \n | \r is in the text, if yes, create a new line
+            if (word.includes("\n") || word.includes("\r")) {
+                result.push(textLine);
+                textLine = word;
+                temp = "";
+            } else {
+                if (tempMetrics.width < w) textLine = temp;
+                else {
+                    result.push(textLine);
+                    textLine = word;
+                    temp = "";
+                }
+            }
+        });
+        // push the last line, because it can fit inside
+        result.push(temp);
+
+        // cleaning up
+        result.forEach(s => { s.trim(); });
+        return result;
+    }
+
+    /**
      * @param {string} text
      * @param {GameScope} scope
      */
-    printNormal(text, scope) {
+    printNormal(scope) {
         // create needed constances to print at the correct height
         const ctx = scope.cache.context[this.canvasGroup],
             w = scope.w,
@@ -234,63 +281,84 @@ class GameDialogueInterface extends GameInterfaces {
             // 96 is image width, 5 is for space between image and text, 42 is left + right offset
             marginRight = ((currentItemText.side == 1 && currentItemText.image) ? w - (96 + 21 + 5) : w - 21);
 
+        // prevent the canvas from getting unwanted pixel
+        ctx.imageSmoothingEnabled = false;
+        RectangleCreator.frameRectangle(scope, ctx, 10, h - this.getFrameHeight(h) - 10, w - 20, this.getFrameHeight(h));
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = "high";
+
+        ctx.fillStyle = "white";
+        // get the name font
+        ctx.font = `120% ${currentItemText.font[0]}`;
+
+        // change the text align depending of the side 
+        ctx.textAlign = (currentItemText.side == 0 ? "left" : "right");
+        // 21 because 10 frame offset, 6 frame line width, 5 text offset from frame
+        ctx.fillText(currentItemText.name, (currentItemText.side == 0 ? 21 : w - 21), h - this.getFrameHeight(h) + 15, w);
+        ctx.textAlign = "left";
+
+        // get the text font
+        ctx.font = `100% ${currentItemText.font[1]}`;
+
+        /*
+        ? new method for pritting current text, minding next parameter
+        
+        ? What we need:
+        v We need a way to know if the text currently printing is part of an item with next = true
+        v If that's the case, delete current string and fill it with the text of the current item and the other item
+        v that will come, until another next = true
+        
+        ! so we need to know if the char we are currently adding is part of what item
+        
+        ? How we will achieve it:
+        we will add char by char, from each item
+        if it's the first char of the item, check the next state
+        if true, delete old char
+        */
+
+        // prepare a var where we will remember the current text to print
+        var textToPrint = "";
+        // prepare a char count to campare with this.letterProgress
+        var charCount = 0;
+        // iterate through all item
+        this.textList.forEach((item, id) => {
+            // iterate through all char of the current item text
+            item.text.split("").forEach((char, rankInItem) => {
+                // add to know the rank of the char in the text to print
+                charCount++;
+                // check if the current charCount is less or equal than the letterProgress
+                if (charCount <= this.letterProgress) {
+                    // if yes, now check if the item has a next state, and the curren char is the first of the item
+                    if (rankInItem == 0 && item.next) {
+                        // we reset the old char
+                        textToPrint = "";
+                    }
+                    // we add the char to the texttToPrint
+                    textToPrint += char;
+                }
+            });
+        });
 
         // now that we have the string that we need to print, print it correctly
-        const textMetrics = ctx.measureText(text);
+        const textMetrics = ctx.measureText(textToPrint);
         // because right + left offset
         if (textMetrics.width < marginRight - marginLeft) {
             // text is small enough to be printed right away
-            ctx.fillText(text, marginLeft, nameHeight + h - this.getFrameHeight(h) + 15 + lineMarginTop);
+            ctx.fillText(textToPrint, marginLeft, nameHeight + h - this.getFrameHeight(h) + 15 + lineMarginTop);
         } else {
             //? text is too long to pe printed directly
             //? so we'll basically split the text in words and check if the next words is out of the frame
             //? if yes, print it a line under and continue on this line
 
-            // split the text in words
-            const words = text.split(" ");
-            // get the metrics of a word for size reference
-            // we can't use words because we don't know if the first on is empty or not
-            // we'll remplce it latter by the real word, we just need a height
-            let wordMetric = ctx.measureText("WordSizepyLl");
-            // this on is constant, to make the space between lines 
-            const wordHeight = wordMetric.actualBoundingBoxAscent + wordMetric.actualBoundingBoxDescent;
-
-            // current line
-            let textLine = "";
-            // where all lines are saved
-            /**@type {string[]}*/
-            let result = [];
-            // temporary line when we add each words
-            let temp = "";
-
-            // set each word to a line
-            words.forEach(word => {
-                // check if the word isn't out of the frame
-                temp = textLine + " " + word;
-                const tempMetrics = ctx.measureText(temp);
-                // check if \n is in the text, if yes, create a new line
-                if (word.includes("\n")) {
-                    result.push(textLine);
-                    textLine = word;
-                    temp = "";
-                } else {
-                    if (tempMetrics.width < marginRight - marginLeft) textLine = temp;
-                    else {
-                        result.push(textLine);
-                        textLine = word;
-                        temp = "";
-                    }
-                }
-            });
-            // push the last line, because it can fit inside
-            result.push(temp);
+            let result = this.wordSeparate(textToPrint, marginRight - marginLeft, ctx);
 
             //then print each result line by line
             //TODO add a scroll up if number of line is too long for the frame (automatic, once it went up, it's finish)
             result.forEach((line, id) => {
-                ctx.fillText(line.trim(), marginLeft, nameHeight + h - this.getFrameHeight(h) + 20 + (wordHeight + lineMarginTop) * id);
+                ctx.fillText(line.trim(), marginLeft,
+                    nameHeight + h - this.getFrameHeight(h) + 20 +
+                    (textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent + lineMarginTop) * id);
             });
-
         }
         // draw the image if there is one
         if (currentItemText.image) {
@@ -303,6 +371,32 @@ class GameDialogueInterface extends GameInterfaces {
                 96, 96
             );
         }
+
+        // if awaitUserInput, draw a arrow to tell the user that the game is waiting
+        if (this.awaitUserInput) {
+            // increase or decrease depending the bounce sign, this should take 1s before changing sign
+            this.nextArrowAlpha += (1 / GameConfig.targetFps) * this.nextArrowAlphaBounce;
+            //changin sign if we hit one of the two limit
+            if (this.nextArrowAlpha <= 0) {
+                this.nextArrowAlphaBounce = 1;
+                // make sure that this.nextArrowAlpha is == 0 and not negativ, 
+                // otherwise the canvas will set it to 1 and it will flush
+                this.nextArrowAlpha = 0;
+            } else if (this.nextArrowAlpha >= 1) {
+                this.nextArrowAlphaBounce = -1;
+            }
+
+            ctx.globalAlpha = this.nextArrowAlpha;
+        } else {
+            // otherwise, hide the arrow
+            ctx.globalAlpha = 0;
+        }
+        //-5 to center the arrow that is 10px width
+        //-20 because -10 for the edge of the frame, -10 for the height of the arrow 
+        ctx.drawImage(this.arrow, w / 2 - 5, h - 41, 10, 10);
+        ctx.globalAlpha = 1;
+
+        this.needsUpdate = false;
     }
 
     /**
@@ -319,8 +413,6 @@ class GameDialogueInterface extends GameInterfaces {
         ctx.textBaseline = "middle";
 
         const keyboard = this.keyboard;
-
-        //TODO can input with click or keyboard
 
         // check the amount of line and calculated the height of the box of each keys
         const linesAmount = keyboard.length,
@@ -369,6 +461,20 @@ class GameDialogueInterface extends GameInterfaces {
     }
 
     /**
+     * @param {GameScope} scope 
+     */
+    choice(scope) {
+        const ctx = scope.cache.context[this.canvasGroup],
+            w = scope.w,
+            h = scope.h;
+
+        //TODO text animation like printNormal
+        //TODO also, try to find a fricking easier mthod to do it, it's really a mess >:l
+        //? maybe do a global method for it, same for wordSeparate
+
+    }
+
+    /**
          * @param {GameScope} scope 
          */
     render(scope) {
@@ -393,71 +499,14 @@ class GameDialogueInterface extends GameInterfaces {
             this.input(scope);
         } else if (this.eventType == 3) {
             // choice between multiple options
+            this.choice(scope);
         } else if (this.eventType == 1 && currentItemText.announcement) {
             // do announcement (center, Takhi)
         } else if (this.eventType == 1 && currentItemText.fullscreen) {
             // print full screen (1/1)
         } else if (this.eventType == 1) {
             // normal dialogue (1/4)
-
-            // prevent the canvas from getting unwanted pixel
-            ctx.imageSmoothingEnabled = false;
-            RectangleCreator.frameRectangle(scope, ctx, 10, h - this.getFrameHeight(h) - 10, w - 20, this.getFrameHeight(h));
-            ctx.imageSmoothingEnabled = true;
-            ctx.imageSmoothingQuality = "high";
-
-            ctx.fillStyle = "white";
-            // get the name font
-            ctx.font = `120% ${currentItemText.font[0]}`;
-
-            const nameMetrics = ctx.measureText(currentItemText.name),
-                nameHeight = nameMetrics.actualBoundingBoxAscent + nameMetrics.actualBoundingBoxDescent;
-
-            // change the text align depending of the side 
-            ctx.textAlign = (currentItemText.side == 0 ? "left" : "right");
-            // 21 because 10 frame offset, 6 frame line width, 5 text offset from frame
-            ctx.fillText(currentItemText.name, (currentItemText.side == 0 ? 21 : w - 21), h - this.getFrameHeight(h) + 15, w);
-            ctx.textAlign = "left";
-
-            // get the text font
-            ctx.font = `100% ${currentItemText.font[1]}`;
-
-            var textToPrint = "";
-            // print each letters until we reach the lettersProgress
-            for (let p = 0; p < this.letterProgress; p++) {
-                textToPrint += this.fullText[p];
-            }
-
-            // invoke the print method, because it's huge
-            this.printNormal(textToPrint, scope);
-
-            // if awaitUserInput, draw a arrow to tell the user that the game is waiting
-            if (this.awaitUserInput) {
-                // increase or decrease depending the bounce sign, this should take 1s before changing sign
-                this.nextArrowAlpha += (1 / GameConfig.targetFps) * this.nextArrowAlphaBounce;
-                //changin sign if we hit one of the two limit
-                if (this.nextArrowAlpha <= 0) {
-                    this.nextArrowAlphaBounce = 1;
-                    // make sure that this.nextArrowAlpha is == 0 and not negativ, 
-                    // otherwise the canvas will set it to 1 and it will flush
-                    this.nextArrowAlpha = 0;
-                } else if (this.nextArrowAlpha >= 1) {
-                    this.nextArrowAlphaBounce = -1;
-                }
-
-                ctx.globalAlpha = this.nextArrowAlpha;
-            } else {
-                // otherwise, hide the arrow
-                ctx.globalAlpha = 0;
-            }
-            //-5 to center the arrow that is 10px width
-            //-20 because -10 for the edge of the frame, -10 for the height of the arrow 
-            ctx.drawImage(this.arrow, w / 2 - 5, h - 41, 10, 10);
-            ctx.globalAlpha = 1;
-
-            this.needsUpdate = false;
-        } else {
-            console.warn("Unknown event");
+            this.printNormal(scope);
         }
     }
 
@@ -497,14 +546,13 @@ class GameDialogueInterface extends GameInterfaces {
                                 this.itemProgress++;
                                 this.saveInput.push(this.inputUser.slice());
                                 this.inputUser = "";
-                            }
-                            else {
+                            } else {
                                 // call the callback function
                                 this.eventType = 0;
                                 this.itemProgress = 0;
-                                //add the names in the global object
-
-                                return this.callback();
+                                this.saveInput.push(this.inputUser);
+                                this.needsUpdate = true;
+                                return this.callback(...this.saveInput);
                             }
                         } else if (key.key == "Backspace") {
                             this.inputUser = this.inputUser.replace(/.$/, '');
@@ -526,6 +574,7 @@ class GameDialogueInterface extends GameInterfaces {
                 else if (ev.key == "Enter" && this.inputUser.length > 0) {
                     // check if there is an item after
                     if (this.inputList[this.itemProgress + 1]) {
+                        // if yes, switch to next item and save the last input
                         this.itemProgress++;
                         this.saveInput.push(this.inputUser);
                         this.inputUser = "";
@@ -534,7 +583,8 @@ class GameDialogueInterface extends GameInterfaces {
                         this.eventType = 0;
                         this.itemProgress = 0;
                         this.saveInput.push(this.inputUser);
-                        return this.callback(this.saveInput);
+                        this.needsUpdate = true;
+                        return this.callback(...this.saveInput);
                     }
                 }
                 this.needsUpdate = true;
@@ -546,8 +596,6 @@ class GameDialogueInterface extends GameInterfaces {
         } else if (this.eventType == 1 && currentItemText.fullscreen) {
             // print full screen (1/1)
         } else if (this.eventType == 1) {
-            //TODO also be able to draw an image on right or left side of the text frame
-
             if (currentItemText.skipable) {
                 // if the message is skipable, await input
                 document.onkeydown = (ev) => {
@@ -572,7 +620,7 @@ class GameDialogueInterface extends GameInterfaces {
                     // then update the letter progress
                     this.letterProgress = count;
                     this.needsUpdate = true;
-                    //BUG weird behavior when clicking multiple times when text is spreading
+                    //BUG weird behavior when clicking/confirm multiple times when text is spreading
                 }
             }
 
@@ -610,14 +658,12 @@ class GameDialogueInterface extends GameInterfaces {
                             // reached textSpeed, so reseting delay and adding a letter
                             this.letterProgressCount = 0;
                             this.letterProgress++;
-                            // skip the space animation
+                            // check if the next char is a space
+                            // if yes, skip the space animation
                             if (this.fullText[this.letterProgress] == " " ||
                                 this.fullText[this.letterProgress] == "\n" ||
                                 this.fullText[this.letterProgress] == "\r") this.letterProgress++;
-                            // so that it refresh the context
-                            this.needsUpdate = true;
                         }
-
                         // if we reached the end of the text of the current item
                         if (this.letterProgress == lettersTotal + item.text.length && idx == this.itemProgress) {
                             // check if we need to wait user input 
@@ -631,18 +677,21 @@ class GameDialogueInterface extends GameInterfaces {
                         }
                     }
                 });
-            }
-
-            // get all the text, then we just need to print this.letterProgress letters of it
-            if (this.fullText == 0) {
-                this.textList.forEach(i => { this.fullText += i.text; });
+                if (this.fullText.length == 0) {
+                    this.textList.forEach((i, id) => {
+                        // add all the char to the full text
+                        this.fullText += i.text;
+                    });
+                }
+                // so that it refresh the context
+                this.needsUpdate = true;
             }
         }
 
         /** 
          * ?What's going since last time?
-         * need to do the next parameter, so clear everything and print item (just re launch the event without first items?)
-         * need to do announcement and fullscreen
+         * need to do announcement, choice and fullscreen
+         * v done the next handling
          */
     }
 }

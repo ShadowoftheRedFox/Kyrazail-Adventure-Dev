@@ -45,10 +45,10 @@ const TestEvents = {
             fullscreen: false,
             announcement: false
         }],
-        end: (scope, ...args) => { GameEvent.emit("MainCharacterName"); },
+        end: (...args) => { GameEvent.emit("MainCharacterName"); },
         stop: ["main"],
         start: ["dialogue"],
-        init: (scope, ...args) => { GameGlobalObject.newGame(scope); }
+        init: (...args) => { GameGlobalObject.newGame(); }
     },
     MainCharacterName: {
         type: 2,
@@ -59,9 +59,9 @@ const TestEvents = {
             text: "Your last name is:",
             param: []
         }],
-        end: (scope, ...args) => {
-            scope.global.player.firstName = args[0];
-            scope.global.player.lastName = args[1];
+        end: (...args) => {
+            window.game.global.player.firstName = args[0];
+            window.game.global.player.lastName = args[1];
             GameEvent.emit("MainCharacterSpeacies");
         },
         stop: [],
@@ -96,8 +96,8 @@ const TestEvents = {
             text: "Fairy",
             param: []
         }],
-        end: (scope, ...args) => {
-            scope.global.player.species = args[0].toLowerCase();
+        end: (...args) => {
+            window.game.global.player.species = args[0].toLowerCase();
             GameEvent.emit("");
         },
         stop: [],
@@ -117,12 +117,15 @@ GameEventHandler.handle = function (event) {
     const scope = window.game,
         events = scope.cache.data.event;
 
+
     // stop all given interface
     if (event.stop.length > 0) event.stop.forEach(s => { scope.state.menu[s].activated = false; });
     // start all given interface
     if (event.start.length > 0) event.start.forEach(s => { scope.state.menu[s].activated = true; });
 
-    if (event.init) event.init(scope);
+    if (event.init && typeof event.init == "function") {
+        event.init();
+    }
 
     switch (event.type) {
         case 1:
@@ -131,6 +134,11 @@ GameEventHandler.handle = function (event) {
             scope.state.menu.dialogue.eventType = event.type;
             break;
         case 2:
+            scope.state.menu.dialogue.inputList = event.list;
+            scope.state.menu.dialogue.callback = event.end;
+            scope.state.menu.dialogue.eventType = event.type;
+            break;
+        case 3:
             scope.state.menu.dialogue.inputList = event.list;
             scope.state.menu.dialogue.callback = event.end;
             scope.state.menu.dialogue.eventType = event.type;

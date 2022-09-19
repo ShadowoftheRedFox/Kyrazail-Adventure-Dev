@@ -3,8 +3,68 @@ function GameSaveManager() {
     throw new Error("This is a static class.");
 }
 
-GameSaveManager.save = function (fileName) {
-    console.log("Saving...");
+GameSaveManager.lastAutoSave = 2;
+GameSaveManager.autoSave = function () {
+    if (window.game.constants.isNwjs) {
+        console.warn("Auto Saving...");
+        //TODO do a save method
+        const scope = window.game,
+            saveObject = {
+                "content": GameGlobalObject.export(scope),
+                "crypted": true,
+                "version": scope.constants.package.version
+            };
+
+        const crypted = GameEncryptData(saveObject);
+
+        // save localy and online if server is set up
+        const fs = require("fs");
+
+        fs.writeFile(`./save/autosave${GameSaveManager.lastAutoSave}.kyraadv`, crypted, (err) => {
+            if (err) return console.error(err);
+            console.log(`saved autosave${GameSaveManager.lastAutoSave}`);
+            GameSaveManager.lastAutoSave = (GameSaveManager.lastAutoSave == 1 ? 2 : 1);
+        });
+    }
+};
+
+GameSaveManager.getSaveNumber = function () {
+    return new Promise((resolve, reject) => {
+        if (!window.game.constants.isNwjs) resolve(0);
+        const fs = require("fs"),
+            path = require("path");
+
+        const pathToSaveFolder = path.join(path.resolve(), "/save");
+        let res = 0;
+        fs.readdir(pathToSaveFolder, (err, files) => {
+            if (err) {
+                console.error(err);
+                reject(err);
+            }
+            console.log("files found, couting", files);
+            files.forEach((fileName, id) => {
+                //to exclude auto save from the count, since there should be 2 auto saves
+                console.log(fileName);
+                if (!fileName.includes("auto")) {
+                    // save names have a pattern of: saveNUMBER.kyraadv
+                    // so split to only get the first part
+                    fileName = fileName.split(".")[0];
+                    console.log(fileName);
+                    //now, get rid of the "save" part
+                    fileName = fileName.split("save")[1];
+                    console.log(fileName);
+                    if (!isNaN(parseInt(fileName)) && parseInt(fileName) > res) res = parseInt(fileName);
+                }
+                // this is the last file, return the result
+                if (id + 1 == files.length) resolve(res);
+            });
+        });
+    });
+};
+
+GameSaveManager.save = function (fileName = "autosave1") {
+    // using warn to know where the save is launched from. So we can see if there is an unwanted
+    console.warn("Saving...");
     //TODO do a save method
     const scope = window.game,
         saveObject = {
@@ -18,7 +78,8 @@ GameSaveManager.save = function (fileName) {
     if (scope.constants.isNwjs) {
         // save localy and online if server is set up
         const fs = require("fs"),
-            path = require("path");
+            path = require("path"),
+            saveNumber = this.getSaveNumber();
 
         fs.writeFileSync(`./save/${fileName}.kyraadv`, crypted, (err) => {
             if (err) return console.error(err);
@@ -40,15 +101,15 @@ GameSaveManager.load = function () {
                 path = require("path");
 
             const pathToSaveFolder = path.join(path.resolve(), "/save");
-            const loadResponse = {
+            const res = {
                 error: null,
                 files: []
             };
 
             fs.readdir(pathToSaveFolder, (err, files) => {
                 if (err) {
-                    loadResponse.error = ["ERROR", err];
-                    return reject(loadResponse);
+                    res.error = ["ERROR", err];
+                    return reject(res);
                 }
 
                 // check if there is files in here
@@ -91,13 +152,13 @@ GameSaveManager.load = function () {
                                 }
                             }
                         });
-                        loadResponse.files.push(fileData);
+                        res.files.push(fileData);
                     });
-                    return resolve(loadResponse);
+                    return resolve(res);
                 } else {
                     // if not, reject
-                    loadResponse.error = ["EMPTY", "No save files in the directory."];
-                    return reject(loadResponse);
+                    res.error = ["EMPTY", "No save files in the directory."];
+                    return reject(res);
                 }
             });
         } else {

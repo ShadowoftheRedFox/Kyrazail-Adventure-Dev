@@ -23,4 +23,10 @@ const StackLoadManager = [{
     path: "./src/manager/",
     status: true,
     description: "Manage saves and auto saves. Also manage the load of saves."
+}, {
+    name: "manager.mod",
+    path: "./src/manager/",
+    // only true on app
+    status: typeof nw == "object",
+    description: "Manage modded files. May not be stable. Only works on app."
 }];

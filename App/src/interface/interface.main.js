@@ -528,7 +528,13 @@ class GameMainInterface extends GameInterfaces {
                 y: 0,
                 w: 0,
                 h: 0,
-                f: (scope) => { open(scope.constants.package.support.url); },
+                f: (scope) => {
+                    if (scope.constants.isNwjs) {
+                        // open a url in a browser and not in the app
+                        var gui = require("nw.gui");
+                        gui.Shell.openExternal(scope.constants.package.support.url);
+                    } else open(scope.constants.package.support.url, "_blank", "rel:'noopener;'");
+                },
                 icon: "Icon/Discord",
                 hover: false
             }, {
@@ -537,7 +543,13 @@ class GameMainInterface extends GameInterfaces {
                 y: 0,
                 w: 0,
                 h: 0,
-                f: (scope) => { open(scope.constants.package.homepage); },
+                f: (scope) => {
+                    if (scope.constants.isNwjs) {
+                        // open a url in a browser and not in the app
+                        var gui = require("nw.gui");
+                        gui.Shell.openExternal(scope.constants.package.homepage);
+                    } else open(scope.constants.package.homepage, "_blank", "rel:'noopener;'");
+                },
                 icon: "Icon/Github",
                 hover: false
             }, {
@@ -546,7 +558,13 @@ class GameMainInterface extends GameInterfaces {
                 y: 0,
                 w: 0,
                 h: 0,
-                f: (scope) => { open(scope.constants.package.online); },
+                f: (scope) => {
+                    if (scope.constants.isNwjs) {
+                        // open a url in a browser and not in the app
+                        var gui = require("nw.gui");
+                        gui.Shell.openExternal(scope.constants.package.online);
+                    } else open(scope.constants.package.online, "_blank", "rel:'noopener;'");
+                },
                 icon: "Icon/Website",
                 hover: false
             }
@@ -1149,6 +1167,7 @@ class GameMainInterface extends GameInterfaces {
                     b.w = w - 40;
                     b.y = 2 * h / 6 + i * 45;
                     b.h = 40;
+                    //TODO display infos relatives to the save (time played, map, player name)
 
                     ctx.fillStyle = "#b8b8b8";
                     ctx.strokeStyle = "#4d4b4b";
@@ -1529,7 +1548,7 @@ class GameMainInterface extends GameInterfaces {
 
 
         // time between two frame
-        const time = 1000 / GameConfig.targetFps;
+        const time = 1000 / scope.GameLoop.fps;
         currentMenu.button.forEach((b, idx) => {
             if (MouseTrackerManager.checkOver(b.x, b.y, b.w, b.h)) {
                 currentMenu.focusedButton = idx;
