@@ -40,7 +40,7 @@ class GameMainInterface extends GameInterfaces {
                 f: this.mainMenuFct,
                 button: [
                     {
-                        name: GameTranslate("NewGameButton"),
+                        name: "NewGameButton",
                         x: 0,
                         y: 0,
                         w: 0,
@@ -721,7 +721,8 @@ class GameMainInterface extends GameInterfaces {
             button.y = h - 45 * currentMenu.button.reverseIndex(index) - 66;
             button.w = 400;
             button.h = 40;
-            ctx.fillText(button.name, w / 2, h - 45 * currentMenu.button.reverseIndex(index) - 50, w);
+            const name = GameTranslate(button.name);
+            ctx.fillText((name ? name : button.name), w / 2, h - 45 * currentMenu.button.reverseIndex(index) - 50, w);
         });
 
         // prevent the canvas from getting unwanted pixel

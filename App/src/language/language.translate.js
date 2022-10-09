@@ -3,7 +3,7 @@
  * Translate a code message and return the translated message.
  * @param {string} messageCode The code message to translate.
  * @param  {...any} [args] The arguments if needed.
- * @returns {string} The translated message.
+ * @returns {string | null} The translated message.
  * @example GameTranslate("ExamplePlayerNameCheck", "Kyra")
  * // if the game is in language "en":
  * => "Your name is Kyra, is that correct?"
@@ -27,7 +27,7 @@ GameTranslate.toEN = function (m, a) {
         //? example of how to use args
         case "ExamplePlayerNameCheck": return `So your name is ${a[0]} ${a[1]}, is that correct?`;
         case "NewGameButton": return "New game";
-        default: return "Unknown message code";
+        default: return null;
     }
 };
 
@@ -39,6 +39,6 @@ GameTranslate.toFR = function (m, a) {
         //? exemple de comment utiliser les arguments
         case "ExamplePlayerNameCheck": return `Donc votre nom est ${a[0]} ${a[1]}, cela est il correct?`;
         case "NewGameButton": return "Nouvelle partie";
-        default: return "Code de message inconnu";
+        default: return null;
     }
 };
