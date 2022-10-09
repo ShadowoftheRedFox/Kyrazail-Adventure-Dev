@@ -40,7 +40,7 @@ class GameMainInterface extends GameInterfaces {
                 f: this.mainMenuFct,
                 button: [
                     {
-                        name: "New Game",
+                        name: GameTranslate("NewGameButton"),
                         x: 0,
                         y: 0,
                         w: 0,

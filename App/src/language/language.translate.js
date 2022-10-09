@@ -26,6 +26,7 @@ GameTranslate.toEN = function (m, a) {
         case "EventBeforeUnload": return "Are you sure you want to leave this page? Progression might not be saved.";
         //? example of how to use args
         case "ExamplePlayerNameCheck": return `So your name is ${a[0]} ${a[1]}, is that correct?`;
+        case "NewGameButton": return "New game";
         default: return "Unknown message code";
     }
 };
@@ -37,6 +38,7 @@ GameTranslate.toFR = function (m, a) {
         case "EventBeforeUnload": return "Êtes vous sur de vouloir quitter la page? La progression n'est peut être pas sauvegardé.";
         //? exemple de comment utiliser les arguments
         case "ExamplePlayerNameCheck": return `Donc votre nom est ${a[0]} ${a[1]}, cela est il correct?`;
+        case "NewGameButton": return "Nouvelle partie";
         default: return "Code de message inconnu";
     }
 };
