@@ -1,0 +1,131 @@
+{
+    "better-comments.tags": [
+        {
+            "tag": "!",
+            "color": "#FF2D00",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "?",
+            "color": "#3498DB",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "_",
+            "color": "#ffffff",
+            "strikethrough": false,
+            "underline": true,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": ".",
+            "color": "#f6ff00",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "//",
+            "color": "#474747",
+            "strikethrough": true,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "TODO",
+            "color": "black",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "orange",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "*",
+            "color": "#98C379",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "BUG",
+            "color": "black",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "red",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "HACK",
+            "color": "white",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "black",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "TEST",
+            "color": "white",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "blue",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "STEP",
+            "color": "white",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "green",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "&",
+            "color": "#ff03ab",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "~",
+            "color": "#a811c7",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "^",
+            "color": "#f7ff03",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        }
+    ],
+    "better-comments.highlightPlainText": true
+}
