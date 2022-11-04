@@ -1,13 +1,13 @@
-class GameMenuBuilder {
+class GameMenu {
     /**
-     * @param {GameMenuBuilderOptions} options 
+     * @param {GameMenuOptions} options 
      */
     constructor(options = {}, skipValidation = false) {
         this.setup(options, skipValidation);
     }
 
     /**
-     * @param {GameMenuBuilderOptions} options 
+     * @param {GameMenuOptions} options 
      * @param {boolean} skipValidation
      */
     setup(options, skipValidation) {
@@ -28,7 +28,7 @@ class GameMenuBuilder {
     }
 
     /**
-     * @param {GameMenuBuilderOptionsMenu[]} menus 
+     * @param {GameMenuOptionsMenu[]} menus 
      */
     validateMenus(menus) {
         menus.forEach((menu, idx) => {

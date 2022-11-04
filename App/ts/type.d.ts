@@ -465,25 +465,25 @@ declare global {
         objPath: string
     }
 
-    type GameMenuBuilderOptions = {
+    type GameMenuOptions = {
         x: number
         y: number
         w: number
         h: number
         positionX: "center" | "left" | "right"
         positionY: "center" | "top" | "bottom"
-        menu: GameMenuBuilderOptionsMenu[]
+        menu: GameMenuOptionsMenu[]
         menuFocused: number
         name: string
         align: "horizontal" | "vertical"
     }
 
-    type GameMenuBuilderOptionsMenu = {
+    type GameMenuOptionsMenu = {
         name: string,
         focused: boolean,
         value: "function" | "menu"
         function?: Function
-        menu?: GameMenuBuilderOptionsMenu[]
+        menu?: GameMenuOptionsMenu[]
         menuFocused?: number
         align: "horizontal" | "vertical"
     }
