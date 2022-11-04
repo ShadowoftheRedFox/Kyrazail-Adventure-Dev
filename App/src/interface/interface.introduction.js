@@ -59,9 +59,7 @@ class GameIntroductionInterface extends GameInterfaces {
             ctx.fillStyle = "#fff";
             ctx.font = "bold 40px Azure";
             ctx.fillText("Kyrazail team presents", w / 2, h / 3 + imgDim / 2);
-        }
-
-        if (this.stepDelay[2] <= Date.now()) {
+        } else if (this.stepDelay[2] <= Date.now() && p.changelog.length != 0) {
             ctx.font = "16px Azure";
             // will scroll down text if needed
             const c = p.changelog;
@@ -88,6 +86,16 @@ class GameIntroductionInterface extends GameInterfaces {
             ctx.fillStyle = "#fff";
             ctx.font = "bold 32px Azure";
             ctx.fillText("Changelog", w / 2, 52);
+        } else {
+            // stops introduction when all phase have been shown
+            this.activated = false;
+            scope.state.menu.main.activated = true;
+            ctx.clearRect(0, 0, w, h);
+            // remove this menu since he won't be used again
+            removeElement(this.interfaceCanvas.id);
+            delete scope.cache.context[this.canvasGroup];
+            delete scope.state.menu.intro;
+            return;
         }
 
         if (this.stepDelay[5] < Date.now()) {
