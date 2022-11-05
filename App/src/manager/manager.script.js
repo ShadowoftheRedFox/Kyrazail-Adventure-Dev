@@ -63,7 +63,7 @@ DataLoaderManager.setup = function (plugins, number, call) {
         if (this.readyState === this.DONE) {
             // when the request has completed
             let object = JSON.parse(this.response);
-            //if object is present, create a path or go to the path and add teh data at the end of the path
+            //if object is present, create a path or go to the path and add the data at the end of the path
             if (object) {
                 //get each path steps
                 var objPath = plugin.objPath.split(".");

@@ -36,7 +36,7 @@ GameTranslate.toFR = function (m, a) {
         case "WindowManagerFatalError": return "Erreur Fatale";
         case "WindowManagerLongLog": return "Log de crash long trouvé. Regardez la console pour un rapport complet.";
         case "EventBeforeUnload": return "Êtes vous sur de vouloir quitter la page? La progression n'est peut être pas sauvegardé.";
-        //? exemple de comment utiliser les arguments
+        //? example de comment utiliser les arguments
         case "ExamplePlayerNameCheck": return `Donc votre nom est ${a[0]} ${a[1]}, cela est il correct?`;
         case "NewGameButton": return "Nouvelle partie";
         default: return null;

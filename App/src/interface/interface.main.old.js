@@ -735,7 +735,7 @@ class GameMainInterface extends GameInterfaces {
         const socialImageSize = 50,
             spaceBetweenButton = 10;
 
-        // to know how much buttons are on the left side of teh screen
+        // to know how much buttons are on the left side of the screen
         let socialButtonCorrected = 0;
 
         that.social.forEach((b, i) => {

@@ -183,7 +183,7 @@ declare global {
             progression: number
             finished: boolean
             failed: boolean
-            /** If important is true, this requirement msut be finished for teh quest to be valid. */
+            /** If important is true, this requirement must be finished for the quest to be valid. */
             important: boolean
         }[]
         /** Condition to enable the quest. */
