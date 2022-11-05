@@ -1,121 +1,81 @@
-<p align="center">
-    <img src="./App/resources/Image/Intro/icon.png" alt="teamIcon" width="200" title="Team icon" />
-</p>
+# Kyarazail Adventure
 
-This game is made by Shadow of the Red Fox\#5881 and the Kyrazail
-Adventure Team. 
+## Index:
 
-For any support, join us on [Discord](https://discord.gg/5mF5AHnRCr).
+- [About](#About): Quick description of what is the project.
+- [Download](#Download): How to download the project or the game.
+- [Update and Uninstallation](#update-and-uninstalling)
+- [Documentation](./Documentation.md): To developper who wants a better understanding of how I sorted all of this.
+- [Team](#Team): People working for the project or contribuated to it.
+- [Contact](#Contact): How to contact me or the team.
+- [Sources](#Sources): External link to eveyrthing used in the game.
 
-------------------------------------------------------------------------
+---
+## About
 
-#What is it about
-================
+This game is project to create a 2D tiled game from scratch. I'm working alone on this project next to my studies, so do not expect a lot of activities.
 
-This repository is the main sources of changes. All versions are made from this one, and the online version on itch.io is a replica of the **App** folder.
+---
+## Download
 
-You will be able to downlaod all file version from [itch.io](https://shadowoftheredfox.itch.io/kyrazail-adventure).
+You can find the source code on [Github](https://github.com/ShadowoftheRedFox/Kyrazail-Adventure-Dev), and you can dowload the game on [itch.io](https://shadowoftheredfox.itch.io/kyrazail-adventure). The game is also available to play online on the same page on itch.io. 
+The game is not available on IOS because the NWjs Builder library does not work with me for this platform.
 
+---
+## Update and Uninstallation
 
-#Update
-======
+### Update
+For the moment, you need to update your game manually if you downloaded it. I will try to create an auto updater, but it may come at different times depending your platform.
 
-If you have an internet connection, the game will check during the
-loading the lastest version and your current version.
+### Uninstallation
+You just need to delete the [game folder](./). And you're done!
 
-He will notice you and ask you if you want to update the game. And if
-you accept, it will download the latest version and install it, and will
-ask a restart of the application to apply the changes.
+---
+## Documentation
 
-If a bug occurs, or the update is not effective, plase download a new
-version online. (You can get the link of the game on our [Discord
-server](https://discord.gg/5mF5AHnRCr)).
+More in details explanation [here](./Documentation.md).
 
-#Uninstalling
-============
+---
+## Team
 
-We are sorry if you want to uninstall our game. But happily, this is
-easy. Just erase [this folder](./) and the game is gone! 
+- **ShadowoftheRedFox:**
+    - **Role:** Everything.
+    - **Github:** [ShadowoftheRedFox](https://github.com/shadowoftheRedFox/)
+    - **Discord:** Shadow of the Red Fox#5881
 
-We would be
-very happy if you could send us the reason of the uninstalation. You can
-contact us [here](./README.html#contact-us).
+A huge thanks to every testers on the Discord server, that give ideas or report bugs!
 
-#Bug and Support
-===============
+---
+## Contact
 
-Known bug and future updates announcements can be found on our [Discord server](https://discord.gg/5mF5AHnRCr). You can report bug via Discord
-or via the mail ****kyra.devs\@gmail.com****. 
+You can contact us via different way:
 
-Discord might be more
-reactive and tell you if it's a known bug or not. If you need any help
-in the game, press **P** to open the pause menu and select the **Help**
-section. If you are still stuck, ask for help on Discord.
+**Mails:** kyra.devs@gmail.com
 
-#Credits
-=======
+**Discord:** [Official Server](https://discord.gg/5mF5AHnRCr)
 
-You can check our credits [here](./App/credits.html).
-It contains the Kyrazail Adventure team, the testers, and all external link needed that the game use.
+**In Game:** If I manage to build and run an API for the game.
 
-#Contact us
-==========
+I am more active on Discord, so you might get an answer quicker here.
 
-You can contact us on ****kyra.devs\@gmail.com**** or on our [Discord server](https://discord.gg/5mF5AHnRCr).
+---
+## Sources
 
-------------------------------------------------------------------------
+Most images and sounds come from what I found online. If any of the owner want to get it removed, or if you see any of your properties in the roject but are not listed below, please [contact me](#contact).
 
-#Customizing parameters
-======================
+- Game Icon: Made myself.
+- Main menu icons: Found on [icon8](https://icons8.com)
+- Compiler for different platform: [NW and NW builder](https://nwjs.io)
+- Host for the online game: [itch.io](https://itch.io)
+- Script: [Modernizr](http://modernizr.com)
+- Script: [CryptoJS](https://code.google.com/archive/p/crypto-js/)
 
-**Please be aware that you can change the key bind in game, as well as
-most of those parameters, so prevent editing this file directly!**
+And of course, a lot of help coming from StackOverflow and it's awesome community.
 
-If by any reasons, you need to edit it, please just copy paste the code below.
+---
+### Tips
 
-In *`App -> src -> config`*, there is a file called
-[config.main.js](./App/src/config/config.main.js). The default file looks like this:
-
-```js
-const GameConfig = {
-    willUpdate: false,
-    targetFps: 60,
-    alwaysRun: false,
-    keyBoard: {
-        up: ["ArrowUp", "z"],
-        down: ["ArrowDown", "s"],
-        right: ["ArrowRight", "d"],
-        left: ["ArrowLeft", "q"],
-        run: ["Shift"],
-        pause: ["p", "Escape"],
-        back: ["Backspace", "x"],
-        confirm: ["e", "Enter"],
-        inventory: ["i", "a"]
-    }
-};
-```
-
-You can manually edit those data, even if it's better to changes them via the game.
-
-**willUpdate** is a reminder that the game can update himself. Do not touch it. *Even if you do, it wouldn't change anything.* ¯\\_(ツ)_/¯
-
-**targetFps** is the wanted frame per second to reach. You can make him lower or higher.
-Lower than 30 may make the game look laggy.
-Over 60 (or your screen refresh rate), the game can be hard to run or not work properly. `number` value only. Default is ``60``.
-
-**alwaysRun** is to make your character run even if you don't press the run key. If it's enabled, the run key is now the walk key, and vice versa. `true` or `false` value only. Default is ``false``.
-
-**keyBoard** is the list of keys that will do the action, for exemple, by default, the action **up**, in menu or when moving, will be **ArrowUp** or **Z**.
-If you want to manually edit them, check the key sintax [here](https://www.freecodecamp.org/news/javascript-keycode-list-keypress-event-key-codes/#a-full-list-of-key-event-values). 
-
-It is not recommended to put same keys at two different functionnality, or it could cause bugged interactions.
-
-------------------------------------------------------------------------
-
-#Tips
-=====
-
-Oh, you read until here? You really like reading README files, don't you? *cough*
+Oh, you read until here? You really like reading README files, don't you? *Cough*
 
 Anyway, here are some tips to help you in the game:
 - The more expensive item is not always the best! Look for the one that suit your character the most.
