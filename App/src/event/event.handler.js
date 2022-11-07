@@ -63,6 +63,8 @@ const TestEvents = {
             window.game.global.player.firstName = args[0];
             window.game.global.player.lastName = args[1];
             GameEvent.emit("MainCharacterSpeacies");
+
+            window.game.state.menu.map.changeMap(window.game, "Map001");
         },
         stop: [],
         start: ["dialogue"],
