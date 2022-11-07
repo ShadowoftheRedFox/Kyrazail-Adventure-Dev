@@ -9,14 +9,14 @@ declare global {
         state: {
             menu: {
                 [name: string]: GameInterfaces
-                intro: GameInterfaces
-                main: GameInterfaces
-                dialogue: GameInterfaces
-                entity: GameInterfaces
-                introduction: GameInterfaces
-                map: GameInterfaces
-                over: GameInterfaces
-                pause: GameInterfaces
+                intro: GameIntroductionInterface
+                main: GameMainInterface
+                dialogue: GameDialogueInterface
+                entity: GameEntityInterface
+                introduction: GameIntroductionInterface
+                map: GameMapInterface
+                over: GameOverInterface
+                pause: GamePauseInterface
             }
         }
         /** Handle errors and corrupted data. */
@@ -422,31 +422,44 @@ declare global {
     }
 
     type GameMapPattern = {
-        height: number
-        infinite: false
-        layers: [{
-            data: number[]
-            height: number
-            id: number
-            name: string
-            opacity: number
-            type: "tilelayer"
-            visible: true
-            width: number
-            x: number
+        compressionlevel: number,
+        height: number,
+        infinite: true,
+        layers: {
+            chunks: {
+                data: number[],
+                height: number,
+                width: number,
+                x: number,
+                y: number
+            }[],
+            height: number,
+            id: number,
+            name: "Ground" | "Over" | "Collision",
+            opacity: number,
+            startx: number,
+            starty: number,
+            type: "tilelayer",
+            visible: boolean,
+            width: number,
+            x: number,
             y: number
-        }]
-        orientation: "orthogonal"
-        renderorder: "right-up"
-        tileheight: number
+        }[],
+        nextlayerid: number,
+        nextobjectid: number,
+        orientation: "orthogonal",
+        renderorder: "left-up",
+        tiledversion: "1.8.4",
+        tileheight: number,
         tilesets: {
-            firstgid: number
+            firstgid: number,
+            /**String pattern: ../.../Name.tsx*/
             source: string
-        }[]
-        tilewidth: number
+        }[],
+        tilewidth: number,
+        type: "map",
+        version: "1.8",
         width: number
-        spawn: number[]
-        colision: number[][]
     }
 
     type GameScriptPreLoad = {

@@ -2,7 +2,7 @@ export { }
 
 declare global {
     class GameMenuBuilder {
-        constructor(options: MenuBuilderDefaultOptions);
+        constructor(options: GameMenuBuilderOptions);
         title: string;
     }
 
@@ -12,7 +12,7 @@ declare global {
      * This may change often, to fix the future numerous amount of bugs.
      * Default options will also be handled internaly, as well as validation.
      */
-    type MenuBuilderDefaultOptions = {
+    type GameMenuBuilderOptions = {
         background: HTMLImageElement | HTMLImageElement[] | ColorResolvable | CanvasGradient | CanvasPattern;
         backgroundMusic: HTMLAudioElement;
         position: keyof typeof RelativePosition;
@@ -38,24 +38,26 @@ declare global {
         /**Transition between buttons.*/
         transition: boolean;
         frame: boolean;
-        menu: {
-            content: string;
-            submenu: GameMenuBuilder | undefined;
-
-            inline: boolean;
-            //? specific to the parameters of the button?
-            onHover: (...args: any) => any | null;
-            onClick: (...args: any) => any | null;
-            onConfirm: (...args: any) => any | null;
-
-            // content style
-            fontSize: string | "inherit";
-            fontStyle: string | "inherit";
-            fontColor: string | ColorResolvable | CanvasGradient | CanvasPattern | "inherit";
-            textAlign: CanvasTextAlign | "inherit";
-            background: HTMLImageElement | ColorResolvable | CanvasGradient | CanvasPattern;
-        }[]
+        menu: GameMenuBuilderOptionsButton[]
     };
+
+    type GameMenuBuilderOptionsButton = {
+        content: string;
+        submenu: GameMenuBuilder | undefined;
+
+        inline: boolean;
+        //? specific to the parameters of the button?
+        onHover: (...args: any) => any | null;
+        onClick: (...args: any) => any | null;
+        onConfirm: (...args: any) => any | null;
+
+        // content style
+        fontSize: string | "inherit";
+        fontStyle: string | "inherit";
+        fontColor: string | ColorResolvable | CanvasGradient | CanvasPattern | "inherit";
+        textAlign: CanvasTextAlign | "inherit";
+        background: HTMLImageElement | ColorResolvable | CanvasGradient | CanvasPattern;
+    }
 
     type ColorResolvable =
         | keyof typeof Colors

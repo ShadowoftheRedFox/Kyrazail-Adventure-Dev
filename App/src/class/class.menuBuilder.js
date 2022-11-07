@@ -1,7 +1,7 @@
 class GameMenuBuilder {
     /**
      * @param {HTMLCanvasElement} canvas
-     * @param {MenuBuilderDefaultOptions} options 
+     * @param {GameMenuBuilderOptions} options 
      */
     constructor(scope, canvas, options = {}) {
         if (!canvas || !canvas.getContext) throw new Error("Canvas is not defined.");
@@ -16,8 +16,8 @@ class GameMenuBuilder {
         this.title = options.title || "Menu Title";
         this.titlePosition = options.titlePosition || "center";
         this.fontSize = options.fontSize || "1em";
-        this.fontStyle = options.fontStyle || "ComicSansMS";
-        this.fontColor = options.fontColor || "#000000";
+        this.fontStyle = options.fontStyle || "Azure";
+        this.fontColor = options.fontColor || "#ffffff";
         this.textAlign = options.textAlign || "center";
         //? title is always on top
 
@@ -51,7 +51,7 @@ class GameMenuBuilder {
             menu[id].onClick = ((typeof button.onClick == "function") ? button.onClick : null);
             menu[id].onConfirm = ((typeof button.onConfirm == "function") ? button.onConfirm : null);
 
-            menu[id].fontSize = button.fontSize || "0.5em";
+            menu[id].fontSize = button.fontSize || "2em";
             menu[id].fontStyle = button.fontStyle || "ComicSansMS";
             menu[id].fontColor = button.fontColor || "#000000";
             menu[id].textAlign = button.textAlign || "center";
@@ -84,27 +84,27 @@ class GameMenuBuilder {
      */
     menuRender(scope) {
         //STEP get actual dimension
-        const width = scope.w;
-        const height = scope.h;
+        const Width = scope.w;
+        const Height = scope.h;
 
         //STEP set text baseline to middle, because it's evenly reparted on bottom and top, so it's easier to draw with different text size
         this.context.textBaseline = "middle";
 
         //STEP clear the canvas
-        this.context.clearRect(0, 0, width, height);
+        this.context.clearRect(0, 0, Width, Height);
 
         //STEP draw background depending of the type
         if (Array.isArray(this.background)) {
             //? preload it in init?
             this.background.forEach((imageName, id) => {
-                if (scope.cache.image[imageName]) this.context.drawImage(scope.cache.image[imageName].image, 0, 0, width, height);
+                if (scope.cache.image[imageName]) this.context.drawImage(scope.cache.image[imageName].image, 0, 0, Width, Height);
                 else throw new Error(`${imageName} is not an image in cache`);
             });
         } else if (this.background instanceof HTMLImageElement) {
-            this.context.drawImage(scope.cache.image[this.background].image, 0, 0, width, height);
+            this.context.drawImage(scope.cache.image[this.background].image, 0, 0, Width, Height);
         } else {
             this.context.fillStyle = this.background;
-            this.context.fillRect(0, 0, width, height);
+            this.context.fillRect(0, 0, Width, Height);
         }
 
         //STEP if debugging is true
@@ -135,31 +135,113 @@ class GameMenuBuilder {
         const TitleMetricsHeight = TitleMetrics.actualBoundingBoxDescent + TitleMetrics.actualBoundingBoxAscent;
         switch (this.titlePosition) {
             case "left":
-                this.context.fillText(this.title, TitleMetricsHeight, TitleMetricsHeight);
+                this.context.fillText(this.title, TitleMetricsHeight, TitleMetricsHeight, Width);
                 break;
             case "center":
-                this.context.fillText(this.title, width, TitleMetricsHeight);
+                this.context.fillText(this.title, Width / 2, TitleMetricsHeight, Width);
                 break;
             case "right":
-                this.context.fillText(this.title, width - TitleMetricsHeight, TitleMetricsHeight);
+                this.context.fillText(this.title, Width - TitleMetricsHeight, TitleMetricsHeight, Width);
                 break;
             default:
                 // center the title
-                this.context.fillText(this.title, width, TitleMetricsHeight);
+                this.context.fillText(this.title, Width, TitleMetricsHeight, Width);
                 break;
         }
 
-        /*
-        ? What's up 'til last time?
-        BUG title is not being displayed
-        
-        */
+        //STEP calculate the position of the menu
+        let MenuPositionX = 0;
+        let MenuPositionY = 0;
+
+        switch (this.position) {
+            case "LEFT":
+                MenuPositionX = 0;
+                MenuPositionY = Height / 2;
+                break;
+            case "CENTER":
+                MenuPositionX = Width / 2;
+                MenuPositionY = Height / 2;
+                break;
+            case "RIGHT":
+                MenuPositionX = Width;
+                MenuPositionY = Height / 2;
+                break;
+            case "TOPLEFT":
+                // even if it's useless now, maybe we'll need to edit that later, so i put that hear
+                MenuPositionX = 0;
+                MenuPositionY = 0;
+                break;
+            case "TOPCENTER":
+                MenuPositionX = Width / 2;
+                MenuPositionY = 0;
+                break;
+            case "TOPRIGHT":
+                MenuPositionX = Width;
+                MenuPositionY = Height;
+                break;
+            case "BOTTOMLEFT":
+                MenuPositionX = 0;
+                MenuPositionY = Height;
+                break;
+            case "BOTTOMCENTER":
+                MenuPositionX = Width / 2;
+                MenuPositionY = Height;
+                break;
+            case "BOTTOMRIGHT":
+                MenuPositionX = Width;
+                MenuPositionY = Height;
+                break;
+            default:
+                //default is BOTTOMCENTER
+                MenuPositionX = Width / 2;
+                MenuPositionY = Height;
+                break;
+        }
 
         //STEP draw button background
 
         //STEP draw buttons
+        //? need to get the largest button content to correctly center them
+        this.menu.forEach((button, id) => {
+            //HACK simple draw, does not take into account the inline parameter
+            this.context.font = `${button.fontSize} ${button.fontStyle}`;
+            this.context.fillStyle = button.fontColor;
+            // if the text align is inherited, use the title text aligne
+            this.context.textAlign = ((button.textAlign == "inherit") ? this.textAlign : button.textAlign);
 
-        //step draw frame
+            const ButtonMetrics = this.context.measureText(this.title);
+            const ButtonMetricsHeight = ButtonMetrics.actualBoundingBoxDescent + ButtonMetrics.actualBoundingBoxAscent;
+            const ButtonMetricsWidth = ButtonMetrics.width;
+
+            //get the reverse ID so it doesn't draw button from bottom to top but top to bottom
+            const reverseID = this.menu.reverseIndex(id);
+
+            //TODO need to use the largest size and not the current button size
+            //TODO calculate the Y and X position of the button depending on the menu position
+            switch (this.context.textAlign) {
+                case "center":
+                    this.context.fillText(button.content, MenuPositionX, MenuPositionY);
+                    break;
+                case "end":
+
+                    break;
+                case "left":
+
+                    break;
+                case "right":
+
+                    break;
+                case "start":
+
+                    break;
+                default:
+                    //default is center
+                    this.context.fillText(button.content, MenuPositionX, MenuPositionY);
+                    break;
+            }
+        });
+
+        //STEP draw frame
 
         return this.refreshCanvas;
     }
@@ -167,5 +249,15 @@ class GameMenuBuilder {
     /**
      * @param {GameScope} scope 
      */
-    menuUpdate(scope) { }
+    menuUpdate(scope) {
+        //STEP key press handling
+
+        //STEP button onHover
+
+    }
 }
+
+/*
+? What's up 'til last time?
+
+*/
