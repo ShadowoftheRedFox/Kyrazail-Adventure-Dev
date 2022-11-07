@@ -69,6 +69,7 @@ Most images and sounds come from what I found online. If any of the owner want t
 - Host for the online game: [itch.io](https://itch.io)
 - Script: [Modernizr](http://modernizr.com)
 - Script: [CryptoJS](https://code.google.com/archive/p/crypto-js/)
+- Map creation: [Tiled Map Editor](https://thorbjorn.itch.io/tiled)
 
 And of course, a lot of help coming from StackOverflow and it's awesome community.
 
