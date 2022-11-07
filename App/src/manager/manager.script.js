@@ -47,12 +47,16 @@ DataLoaderManager._errorUrls = [];
 DataLoaderManager._dataLoaded = {};
 
 DataLoaderManager.setup = function (plugins, number, call) {
-    if (!plugins) throw new ReferenceError("plugins is not defined.");
-    if (isNaN(number)) throw new ReferenceError("number is not defined.");
-    if (typeof call !== "function") throw new TypeError(`Call is not a function, got ${typeof call}`);
-    if (number >= plugins.length) return call();
+    if (!plugins || !Array.isArray(plugins)) throw new ReferenceError(`plugins is not an array, got ${typeof plugins}`);
+    if (isNaN(number)) throw new ReferenceError(`number is not a number, got ${typeof number}`);
+    if (typeof call !== "function") throw new TypeError(`call is not a function, got ${typeof call}`);
+    if (number >= plugins.length) {
+        return call();
+    }
     const plugin = plugins[number];
-    if (!plugin.status) return DataLoaderManager.setup(plugins, number + 1, call);
+    if (!plugin.status) {
+        return DataLoaderManager.setup(plugins, number + 1, call);
+    }
     DataLoaderManager._datas.push(plugin.name);
     var url = plugin.path + plugin.name + ".json";
     let httpRequest = new XMLHttpRequest(); // asynchronous request
