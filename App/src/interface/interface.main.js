@@ -1270,7 +1270,7 @@ class GameMainInterface extends GameInterfaces {
         if (!scope.constants.isNwjs) {
             const currentMenu = that.menu[that.focusedMenu],
                 b = currentMenu.button[currentMenu.focusedButton];
-            if ((!that.loadSaveFile.file || that.loadSaveFile.failed == false) && b.name != "Load a file before!") {
+            if ((!that.loadSaveFile.file || that.loadSaveFile.failed === false) && b.name != "Load a file before!") {
                 const o = b.name;
                 b.name = "Load a file before!";
                 that.u();
