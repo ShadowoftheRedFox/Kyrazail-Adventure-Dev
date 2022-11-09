@@ -50,7 +50,7 @@ A huge thanks to every testers on the Discord server, that give ideas or report 
 
 You can contact us via different way:
 
-**Mails:** kyra.devs@gmail.com
+**Mails:** [kyra.devs@gmail.com](mailto:kyra.devs@gmail.com)
 
 **Discord:** [Official Server](https://discord.gg/5mF5AHnRCr)
 

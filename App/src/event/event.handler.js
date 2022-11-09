@@ -64,6 +64,7 @@ const TestEvents = {
             window.game.global.player.lastName = args[1];
             GameEvent.emit("MainCharacterSpeacies");
 
+            window.game.state.menu.map.activated = true;
             window.game.state.menu.map.changeMap(window.game, "Map001");
         },
         stop: [],
