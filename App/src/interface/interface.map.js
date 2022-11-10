@@ -15,6 +15,11 @@ class GameMapInterface extends GameInterfaces {
 
         this.currentMapName = "";
         this.mapLoaded = false;
+        /**
+         * Link the tilesetId to the firstgid.
+         * @type {Map<number, number>}
+         */
+        this.setMap = new Map();
     }
 
     /**
@@ -53,17 +58,18 @@ class GameMapInterface extends GameInterfaces {
         render ground first
         then collision
         then over
+
+        HACK to fix the line problem when drawing perfact size
+        When we are drawing multiple case, line appears between them when devicePixelRation gets tiny
+        so we draw the tile 1 pixel wider and higher
+        so the next one cover the pixel
+
+        then we need to clear the extra pixel left on the right side and bottom
         */
 
-        const CenterX = Width / 2;
-        const CenterY = Height / 2;
-
-        const TileWidth = MapToRender.tilewidth;
-        const TileHeight = MapToRender.tileheight;
-
-        const MapGround = MapToRender.layers.filter(layer => layer.name == "Ground");
-        const MapCollision = MapToRender.layers.filter(layer => layer.name == "Collision");
-        const MapOver = MapToRender.layers.filter(layer => layer.name == "Over");
+        const GroundLayers = MapToRender.layers.filter(layer => layer.name == "Ground");
+        const CollisionLayers = MapToRender.layers.filter(layer => layer.name == "Collision");
+        const OverLayers = MapToRender.layers.filter(layer => layer.name == "Over");
 
         /*
         ? What order to render?
@@ -73,70 +79,11 @@ class GameMapInterface extends GameInterfaces {
         so if he doesn't move, we only need to draw each layer on their canvas, then update them all only if player moves
         */
 
-        //TODO find how the fuck to get the coordinates of each tile ;-;
         //TODO also check if the tile is visible on screen, if no, don't draw it
-        MapGround.forEach(layer => {
-            if (!layer.visible || layer.opacity == 0) return;
-            ctx.globalAlpha = layer.opacity;
-            /*
-            ! coordinates
-            layer.x and layer.y indicates the top left corner of the layer on the whole map
-            */
-            /*
-            ! start
-            layer.startx layer.starty is the starting point compared to the rest of the grid
-            */
-            /*
-            ! size
-            layer.width and layer.height means the total tile on the layer
-            */
-            // where the tile is on the whole map grid
-            let TilePositionX = CenterX + layer.x * TileWidth;
-            let TilePositionY = CenterY + layer.y * TileHeight;
-            layer.chunks.forEach(chunk => {
-                console.log(chunk);
-                /*
-                ! size
-                chunk.width and chunk.height means the total tile on the chunk
-                */
-                /*
-                ! coordinates
-                chunk.x and chunk.y indicates the top left corner of the layer on the whole layer/map?
-                */
-                TilePositionX += chunk.x * TileWidth;
-                TilePositionY += chunk.y * TileHeight;
-                chunk.data.forEach((tile, tileIndex) => {
-                    // get the exact position of the current tile
-                    let CurrentTileX = TilePositionX + (tileIndex % chunk.width) * TileWidth;
-                    let CurrentTileY = TilePositionY + (Math.floor(tileIndex / chunk.height)) * TileHeight;
-                    // if tile == 0, it means it's empty, so just clear the position on the context
-                    if (tile == 0) {
-                        ctx.clearRect(CurrentTileX, CurrentTileY, TileWidth, TileHeight);
-                    } else {
-                        // else, get the image depending of the tile value and image max tile value
-                        let TileImage = null;
-                        MapToRender.tilesets.forEach((set, setId) => {
-                            // if we are at the last set, it in all case the one we need
-                            if (setId + 1 == MapToRender.tilesets.length) { TileImage = scope.cache.image[set.source].image; return; }
-                            // else, if the first tile id is bigger than the current tile, and since we're goinf from the tiniest to the biggest
-                            // it means that the image was the one before that one
-                            if (tile < set.firstgid && !TileImage) {
-                                TileImage = scope.cache.image[MapToRender.tilesets[setId - 1].source].image;
-                                return;
-                            }
-                        });
-                        let TileSourceX = (tileIndex % chunk.width) * TileWidth;
-                        let TileSourceY = (Math.floor(tileIndex / chunk.height)) * TileHeight;
-                        ctx.drawImage(TileImage, TileSourceX, TileSourceY, TileWidth, TileHeight, CurrentTileX, CurrentTileY, TileWidth, TileHeight);
-                    }
-                });
-            });
-        });
-        //TEST need to debug the part above
-        /*
-        TEST 1: render, but not correct tiles, nor correct images
-        */
-
+        //TODO create multiple canvases for each layer
+        this.drawMap(scope, MapToRender, GroundLayers);
+        this.drawMap(scope, MapToRender, CollisionLayers);
+        this.drawMap(scope, MapToRender, OverLayers);
 
         //STEP map animated
         //STEP entities
@@ -155,6 +102,15 @@ class GameMapInterface extends GameInterfaces {
         //STEP entities
         //STEP map over
         //STEP map effect
+    }
+
+    /**
+     * Return the image name of the set source.
+     * @param {string} source The original source string.
+     * @returns {string} The image name.
+     */
+    getImageNameFromSource(source) {
+        return source.split("/").last().split(".")[0];
     }
 
     /**
@@ -180,15 +136,127 @@ class GameMapInterface extends GameInterfaces {
         this.currentMapName = map;
         // live load the map images
         const MapTileSetsImageToLoad = [];
-        scope.cache.map[map].tilesets.forEach(tileset => {
+        scope.cache.map[map].tilesets.forEach((tileset, tilesetId) => {
             // get the name of the image through the string pattern, and replace it for further use
-            tileset.source = `Tilesets/${tileset.source.split("/").last().split(".")[0]}`;
+            tileset.source = `Tilesets/${this.getImageNameFromSource(tileset.source)}`;
             MapTileSetsImageToLoad.push(tileset.source);
+
+            // create a map that link tileset id and the firstgid
+            this.setMap.set(tilesetId, tileset.firstgid);
         });
 
         GameLoadImage(scope, MapTileSetsImageToLoad, () => {
             this.mapLoaded = true;
             this.needsUpdate = true;
+        });
+    }
+
+
+    /**
+     * Return the correct image name depending of the sets and tile.
+     * @param {GameMapTileSet[]} sets The sets array to look for.
+     * @param {number} tile The tile.
+     * @returns {{source:string, firstgid:number}} The image name and firstgid.
+     */
+    getImageFromTile(sets, tile = 0) {
+        if (!sets || !Array.isArray(sets) || !sets.length) throw new TypeError("sets must be an array longer than 0!");
+        if (tile == 0) return null;
+        let imageSource = "";
+        let setIndex = 0;
+
+        // until the firstgid is >= tile, replace the source
+        // so when it's not true anymore, we know we have the right source
+        while (setIndex < sets.length && sets[setIndex].firstgid > tile) {
+            setIndex++;
+        }
+        return { source: "Tilesets/" + this.getImageNameFromSource(sets[setIndex].source), firstgid: sets[setIndex].firstgid };
+    }
+
+    drawMap(scope, map, layers) {
+        const ctx = scope.cache.context[this.canvasGroup];
+        const TileWidth = map.tilewidth;
+        const TileHeight = map.tileheight;
+        const Width = scope.w;
+        const Height = scope.h;
+
+        layers.forEach((layer, layerId) => {
+            if (!layer.visible || layer.opacity == 0) return;
+            ctx.globalAlpha = layer.opacity;
+            /*
+            ! coordinates
+            layer.x and layer.y indicates the top left corner of the layer on the whole map
+            */
+            /*
+            ! start
+            layer.startx layer.starty is the starting point compared to the rest of the grid
+            */
+            /*
+            ! size
+            layer.width and layer.height means the total tile on the layer
+            */
+            // where the tile is on the whole map grid
+            // we now set the top left corner
+            const LayerPositionX = (Width - layer.width * TileWidth) / 2;
+            const LayerPositionY = (Height - layer.height * TileWidth) / 2;
+
+            ctx.fillStyle = "white";
+            ctx.fillRect(LayerPositionX, LayerPositionY, layer.width, layer.height);
+
+            layer.chunks.forEach((chunk, chunkId) => {
+                //BUG there is a pixel between each chunk border
+
+                // set the top left corner of the current chunk
+                const ChunkPositionX = LayerPositionX + ((chunkId % (layer.width / chunk.width)) * chunk.width) * TileWidth;
+                const ChunkPositionY = LayerPositionY + (Math.floor(chunkId / (layer.height / chunk.height)) * chunk.height) * TileHeight;
+
+                /*
+                ! size
+                chunk.width and chunk.height means the total tile on the chunk
+                */
+                /*
+                ! coordinates
+                chunk.x and chunk.y indicates the top left corner of the layer on the whole layer/map?
+                */
+                chunk.data.forEach((tile, tileId) => {
+                    // get the exact position of the current tile
+                    const TilePositionX = ChunkPositionX + (tileId % chunk.width) * TileWidth;
+                    const TilePositionY = ChunkPositionY + (Math.floor(tileId / chunk.height)) * TileHeight;
+
+                    //TEST
+                    // ctx.fillStyle = (((tileId % chunk.width + Math.floor(tileId / chunk.height)) % 2 == 0) ? "grey" : "darkgrey");
+                    // if (tileId == 0) ctx.fillStyle = "green";
+                    // if (tileId == chunk.data.length - 1) ctx.fillStyle = "green";
+                    // ctx.fillRect(TilePositionX, TilePositionY, TileWidth + 1, TileHeight + 1);
+                    //TEST END
+
+                    // if tile == 0, it means it's empty, so just ski it
+                    if (tile !== 0) {
+                        // else, get the image depending of the tile value and image max tile value
+                        const TileData = this.getImageFromTile(map.tilesets, tile);
+                        // and render the tile
+                        const TileImage = scope.cache.image[TileData.source].image;
+
+                        // calculating the source coodinates of the tile on the source image
+                        const TileSourceX = ((tile - TileData.firstgid) * TileWidth) % TileImage.width;
+                        const TileSourceY = Math.floor(((tile - TileData.firstgid) * TileHeight) / TileImage.height);
+
+                        // make sure to smooth each pixel so it doesn't look rough
+                        ctx.imageSmoothingEnabled = true;
+                        ctx.drawImage(
+                            TileImage,
+                            TileSourceX, TileSourceY,
+                            TileWidth + 1, TileHeight + 1,
+                            TilePositionX, TilePositionY,
+                            TileWidth + 1, TileHeight + 1
+                        );
+                    }
+                });
+            });
+
+            //HACK clearing extra pixel on the right side (plus the pixel at the corner, so the +1 at the end)
+            ctx.clearRect(LayerPositionX + layer.width * TileWidth, LayerPositionY, 1, layer.height * TileHeight + 1);
+            //HACK and no the bottom
+            ctx.clearRect(LayerPositionX, LayerPositionY + layer.height * TileHeight, layer.width * TileWidth, 1);
         });
     }
 }
