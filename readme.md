@@ -4,7 +4,7 @@
 
 - [About](#About): Quick description of what is the project.
 - [Download](#Download): How to download the project or the game.
-- [Update and Uninstallation](#update-and-uninstalling)
+- [Update and Uninstallation](#update-and-uninstallation)
 - [Documentation](./Documentation.md): To developper who wants a better understanding of how I sorted all of this.
 - [Team](#Team): People working for the project or contribuated to it.
 - [Contact](#Contact): How to contact me or the team.
@@ -28,7 +28,7 @@ The game is not available on IOS because the NWjs Builder library does not work 
 For the moment, you need to update your game manually if you downloaded it. I will try to create an auto updater, but it may come at different times depending your platform.
 
 ### Uninstallation
-You just need to delete the [game folder](./). And you're done!
+You just need to delete the [game folder](../). And you're done!
 
 ---
 ## Documentation
