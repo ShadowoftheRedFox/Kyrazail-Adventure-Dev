@@ -20,6 +20,7 @@ This game is project to create a 2D tiled game from scratch. I'm working alone o
 
 You can find the source code on [Github](https://github.com/ShadowoftheRedFox/Kyrazail-Adventure-Dev), and you can dowload the game on [itch.io](https://shadowoftheredfox.itch.io/kyrazail-adventure). The game is also available to play online on the same page on itch.io. 
 The game is not available on IOS because the NWjs Builder library does not work with me for this platform.
+You can play the pre release version [here](https://shadowoftheredfox.github.io/Kyrazail-Adventure-Dev/App/).
 
 ---
 ## Update and Uninstallation
