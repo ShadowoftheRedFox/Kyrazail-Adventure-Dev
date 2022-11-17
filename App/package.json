@@ -1,7 +1,8 @@
 {
     "name": "kyrazail-adventure",
-    "version": "1.1.1.8",
     "description": "Kyrazail adventure game. Maybe a real description soon, who knows?",
+    "version": "1.1.2.0",
+    "lastUpdate": "17/11/2022",
     "main": "./index.html",
     "keywords": [
         "game",
@@ -10,13 +11,13 @@
     ],
     "author": "Shadow of the Red Fox#5881",
     "license": "ISC",
-    "lastUpdate": "07/11/2022",
     "releaseType": "Dev/Alpha",
     "changelog": [
         "Corrected bugs",
         "Starting adventure!",
         "Save and load ready to work.",
-        "Starting to create the map!"
+        "Starting to create the map!",
+        "Map is rendering correctly!"
     ],
     "window": {
         "title": "Kyrazail Adventure",

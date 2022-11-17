@@ -37,7 +37,7 @@ class GameMainInterface extends GameInterfaces {
         this.menu = [
             {
                 name: "",
-                f: this.mainMenuFct,
+                function: this.mainMenuFct,
                 button: [
                     {
                         name: "NewGameButton",
@@ -45,42 +45,42 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: this.startNewGame
+                        function: this.startNewGame
                     }, {
                         name: "Load",
                         x: 0,
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: this.toLoad
+                        function: this.toLoad
                     }, {
                         name: "Settings",
                         x: 0,
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: this.toSettings
+                        function: this.toSettings
                     }, {
                         name: "Credits",
                         x: 0,
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: () => { open("./credits.html"); }
+                        function: () => { open("./credits.html"); }
                     }, {
                         name: "Quit Game",
                         x: 0,
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: WindowManager.closeGame
+                        function: WindowManager.closeGame
                     }
                 ],
                 focusedButton: 0
             },
             {
                 name: "Load game",
-                f: this.loadMenuFct,
+                function: this.loadMenuFct,
                 button: [
                     {
                         name: "Retry",
@@ -88,14 +88,14 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: this.loadSaveFileRetry
+                        function: this.loadSaveFileRetry
                     }, {
                         name: "Load",
                         x: 0,
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: this.loadSave,
+                        function: this.loadSave,
                         loader: true
                     },
                     {
@@ -104,7 +104,7 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: this.toMain,
+                        function: this.toMain,
                         back: true
                     }
                 ],
@@ -112,7 +112,7 @@ class GameMainInterface extends GameInterfaces {
             },
             {
                 name: "Settings",
-                f: this.settingsMenuFct,
+                function: this.settingsMenuFct,
                 button: [
                     {
                         name: "General",
@@ -120,35 +120,35 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: this.toGeneral
+                        function: this.toGeneral
                     }, {
                         name: "Audio",
                         x: 0,
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: this.toAudio
+                        function: this.toAudio
                     }, {
                         name: "Control",
                         x: 0,
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: this.toKeyBind
+                        function: this.toKeyBind
                     }, {
                         name: "Language",
                         x: 0,
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: this.toLanguage
+                        function: this.toLanguage
                     }, {
                         name: "Back",
                         x: 0,
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: this.toMain,
+                        function: this.toMain,
                         back: true
                     }
                 ],
@@ -156,7 +156,7 @@ class GameMainInterface extends GameInterfaces {
             },
             {
                 name: "Settings: General",
-                f: this.settingsGeneralMenuFct,
+                function: this.settingsGeneralMenuFct,
                 button: [
                     {
                         name: "Always run:",
@@ -164,7 +164,7 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: () => { GameConfig.alwaysRun = (GameConfig.alwaysRun ? false : true); }
+                        function: () => { GameConfig.alwaysRun = (GameConfig.alwaysRun ? false : true); }
                     },
                     {
                         name: "   Game fps:",
@@ -173,7 +173,7 @@ class GameMainInterface extends GameInterfaces {
                         w: 0,
                         h: 0,
                         special: true,
-                        f: (dir) => {
+                        function: (dir) => {
                             if (dir == 1 && GameConfig.targetFps + 10 <= 140) { GameConfig.targetFps += 10; }
                             else if (dir == 0 && GameConfig.targetFps - 10 >= 30) { GameConfig.targetFps -= 10; }
                         }
@@ -184,7 +184,7 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: () => {
+                        function: () => {
                             ConfigConst.DEBUG = (ConfigConst.DEBUG ? false : true);
                             // clear fps if debug has been disabled
                             if (!ConfigConst.DEBUG) WindowManager.data.ctx.clearRect(0, 0, scope.w, scope.h);
@@ -196,7 +196,7 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: this.toSettings,
+                        function: this.toSettings,
                         back: true
                     }
                 ],
@@ -204,7 +204,7 @@ class GameMainInterface extends GameInterfaces {
             },
             {
                 name: "Settings: Audio",
-                f: this.settingsAudioMenuFct,
+                function: this.settingsAudioMenuFct,
                 button: [
                     {
                         name: "Musics volume:",
@@ -213,7 +213,7 @@ class GameMainInterface extends GameInterfaces {
                         w: 0,
                         h: 0,
                         special: true,
-                        f: (dir) => {
+                        function: (dir) => {
                             var s = scope.soundsSettings.volumeBG * 100;
                             if (dir == 1 && s + 5 <= 100) {
                                 s += 5;
@@ -230,7 +230,7 @@ class GameMainInterface extends GameInterfaces {
                         w: 0,
                         h: 0,
                         special: true,
-                        f: (dir) => {
+                        function: (dir) => {
                             var s = scope.soundsSettings.volumeEFX * 100;
                             if (dir == 1 && s + 5 <= 100) {
                                 s += 5;
@@ -246,7 +246,7 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: this.toSettings,
+                        function: this.toSettings,
                         back: true
                     }
                 ],
@@ -254,7 +254,7 @@ class GameMainInterface extends GameInterfaces {
             },
             {
                 name: "Settings: Control",
-                f: this.settingsKeyBindMenuFct,
+                function: this.settingsKeyBindMenuFct,
                 button: [
                     {
                         name: "Up",
@@ -266,7 +266,7 @@ class GameMainInterface extends GameInterfaces {
                         enabled: true,
                         key1: GameConfig.keyBoard.up[0],
                         key2: GameConfig.keyBoard.up[1],
-                        f: (dir, b) => {
+                        function: (dir, b) => {
                             if (dir == 0) {
                                 // custom key 1
                                 GameConfig.keyBoard.up[0] = b.key1;
@@ -285,7 +285,7 @@ class GameMainInterface extends GameInterfaces {
                         enabled: true,
                         key1: GameConfig.keyBoard.down[0],
                         key2: GameConfig.keyBoard.down[1],
-                        f: (dir, b) => {
+                        function: (dir, b) => {
                             if (dir == 0) {
                                 // custom key 1
                                 GameConfig.keyBoard.down[0] = b.key1;
@@ -304,7 +304,7 @@ class GameMainInterface extends GameInterfaces {
                         enabled: true,
                         key1: GameConfig.keyBoard.left[0],
                         key2: GameConfig.keyBoard.left[1],
-                        f: (dir, b) => {
+                        function: (dir, b) => {
                             if (dir == 0) {
                                 // custom key 1
                                 GameConfig.keyBoard.left[0] = b.key1;
@@ -323,7 +323,7 @@ class GameMainInterface extends GameInterfaces {
                         enabled: true,
                         key1: GameConfig.keyBoard.right[0],
                         key2: GameConfig.keyBoard.right[1],
-                        f: (dir, b) => {
+                        function: (dir, b) => {
                             if (dir == 0) {
                                 // custom key 1
                                 GameConfig.keyBoard.right[0] = b.key1;
@@ -342,7 +342,7 @@ class GameMainInterface extends GameInterfaces {
                         enabled: true,
                         key1: GameConfig.keyBoard.run[0],
                         key2: GameConfig.keyBoard.run[1],
-                        f: (dir, b) => {
+                        function: (dir, b) => {
                             if (dir == 0) {
                                 // custom key 1
                                 GameConfig.keyBoard.run[0] = b.key1;
@@ -361,7 +361,7 @@ class GameMainInterface extends GameInterfaces {
                         enabled: true,
                         key1: GameConfig.keyBoard.pause[0],
                         key2: GameConfig.keyBoard.pause[1],
-                        f: (dir, b) => {
+                        function: (dir, b) => {
                             if (dir == 0) {
                                 // custom key 1
                                 GameConfig.keyBoard.pause[0] = b.key1;
@@ -380,7 +380,7 @@ class GameMainInterface extends GameInterfaces {
                         enabled: true,
                         key1: GameConfig.keyBoard.back[0],
                         key2: GameConfig.keyBoard.back[1],
-                        f: (dir, b) => {
+                        function: (dir, b) => {
                             if (dir == 0) {
                                 // custom key 1
                                 GameConfig.keyBoard.back[0] = b.key1;
@@ -399,7 +399,7 @@ class GameMainInterface extends GameInterfaces {
                         enabled: true,
                         key1: GameConfig.keyBoard.confirm[0],
                         key2: GameConfig.keyBoard.confirm[1],
-                        f: (dir, b) => {
+                        function: (dir, b) => {
                             if (dir == 0) {
                                 // custom key 1
                                 GameConfig.keyBoard.confirm[0] = b.key1;
@@ -418,7 +418,7 @@ class GameMainInterface extends GameInterfaces {
                         enabled: true,
                         key1: GameConfig.keyBoard.inventory[0],
                         key2: GameConfig.keyBoard.inventory[1],
-                        f: (dir, b) => {
+                        function: (dir, b) => {
                             if (dir == 0) {
                                 // custom key 1
                                 GameConfig.keyBoard.inventory[0] = b.key1;
@@ -433,7 +433,7 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: this.toSettings,
+                        function: this.toSettings,
                         back: true
                     }
                 ],
@@ -444,7 +444,7 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: (that, f) => { that.arrowHeightChange += 52;/*f is the button focused var*/f++; },
+                        function: (that, f) => { that.arrowHeightChange += 52;/*f is the button focused var*/f++; },
                         draw: (c) => { return ArrowDrawer.pixel("up", c); },
                         arrowUp: true,
                         enabled: false
@@ -454,7 +454,7 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: (that, f) => { that.arrowHeightChange -= 52;/*f is the button focused var*/f--; },
+                        function: (that, f) => { that.arrowHeightChange -= 52;/*f is the button focused var*/f--; },
                         draw: (c) => { return ArrowDrawer.pixel("down", c); },
                         arrowDown: true,
                         enabled: false
@@ -465,7 +465,7 @@ class GameMainInterface extends GameInterfaces {
             },
             {
                 name: "Kyrazail Account",
-                f: this.accountFct,
+                function: this.accountFct,
                 button: [
                     {
                         name: "Back",
@@ -473,7 +473,7 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: this.toMain,
+                        function: this.toMain,
                         back: true
                     }
                 ],
@@ -481,7 +481,7 @@ class GameMainInterface extends GameInterfaces {
             },
             {
                 name: "Language",
-                f: this.accountFct,
+                function: this.accountFct,
                 button: [
                     {
                         name: "English",
@@ -489,14 +489,14 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: (scope, that) => { scope.language = "en"; ConfigConst.LANGUAGE = "en"; }
+                        function: (scope, that) => { scope.language = "en"; ConfigConst.LANGUAGE = "en"; }
                     }, {
                         name: "Français",
                         x: 0,
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: (scope, that) => { scope.language = "fr"; ConfigConst.LANGUAGE = "fr"; }
+                        function: (scope, that) => { scope.language = "fr"; ConfigConst.LANGUAGE = "fr"; }
                     },
                     {
                         name: "Back",
@@ -504,7 +504,7 @@ class GameMainInterface extends GameInterfaces {
                         y: 0,
                         w: 0,
                         h: 0,
-                        f: this.toSettings,
+                        function: this.toSettings,
                         back: true
                     }
                 ],
@@ -519,7 +519,7 @@ class GameMainInterface extends GameInterfaces {
                 y: 0,
                 w: 0,
                 h: 0,
-                f: () => { },//this.toAccount,
+                function: () => { },//this.toAccount,
                 icon: "Icon/Account",
                 hover: false
             }, {
@@ -528,7 +528,7 @@ class GameMainInterface extends GameInterfaces {
                 y: 0,
                 w: 0,
                 h: 0,
-                f: (scope) => {
+                function: (scope) => {
                     if (scope.constants.isNwjs) {
                         // open a url in a browser and not in the app
                         var gui = require("nw.gui");
@@ -543,7 +543,7 @@ class GameMainInterface extends GameInterfaces {
                 y: 0,
                 w: 0,
                 h: 0,
-                f: (scope) => {
+                function: (scope) => {
                     if (scope.constants.isNwjs) {
                         // open a url in a browser and not in the app
                         var gui = require("nw.gui");
@@ -558,7 +558,7 @@ class GameMainInterface extends GameInterfaces {
                 y: 0,
                 w: 0,
                 h: 0,
-                f: (scope) => {
+                function: (scope) => {
                     if (scope.constants.isNwjs) {
                         // open a url in a browser and not in the app
                         var gui = require("nw.gui");
@@ -1143,7 +1143,7 @@ class GameMainInterface extends GameInterfaces {
                             y: 0,
                             w: 0,
                             h: 0,
-                            f: () => { GameGlobalObject.loadGame(file.content); }
+                            function: () => { GameGlobalObject.loadGame(file.content); }
                             //TODO add infos relativ to the game, like current map, player name, wealth etc...
                         });
                     });
@@ -1389,7 +1389,7 @@ class GameMainInterface extends GameInterfaces {
 
         try {
             // render the current menu
-            this.menu[this.focusedMenu].f(scope, this);
+            this.menu[this.focusedMenu].function(scope, this);
         } catch (e) {
             WindowManager.fatal(e);
         }
@@ -1433,13 +1433,13 @@ class GameMainInterface extends GameInterfaces {
                 if (that.buttonToChange.key == 1 && ev.key != b.key2 && !that.checkNoDuplicateKey(ev.key)) {
                     b.key1 = ev.key;
                     // change the correct data in the config
-                    b.f(0, b);
+                    b.function(0, b);
                     that.endOfInput(that);
                 }
                 if (that.buttonToChange.key == 2 && b.key1 != ev.key && !that.checkNoDuplicateKey(ev.key)) {
                     b.key2 = ev.key;
                     // change the correct data in the config
-                    b.f(1, b);
+                    b.function(1, b);
                     that.endOfInput(that);
                 }
             };
@@ -1457,12 +1457,12 @@ class GameMainInterface extends GameInterfaces {
                 }
                 if (k.confirm.includes(ev.key) && !currentMenu.button[currentMenu.focusedButton].special &&
                     !currentMenu.button[currentMenu.focusedButton].keyboard) {
-                    currentMenu.button[currentMenu.focusedButton].f(scope, that);
+                    currentMenu.button[currentMenu.focusedButton].function(scope, that);
                     that.u();
                 }
                 if (currentMenu.button[currentMenu.focusedButton].special) {
-                    if (k.right.includes(ev.key)) { currentMenu.button[currentMenu.focusedButton].f(1); that.u(); }
-                    if (k.left.includes(ev.key)) { currentMenu.button[currentMenu.focusedButton].f(0); that.u(); }
+                    if (k.right.includes(ev.key)) { currentMenu.button[currentMenu.focusedButton].function(1); that.u(); }
+                    if (k.left.includes(ev.key)) { currentMenu.button[currentMenu.focusedButton].function(0); that.u(); }
                 } else if (k.left.includes(ev.key) && currentMenu.button[currentMenu.button.reverseIndex()].back &&
                     (!currentMenu.sideButton || currentMenu.sideButton == 1)) {
                     // to focus on the back button
@@ -1470,7 +1470,7 @@ class GameMainInterface extends GameInterfaces {
                     that.u();
                 }
                 if (k.back.includes(ev.key) && currentMenu.button[currentMenu.button.reverseIndex()].back) {
-                    currentMenu.button[currentMenu.button.reverseIndex()].f(scope, that);
+                    currentMenu.button[currentMenu.button.reverseIndex()].function(scope, that);
                     that.u();
                 }
                 if (currentMenu.sideButton) {
@@ -1564,16 +1564,16 @@ class GameMainInterface extends GameInterfaces {
                 that.u();
             }
             if (MouseTrackerManager.checkClick(b.x, b.y, b.w, b.h, time) && !b.special) {
-                b.f(scope, that);
+                b.function(scope, that);
                 that.u();
             }
             if (b.special) {
                 if (MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time)) {
-                    b.f(0);
+                    b.function(0);
                     that.u();
                 }
                 if (MouseTrackerManager.checkClick(b.x + b.w / 2, b.y, b.w / 2, b.h, time)) {
-                    b.f(1);
+                    b.function(1);
                     that.u();
                 }
             }
@@ -1643,7 +1643,7 @@ class GameMainInterface extends GameInterfaces {
         */
         if (currentMenu.arrow) currentMenu.arrow.forEach(a => {
             if (MouseTrackerManager.checkClick(a.x, a.y, a.w, a.h, time) && a.enabled) {
-                a.f(that, currentMenu);
+                a.function(that, currentMenu);
                 that.u();
             }
         });
@@ -1658,7 +1658,7 @@ class GameMainInterface extends GameInterfaces {
                 a.hover = false;
             }
             if (MouseTrackerManager.checkClick(a.x, a.y, a.w, a.h, time)) {
-                a.f(scope, that);
+                a.function(scope, that);
                 that.u();
             }
         });
@@ -1668,3 +1668,6 @@ class GameMainInterface extends GameInterfaces {
 
     u() { this.needsUpdate = true; }
 }
+
+
+//BUG save can be created and downloaded at the start of teh game? (spam keys?)

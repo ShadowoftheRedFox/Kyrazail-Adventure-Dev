@@ -695,3 +695,5 @@ class GameDialogueInterface extends GameInterfaces {
          */
     }
 }
+
+//BUG space doesn't work when inputing with keyboard
