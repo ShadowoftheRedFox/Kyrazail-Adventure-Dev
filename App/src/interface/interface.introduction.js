@@ -9,7 +9,7 @@ class GameIntroductionInterface extends GameInterfaces {
             asOwnCanvas: true,
             zindex: ConfigConst.ZINDEX.INTRODUCTION,
             canvasGroup: "GameIntroductionGroup",
-            requiredImage: ["Intro/Icon"],
+            requiredImage: ["Introduction/Icon"],
             transitionLeave: true,
             transitionSpawns: true,
             activated: true,

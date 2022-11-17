@@ -25,7 +25,7 @@ class GameMainInterface extends GameInterfaces {
             requiredImage: [
                 "System/Window",
                 GameMainInterfaceChoosen[0], GameMainInterfaceChoosen[1],
-                "Icon/Account", "Icon/Discord", "Icon/Github", "Icon/Website",
+                "Icons/Account", "Icons/Discord", "Icons/Github", "Icons/Website",
                 "Faces/Spiritual"
             ],
             requiredAudio: ["MAIN/Adeste", "MAIN/Dramatic", "MAIN/Moon", "MAIN/Silence"],
@@ -520,7 +520,7 @@ class GameMainInterface extends GameInterfaces {
                 w: 0,
                 h: 0,
                 function: () => { },//this.toAccount,
-                icon: "Icon/Account",
+                icon: "Icons/Account",
                 hover: false
             }, {
                 name: "Discord",
@@ -535,7 +535,7 @@ class GameMainInterface extends GameInterfaces {
                         gui.Shell.openExternal(scope.constants.package.support.url);
                     } else open(scope.constants.package.support.url, "_blank", "rel:'noopener;'");
                 },
-                icon: "Icon/Discord",
+                icon: "Icons/Discord",
                 hover: false
             }, {
                 name: "GitHub",
@@ -550,7 +550,7 @@ class GameMainInterface extends GameInterfaces {
                         gui.Shell.openExternal(scope.constants.package.homepage);
                     } else open(scope.constants.package.homepage, "_blank", "rel:'noopener;'");
                 },
-                icon: "Icon/Github",
+                icon: "Icons/Github",
                 hover: false
             }, {
                 name: "Online game",
@@ -565,7 +565,7 @@ class GameMainInterface extends GameInterfaces {
                         gui.Shell.openExternal(scope.constants.package.online);
                     } else open(scope.constants.package.online, "_blank", "rel:'noopener;'");
                 },
-                icon: "Icon/Website",
+                icon: "Icons/Website",
                 hover: false
             }
         ];

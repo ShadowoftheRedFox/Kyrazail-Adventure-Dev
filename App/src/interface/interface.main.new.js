@@ -30,7 +30,7 @@ class GameMainInterface extends GameInterfaces {
             requiredImage: [
                 "System/Window",
                 GameMainInterfaceChoosen[0], GameMainInterfaceChoosen[1],
-                "Icon/Account", "Icon/Discord", "Icon/Github", "Icon/Website",
+                "Icons/Account", "Icons/Discord", "Icons/Github", "Icons/Website",
                 "Faces/Spiritual"
             ],
             requiredAudio: ["MAIN/Adeste", "MAIN/Dramatic", "MAIN/Moon", "MAIN/Silence"],
