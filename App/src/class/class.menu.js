@@ -8,12 +8,9 @@ class GameMenu {
 
     /**
      * @param {GameMenuOptions} options 
-     * @param {boolean} skipValidation
+     * @param {boolean} [skipValidation]
      */
-    setup(options, skipValidation) {
-        this.positionY = options.positionY || "center";
-        this.positionX = options.positionX || "center";
-
+    setup(options, skipValidation = false) {
         this.name = (options.name ? options.name.toString().trim() : (function () { throw new ReferenceError(`You must pass a name for the menu.`); })());
         this.menu = (skipValidation == true ? options.menu : this.validateMenus(options.menu));
 
@@ -21,10 +18,6 @@ class GameMenu {
 
         this.x = options.x || 0;
         this.y = options.y || 0;
-        this.w = options.w || ConfigConst.MAINCONTAINER.offsetWidth;
-        this.h = options.h || ConfigConst.MAINCONTAINER.offsetHeight;
-
-        this.align = options.align || "vertical";
     }
 
     /**

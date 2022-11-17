@@ -3,17 +3,15 @@
  * This module contains the game loop, which handles
  * updating the game state and re-rendering the canvas
  * (using the updated state) at the configured FPS.
- * @constructor
  * @doom
- * @param {scope} scope 
- * @returns {scope}
+ * @param {GameScope} scope 
+ * @returns {GameScope}
  */
 class GameLoop {
     /**
      * Constructor
-     * @constructor
-     * @param {scope} scope 
-     * @returns {scope}
+     * @param {GameScope} scope 
+     * @returns {GameScope}
      */
     constructor(scope) {
         var loop = this;
@@ -102,7 +100,7 @@ class GameLoop {
                 }
 
                 try {
-                    //check for errors
+                    // check for errors
                     scope.GameCrashHandler();
                     // Update the game state
                     scope.state = scope.GameStateUpdate(now);
