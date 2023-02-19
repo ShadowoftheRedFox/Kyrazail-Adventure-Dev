@@ -62,9 +62,9 @@ I am more active on Discord, so you might get an answer quicker here.
 ---
 ## Sources
 
-Most images and sounds come from what I found online. If any of the owner want to get it removed, or if you see any of your properties in the roject but are not listed below, please [contact me](#contact).
+Most images and sounds come from what I found online. If any of the owner want to get it removed, or if you see any of your properties in the project but are not listed below, please [contact me](#contact).
 
-- Game Icon: Made myself.
+- Game Icon: Made myself (will change soon).
 - Main menu icons: Found on [icon8](https://icons8.com)
 - Compiler for different platform: [NW and NW builder](https://nwjs.io)
 - Host for the online game: [itch.io](https://itch.io)
