@@ -1,6 +1,22 @@
 {
     "item": {},
-    "event": {},
+    "event": {
+        "NewGame": {
+            "id": 0,
+            "start": [
+                "map",
+                "player"
+            ],
+            "stop": [
+                "main"
+            ],
+            "callbackEvent": null,
+            "data": {
+                "type": "map",
+                "map": "Map001"
+            }
+        }
+    },
     "title": {},
     "monsters": {},
     "class": {},
