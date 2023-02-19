@@ -90,7 +90,12 @@ String.prototype.contains = function (string) {
  * @return {Number} A number in the range (min, max)
  */
 Number.prototype.clamp = function (min, max) {
+    if (isNaN(min) || isNaN(max)) return this;
     return Math.min(Math.max(this, min), max);
+};
+
+Math.randomSign = function () {
+    return (Math.random() < 0.5) ? -1 : 1;
 };
 
 /**
@@ -235,5 +240,76 @@ Utils.convertDate = function (mls) {
  * @return {any[]} The array without the duplicates.
  */
 Utils.RemoveDuplicate = function (a) {
-    return [...new Set(a)];
+    return Array.from(new Set(a));
 };
+
+class Point2D {
+    constructor(pX = 0, pY = 0) {
+        if (isNaN(pX)) pX = 0;
+        if (isNaN(pY)) pY = 0;
+        this.setX(pX);
+        this.setY(pY);
+    }
+    getX() {
+        return this.mX;
+    }
+    setX(pX = 0) {
+        this.mX = pX;
+    }
+    getY() {
+        return this.mY;
+    }
+    setY(pY = 0) {
+        this.mY = pY;
+    }
+    from(pt) {
+        let p = new Point2D();
+        if (!pt) return p;
+        if (pt.x) p.setX(pt.x);
+        else p.setX(0);
+        if (pt.y) p.setY(pt.y);
+        else p.setX(0);
+        return p;
+    }
+}
+
+class Vector2D {
+    constructor(pX = 0, pY = 0) {
+        this.setX(pX);
+        this.setY(pY);
+    }
+    getX() {
+        return this.mX;
+    }
+    setX(pX = 0) {
+        this.mX = pX;
+    }
+    getY() {
+        return this.mY;
+    }
+    setY(pY = 0) {
+        this.mY = pY;
+    }
+    add(v) {
+        return new Vector2D(this.getX() + v.getX(), this.getY() + v.getY());
+    }
+    subtract(v) {
+        return new Vector2D(this.getX() - v.getX(), this.getY() - v.getY());
+    }
+    multiply(scalar = 1) {
+        return new Vector2D(this.getX() * scalar, this.getY() * scalar);
+    }
+    divide(scalar = 1) {
+        if (scalar === 0 || isNaN(scalar)) return this;
+        return new Vector2D(this.getX() / scalar, this.getY() / scalar);
+    }
+    length() {
+        return Math.sqrt(this.getX() * this.getX() + this.getY() * this.getY());
+    }
+    normalize() {
+        return this.divide(this.length());
+    }
+    from(ptA = new Point2D(), ptB = new Point2D()) {
+        return new Vector2D(ptB.getX() - ptA.getX(), ptB.getY() - ptA.getY());
+    }
+}

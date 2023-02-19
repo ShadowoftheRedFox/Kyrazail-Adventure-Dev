@@ -2,7 +2,7 @@ const StackLoadUtil = [{
     name: "util.canvas",
     path: "./src/util/",
     status: true,
-    description: "Canvas relativ functions."
+    description: "Canvas relative functions."
 }, {
     name: "util.crypt",
     path: "./src/util/",

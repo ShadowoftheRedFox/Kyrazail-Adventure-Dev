@@ -3,60 +3,62 @@ function LoadingScreenManager() {
     throw new Error("LoadingScreenmanager is a static class.");
 }
 
-LoadingScreenManager.w = 0;
-LoadingScreenManager.h = 0;
+const LSM = LoadingScreenManager;
 
-LoadingScreenManager.progress = 0;
-LoadingScreenManager.interval = 0;
-LoadingScreenManager.progressMax = 10;
-LoadingScreenManager.progressLast = 0;
-LoadingScreenManager.refreshSpeed = 20;
-LoadingScreenManager.progressSmooth = 20;
-LoadingScreenManager.progressAnimation = 0;
-LoadingScreenManager.message = "Initialisation";
+LSM.w = 0;
+LSM.h = 0;
+
+LSM.progress = 0;
+LSM.interval = 0;
+LSM.progressMax = 10;
+LSM.progressLast = 0;
+LSM.refreshSpeed = 20;
+LSM.progressSmooth = 20;
+LSM.progressAnimation = 0;
+LSM.message = "Initialisation";
 
 /**
  * @type {CanvasRenderingContext2D | null}
  */
-LoadingScreenManager.ctx = null;
+LSM.ctx = null;
 /**
  * @type {HTMLCanvasElement | null}
  */
-LoadingScreenManager.viewport = null;
+LSM.viewport = null;
 
-LoadingScreenManager.trailingStep = 0;
-LoadingScreenManager.trailingCount = 0;
-LoadingScreenManager.trailingSpeed = 1000;
+LSM.trailingStep = 0;
+LSM.trailingCount = 0;
+LSM.trailingSpeed = 1000;
 
-LoadingScreenManager.tipIndex = 0;
-LoadingScreenManager.tipCount = 0;
-LoadingScreenManager.tipSpeed = 15;
+LSM.tipIndex = 0;
+LSM.tipCount = 0;
+LSM.tipSpeed = 15;
 
-LoadingScreenManager.stripeStep = 0;
-LoadingScreenManager.stripeSpeed = 0.6;
-LoadingScreenManager.stripeAlpha = 0.3;
-LoadingScreenManager.stripeColor = "#9c9c9c";
+LSM.stripeStep = 0;
+LSM.stripeSpeed = 0.6;
+LSM.stripeAlpha = 0.3;
+LSM.stripeColor = "#9c9c9c";
 
-LoadingScreenManager.animationW = (function (a) { return a[Math.floor(Math.random() * a.length)]; })([0, 3, 9]);
-LoadingScreenManager.animationH = (function (a) { return a[Math.floor(Math.random() * a.length)]; })([2, 6]);
-LoadingScreenManager.animationStep = 0;
-LoadingScreenManager.animationImage = null;
-LoadingScreenManager.animationMargin = 100;
-LoadingScreenManager.animationLastStep = 0;
-LoadingScreenManager.animationStepCount = 0;
-LoadingScreenManager.animationStepSpeed = 250;
-LoadingScreenManager.animationStepSpeedDistance = 16;
-LoadingScreenManager.animationPositionSpeed = function (w) {
-    return (w + LoadingScreenManager.animationMargin * 2) / ((LoadingScreenManager.tipSpeed * 1000) / LoadingScreenManager.refreshSpeed);
+LSM.animationW = (function (a) { return a[Math.floor(Math.random() * a.length)]; })([0, 3, 9]);
+LSM.animationH = (function (a) { return a[Math.floor(Math.random() * a.length)]; })([2, 6]);
+LSM.animationStep = 0;
+LSM.animationImage = null;
+LSM.animationMargin = 100;
+LSM.animationLastStep = 0;
+LSM.animationStepCount = 0;
+LSM.animationStepSpeed = 250;
+LSM.animationStepSpeedDistance = 16;
+LSM.animationPositionSpeed = function (w) {
+    return (w + LSM.animationMargin * 2) / ((LSM.tipSpeed * 1000) / LSM.refreshSpeed);
 };
-LoadingScreenManager.animationPosition = -LoadingScreenManager.animationMargin;
+LSM.animationPosition = -LSM.animationMargin;
 
-LoadingScreenManager.calledEqual = false;
-LoadingScreenManager.e = 0;
+LSM.calledEqual = false;
+LSM.e = 0;
 
-LoadingScreenManager.init = function (callOnEqual) {
+LSM.init = function (callOnEqual) {
     if (callOnEqual && typeof callOnEqual !== "function") throw new TypeError("callOnEqual is not a function.");
-    if (LoadingScreenManager.viewport) return console.warn("LoadingScreenManager has already been started.");
+    if (LSM.viewport) return console.warn("LSM has already been started.");
 
     document.getElementById("textPreLoading").hidden = true;
 
@@ -66,68 +68,68 @@ LoadingScreenManager.init = function (callOnEqual) {
     var w = $.offsetWidth;
     var h = $.offsetHeight;
 
-    LoadingScreenManager.viewport = generateCanvas(w, h, ConfigConst.ZINDEX.LOADING);
-    LoadingScreenManager.viewport.id = "LoadingScreenViewport";
-    LoadingScreenManager.ctx = LoadingScreenManager.viewport.getContext("2d");
-    LoadingScreenManager.w = w;
-    LoadingScreenManager.h = h;
+    LSM.viewport = generateCanvas(w, h, ConfigConst.ZINDEX.LOADING);
+    LSM.viewport.id = "LoadingScreenViewport";
+    LSM.ctx = LSM.viewport.getContext("2d");
+    LSM.w = w;
+    LSM.h = h;
 
-    $c.insertBefore(LoadingScreenManager.viewport, $c.firstChild);
+    $c.insertBefore(LSM.viewport, $c.firstChild);
     const i = new Image();
-    i.onload = () => LoadingScreenManager.animationImage = i;
+    i.onload = () => LSM.animationImage = i;
     i.onerror = () => WindowManager.fatal(new MediaError(`${i.src} failed`));
     i.src = document.getElementById("LoadingScreenAnimationImage").src;
 
-    LoadingScreenManager.interval = setInterval(() => {
-        if ($.offsetWidth !== LoadingScreenManager.w || $.offsetHeight !== LoadingScreenManager.h) {
-            regenerateCanvas(LoadingScreenManager.viewport, $.offsetWidth, $.offsetHeight);
-            LoadingScreenManager.w = $.offsetWidth;
-            LoadingScreenManager.h = $.offsetHeight;
+    LSM.interval = setInterval(() => {
+        if ($.offsetWidth !== LSM.w || $.offsetHeight !== LSM.h) {
+            regenerateCanvas(LSM.viewport, $.offsetWidth, $.offsetHeight);
+            LSM.w = $.offsetWidth;
+            LSM.h = $.offsetHeight;
         }
 
-        if (LoadingScreenManager.progress == LoadingScreenManager.progressMax && LoadingScreenManager.calledEqual === false) {
+        if (LSM.progress == LSM.progressMax && LSM.calledEqual === false) {
             if (callOnEqual && typeof callOnEqual == "function") {
                 callOnEqual();
                 GameEvent.emit("LoadingScreenFinishProgress");
                 console.log("called");
             }
-            LoadingScreenManager.calledEqual = true;
+            LSM.calledEqual = true;
         }
 
-        LoadingScreenManager.stripeStep += LoadingScreenManager.stripeSpeed;
-        if (LoadingScreenManager.stripeStep > LoadingScreenManager.h / 20) LoadingScreenManager.stripeStep = 0;
+        LSM.stripeStep += LSM.stripeSpeed;
+        if (LSM.stripeStep > LSM.h / 20) LSM.stripeStep = 0;
 
-        LoadingScreenManager.edit();
-    }, LoadingScreenManager.refreshSpeed);
+        LSM.edit();
+    }, LSM.refreshSpeed);
 };
 
-LoadingScreenManager.end = function () {
-    if (LoadingScreenManager.viewport) removeElement(LoadingScreenManager.viewport.id);
-    clearInterval(LoadingScreenManager.interval);
-    LoadingScreenManager.animationImage = LoadingScreenManager.viewport = LoadingScreenManager.stripePattern = LoadingScreenManager.ctx = null;
+LSM.end = function () {
+    if (LSM.viewport) removeElement(LSM.viewport.id);
+    clearInterval(LSM.interval);
+    LSM.animationImage = LSM.viewport = LSM.stripePattern = LSM.ctx = null;
 };
 
-LoadingScreenManager.edit = function () {
-    if (!LoadingScreenManager.ctx) return console.log("no ctx");
+LSM.edit = function () {
+    if (!LSM.ctx) return console.log("no ctx");
     // to hide anything behind the loading screen
-    LoadingScreenManager.ctx.fillStyle = "#000";
-    LoadingScreenManager.ctx.fillRect(0, 0, LoadingScreenManager.w, LoadingScreenManager.h);
+    LSM.ctx.fillStyle = "#000";
+    LSM.ctx.fillRect(0, 0, LSM.w, LSM.h);
 
     try {
-        LoadingScreenManager.title();
-        LoadingScreenManager.bar();
-        LoadingScreenManager.tip();
-        LoadingScreenManager.animate();
+        LSM.title();
+        LSM.bar();
+        LSM.tip();
+        LSM.animate();
     } catch (e) {
         WindowManager.fatal(e);
-        LoadingScreenManager.end();
+        LSM.end();
     }
 };
 
-LoadingScreenManager.bar = function () {
-    const ctx = LoadingScreenManager.ctx,
-        w = LoadingScreenManager.w,
-        h = LoadingScreenManager.h;
+LSM.bar = function () {
+    const ctx = LSM.ctx,
+        w = LSM.w,
+        h = LSM.h;
 
     var grd = ctx.createLinearGradient(w / 5, h * 9 / 10, w * 8 / 10, h * 9 / 10);
     grd.addColorStop(0, "rgba(255, 0, 0, 1)");
@@ -146,96 +148,96 @@ LoadingScreenManager.bar = function () {
     ctx.font = "bold 16px Azure";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    LoadingScreenManager.progressFunction();
+    LSM.progressFunction();
 
     // progress bar progress %
-    let b = (LoadingScreenManager.progressAnimation / LoadingScreenManager.progressMax);
+    let b = (LSM.progressAnimation / LSM.progressMax);
     let p = Math.floor(b * 100);
-    if (Math.random() * 100000 <= 1) LoadingScreenManager.e = Date.now();
-    if (LoadingScreenManager.e + 1000 >= Date.now()) { p = "666"; b = 1; }
+    if (Math.random() * 100000 <= 1) LSM.e = Date.now();
+    if (LSM.e + 1000 >= Date.now()) { p = "666"; b = 1; }
 
     ctx.fillStyle = grd;
     RectangleCreator.roundRect(ctx, w / 5, h * 9 / 10, b * w * 6 / 10, h / 20, 30, true);
-    ctx.fillStyle = LoadingScreenManager.createPattern(LoadingScreenManager.stripeColor, LoadingScreenManager.stripeAlpha);
+    ctx.fillStyle = LSM.createPattern(LSM.stripeColor, LSM.stripeAlpha);
     RectangleCreator.roundRect(ctx, w / 5, h * 9 / 10, b * w * 6 / 10, h / 20, 30, true);
 
     ctx.fillStyle = "#fff";
     // true progress %
-    // let p = Math.floor((LoadingScreenManager.progress / LoadingScreenManager.progressMax) * 1000) / 10;
+    // let p = Math.floor((LSM.progress / LSM.progressMax) * 1000) / 10;
 
 
     // animated %
-    // ctx.fillText(`${p}%`, (LoadingScreenManager.progressAnimation) * w * 6 / 10 / 2 + w / 5, h * 9 / 10);
+    // ctx.fillText(`${p}%`, (LSM.progressAnimation) * w * 6 / 10 / 2 + w / 5, h * 9 / 10);
 
     // static %
     ctx.fillText(`${p}%`, w / 2, h * 9 / 10 + h / 40);
 };
 
-LoadingScreenManager.animate = function () {
-    const ctx = LoadingScreenManager.ctx,
-        w = LoadingScreenManager.w,
-        h = LoadingScreenManager.h;
+LSM.animate = function () {
+    const ctx = LSM.ctx,
+        w = LSM.w,
+        h = LSM.h;
 
-    if (!LoadingScreenManager.animationImage) return;
+    if (!LSM.animationImage) return;
 
     // step with time delay
-    if (LoadingScreenManager.animationStepCount + LoadingScreenManager.animationStepSpeed < Date.now()) {
-        // LoadingScreenManager.animationStepCount = Date.now();
-        // LoadingScreenManager.animationStep = (LoadingScreenManager.animationStep == 0) ? 2 : 0;
+    if (LSM.animationStepCount + LSM.animationStepSpeed < Date.now()) {
+        // LSM.animationStepCount = Date.now();
+        // LSM.animationStep = (LSM.animationStep == 0) ? 2 : 0;
     }
 
     // step with distance walked delay
-    if (LoadingScreenManager.animationPosition > LoadingScreenManager.animationLastStep + LoadingScreenManager.animationStepSpeedDistance) {
-        LoadingScreenManager.animationLastStep = LoadingScreenManager.animationPosition;
-        LoadingScreenManager.animationStep = (LoadingScreenManager.animationStep == 0) ? 2 : 0;
+    if (LSM.animationPosition > LSM.animationLastStep + LSM.animationStepSpeedDistance) {
+        LSM.animationLastStep = LSM.animationPosition;
+        LSM.animationStep = (LSM.animationStep == 0) ? 2 : 0;
     }
 
-    LoadingScreenManager.animationPosition += LoadingScreenManager.animationPositionSpeed(w);
-    if (LoadingScreenManager.animationPosition > LoadingScreenManager.animationMargin + LoadingScreenManager.w) {
-        LoadingScreenManager.animationPosition = -LoadingScreenManager.animationMargin;
+    LSM.animationPosition += LSM.animationPositionSpeed(w);
+    if (LSM.animationPosition > LSM.animationMargin + LSM.w) {
+        LSM.animationPosition = -LSM.animationMargin;
         //also randomise the new character
-        LoadingScreenManager.animationH = [2, 6].random();
-        LoadingScreenManager.animationW = [0, 3, 9].random();
-        LoadingScreenManager.animationLastStep = 0;
+        LSM.animationH = [2, 6].random();
+        LSM.animationW = [0, 3, 9].random();
+        LSM.animationLastStep = 0;
     }
 
-    // console.log(LoadingScreenManager.animationW , LoadingScreenManager.animationStep)
+    // console.log(LSM.animationW , LSM.animationStep)
 
-    ctx.drawImage(LoadingScreenManager.animationImage,
-        (LoadingScreenManager.animationW + LoadingScreenManager.animationStep) * 32,
-        LoadingScreenManager.animationH * 32,
+    ctx.drawImage(LSM.animationImage,
+        (LSM.animationW + LSM.animationStep) * 32,
+        LSM.animationH * 32,
         32, 32,
-        LoadingScreenManager.animationPosition, h * 7 / 10,
+        LSM.animationPosition, h * 7 / 10,
         32, 32
     );
 };
 
-LoadingScreenManager.tip = function () {
-    const ctx = LoadingScreenManager.ctx,
-        w = LoadingScreenManager.w,
-        h = LoadingScreenManager.h;
+LSM.tip = function () {
+    const ctx = LSM.ctx,
+        w = LSM.w,
+        h = LSM.h;
 
     ctx.fillStyle = "#fff";
     ctx.font = "16px Azure";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    if (LoadingScreenManager.tipCount + LoadingScreenManager.tipSpeed * 1000 < Date.now()) {
-        LoadingScreenManager.tipCount = Date.now();
-        LoadingScreenManager.tipIndex = Math.floor(ConfigConst.TIP.length * Math.random());
+    if (LSM.tipCount + LSM.tipSpeed * 1000 < Date.now()) {
+        LSM.tipCount = Date.now();
+        LSM.tipIndex = Math.floor(ConfigConst.TIP.length * Math.random());
     }
 
-    ctx.fillText(ConfigConst.TIP[LoadingScreenManager.tipIndex], w / 2, h * 9 / 10 - 20, w);
+    ctx.fillText(ConfigConst.TIP[LSM.tipIndex], w / 2, h * 9 / 10 - 20, w);
 };
 
-LoadingScreenManager.title = function () {
-    if (Date.now() >= LoadingScreenManager.trailingSpeed + LoadingScreenManager.trailingStep) {
-        LoadingScreenManager.trailingCount++;
-        LoadingScreenManager.trailingStep = Date.now();
+LSM.title = function () {
+    if (Date.now() >= LSM.trailingSpeed + LSM.trailingStep) {
+        LSM.trailingCount++;
+        LSM.trailingStep = Date.now();
     }
 
     let trailing = "";
-    switch (LoadingScreenManager.trailingCount % 4) {
+    switch (LSM.trailingCount % 4) {
         case 0:
             trailing = "";
             break;
@@ -254,45 +256,45 @@ LoadingScreenManager.title = function () {
             break;
     }
 
-    const ctx = LoadingScreenManager.ctx,
-        w = LoadingScreenManager.w,
-        h = LoadingScreenManager.h;
+    const ctx = LSM.ctx,
+        w = LSM.w,
+        h = LSM.h;
 
     ctx.fillStyle = "#ffffff";
     ctx.font = "32px Azure";
     ctx.textAlign = "center";
-    ctx.fillText(`${LoadingScreenManager.message}${trailing}`, w / 2, h / 2);
+    ctx.fillText(`${LSM.message}${trailing}`, w / 2, h / 2);
     ctx.font = "1px Unreadable";
     ctx.fillText(".", 0, 0); // pre load Unreadble font
     ctx.font = "1px Takhi";
     ctx.fillText(".", 0, 0); // pre load Takhi font, for places names
 };
 
-LoadingScreenManager.addProgress = function (n) {
+LSM.addProgress = function (n) {
     if (!n || n <= 0) throw new TypeError("n must be a positiv integer");
-    LoadingScreenManager.progress += n;
-    LoadingScreenManager.progressLast = n;
-    if (LoadingScreenManager.progress > LoadingScreenManager.progressMax) LoadingScreenManager.progress = LoadingScreenManager.progressMax;
+    LSM.progress += n;
+    LSM.progressLast = n;
+    if (LSM.progress > LSM.progressMax) LSM.progress = LSM.progressMax;
 
 };
 
-LoadingScreenManager.setMaxProgress = function (n) {
+LSM.setMaxProgress = function (n) {
     if (!n || n <= 0) throw new TypeError("n must be a positiv integer");
-    LoadingScreenManager.progress = 0;
-    LoadingScreenManager.progressLast = 0;
-    LoadingScreenManager.progressAnimation = 0;
-    LoadingScreenManager.progressMax = n;
-    LoadingScreenManager.calledEqual = false;
+    LSM.progress = 0;
+    LSM.progressLast = 0;
+    LSM.progressAnimation = 0;
+    LSM.progressMax = n;
+    LSM.calledEqual = false;
 };
 
-LoadingScreenManager.createPattern = function (color = "grey", alpha = 1) {
+LSM.createPattern = function (color = "grey", alpha = 1) {
     var canvas = document.createElement('canvas'),
         ctx = canvas.getContext('2d');
 
-    let h = LoadingScreenManager.h / 10,
-        w = LoadingScreenManager.h / 10,
+    let h = LSM.h / 10,
+        w = LSM.h / 10,
         offset = 4,
-        step = LoadingScreenManager.stripeStep;
+        step = LSM.stripeStep;
 
     canvas.width = w;
     canvas.height = h;
@@ -330,24 +332,24 @@ LoadingScreenManager.createPattern = function (color = "grey", alpha = 1) {
  * We want to fill in g frame the difference between a and p.
  * We also want the animation to go slower at the end.
  */
-LoadingScreenManager.progressFunction = function () {
+LSM.progressFunction = function () {
     /** The amount of frame for progressAnimation to reach progress. */
-    var g = LoadingScreenManager.progressMax / (LoadingScreenManager.progress - LoadingScreenManager.progressAnimation), //LoadingScreenManager.progressSmooth,
+    var g = LSM.progressMax / (LSM.progress - LSM.progressAnimation), //LSM.progressSmooth,
         /** The max amount of progress. */
-        m = LoadingScreenManager.progressMax,
+        m = LSM.progressMax,
         /** The current progress. equal 0 <= x <= maxProgress */
-        p = LoadingScreenManager.progress,
+        p = LSM.progress,
         /** The last amount of progress added. */
-        l = LoadingScreenManager.progressLast,
+        l = LSM.progressLast,
         /** The smoothing effect, equal 0 < x <= progress <= 100 */
-        c = LoadingScreenManager.progressAnimation;
+        c = LSM.progressAnimation;
 
     // get the current pourcentage filled with the animation smoothing
     let $ = c;
 
     // to finish the loading bar, because g leads towards infinity, we need to cut him down at one point
-    if (g > m / LoadingScreenManager.progressSmooth) {
-        g = LoadingScreenManager.progressSmooth;
+    if (g > m / LSM.progressSmooth) {
+        g = LSM.progressSmooth;
     }
 
     // add the travel part in one frame
@@ -361,5 +363,5 @@ LoadingScreenManager.progressFunction = function () {
     if (!ConfigConst.DEBUG && $ <= 0) $ = p;
 
     //update result
-    LoadingScreenManager.progressAnimation = $;
+    LSM.progressAnimation = $;
 };

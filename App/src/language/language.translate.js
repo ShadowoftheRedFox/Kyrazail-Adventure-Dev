@@ -27,7 +27,7 @@ GameTranslate.toEN = function (m, a) {
         //? example of how to use args
         case "ExamplePlayerNameCheck": return `So your name is ${a[0]} ${a[1]}, is that correct?`;
         case "NewGameButton": return "New game";
-        default: return null;
+        default: return m;
     }
 };
 
@@ -39,6 +39,6 @@ GameTranslate.toFR = function (m, a) {
         //? example de comment utiliser les arguments
         case "ExamplePlayerNameCheck": return `Donc votre nom est ${a[0]} ${a[1]}, cela est il correct?`;
         case "NewGameButton": return "Nouvelle partie";
-        default: return null;
+        default: return m;
     }
 };

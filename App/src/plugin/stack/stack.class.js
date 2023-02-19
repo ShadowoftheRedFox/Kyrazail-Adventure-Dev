@@ -13,9 +13,4 @@ const StackLoadClass = [{
     path: "./src/class/",
     status: true,
     description: "Menu schema class. Will be deprecated in the future if menuBuilder is done."
-}, {
-    name: "class.menuBuilder",
-    path: "./src/class/",
-    status: true,
-    description: "Menu builder class."
 }];

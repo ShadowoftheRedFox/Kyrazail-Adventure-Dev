@@ -12,7 +12,12 @@ function GameCrashHandler(scope) {
             scope.h = $.offsetHeight;
             regenerateAllCanvas(scope.w, scope.h);
             // since size has changed, we need to redraw every menus, so set needsUpdate to true
-            for (var menu in scope.state.menu) if (scope.state.menu[menu].activated) scope.state.menu[menu].needsUpdate = true;
+            for (var menu in scope.state.menu) {
+                if (scope.state.menu[menu].activated) {
+                    scope.state.menu[menu].needsUpdate = true;
+                    scope.state.menu[menu].resized = true;
+                }
+            }
         }
     };
 }

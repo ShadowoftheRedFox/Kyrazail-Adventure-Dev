@@ -1,7 +1,7 @@
 /// <reference path="../../ts/type.d.ts"/>
 /**
  * Used to save data.
- * @param {scope} scope
+ * @param {GameScope} scope
  * @param {string} path Where the file should be saved
  * @param {string} name the name of the file
  * @param {any} data the data that will be saved in the file, crypted
@@ -10,7 +10,7 @@
  * @return {{ success: boolean, error: Error | null }} info if the action succeed, or not, and some other info
  */
 function saveScope(scope, path, name, data, auto, timeCreated) {
-    if (scope.constants.isNodejs === true) {
+    if (scope.constants.Nwjs === true) {
         //save in local save using Node.js
         const fs = require('fs');
         fs.access(path, fs.F_OK, (err) => {
