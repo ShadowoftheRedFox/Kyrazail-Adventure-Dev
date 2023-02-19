@@ -1,8 +1,15 @@
+# node modules and builded files
 node_modules/
+package-lock.json
 cache/
 dist/
-*.bat
 build/
-package-lock.json
+*.bat
+
+# vscode parameters
 !.vscode/settings.json
 **/.vscode
+
+# test folders
+App/test/**
+test/**
