@@ -1,81 +1,66 @@
 export { }
 
 declare global {
-    enum GameEventType {
-        Text,
-        Fullscreen,
-        Keyboard,
-        Announcement
-    }
+    type GameEventCodeName = "Test" |
+        "NewGame" |
+        undefined
 
-    type GameEvents = {
-        type: number
-        /**Depends the type of the event. Check your reminder.*/
-        list: GameEventsListType1[] | GameEventsListType2[] | any[]
-        end: string | (() => {}) | null
-        init: string | (() => {}) | null
-        stop: string[]
-        start: string[] | []
-    }
+    type GameEvent = {
+        id: number,
+        start: string[],
+        stop: string[],
+        callbackEvent: GameEventCodeName | null,
+        data: {
+            // fullscreen text
+            type: "text",
+            text: string[],
+            font: string,
+            skipable: boolean
+        } | {
+            // announcement sentence
+            type: "announcement",
+            ratioWidth: number,
+            ratioHeight: number,
+            text: string,
+            font: string,
+            color: string,
+            bold: boolean,
+            underlined: boolean,
+            fadeIn: number,
+            fadeOut: number
+        } | {
+            // dialogue
+            type: "dialogue",
+            title: string,
+            text: string[],
+            image: {
+                src: string | null,
+                col: number | null,
+                row: number | null
+            },
+            // true is left
+            position: boolean,
+            titleFont: string | null,
+            textFont: string | null,
+            skipable: boolean
+        } | {
+            type: "keyboard",
+            text: string,
+            font: string
+        } | {
+            type: "map",
+            map: string
+        } | {
+            type: "timeout",
+            time: number
+        }
 
-    type GameEventsListType1 = {
-        /**
-         * Font for, in order, the name, then the text.
-         */
-        font: [string, string]
-        /**
-         * Name of the character speaking.
-         */
-        name: string
-        /**
-         * Text to display.
-         */
-        text: string
-        /**
-         * Image of the character speaking. If null, no image.
-         * String is the name of the image.
-         * Numbers are in order col then row.
-         */
-        image: [string, number, number] | null
-        /**
-         * Side to draw the image if there is one. 0 is left, 1 is right.
-         */
-        side: 0 | 1
-        /**
-         * If the message triger the end function of the event.
-         */
-        next: boolean
-        /**
-         * If the precedents message needs to be cleared.
-         */
-        skipable: boolean
-        /**
-         * The text speed display in letters/s.
-         */
-        textSpeed: number
-        /**
-         * If true, when the dialog get to the end of the string, await user input. Else continue to the next item.
-         */
-        stop: boolean
-        /**
-         * If the dialog should take all the screen, and not just the bottom.
-         */
-        fullscreen: boolean
-        /**
-         * If it's an announcement, meaning that the text is short, big, and centered. 
-         */
-        announcement: boolean
-    }
-
-    type GameEventsListType2 = {
-        /** 
-         * The text before the input 
-         */
-        text: string
-        /**
-         * Parameters of the input
-         * In order: min length, max length
-         */
-        param: [number, number]
+        /*
+        TODO event that may need to be added:
+        fade in, fade out
+        animation: flash, shake, bubbles
+        
+        
+        */
     }
 }

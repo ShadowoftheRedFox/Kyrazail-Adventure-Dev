@@ -5,7 +5,7 @@ declare global {
     var GameImagesToLoad: []
 
     const ConfigConst: {
-        KEY: "cn40'9@W+9)S&7§:e9+.{&y&uÙtA!h[3R-31:l'5]]:h$0>@ui!0z$FIiU£lb9H6BFST+*§[TwSdjm7.6)26N§=>)068geSUeY£!R%[£0!£%+8.IQ&(N/&Ipi%)Lm;.B3}D/1hvnSNlZJA]G[,2}v(9[<}-73z=/pJ$kQ0UQhp<n<]--x!=S.O;.§§*tBPwE§£CmgiXK"
+        KEY: string
         DISCORD: "https://discord.gg/5mF5AHnRCr"
         GITHUB: "https://github.com/ShadowoftheRedFox/Kyrazail-Adventure-Dev.git"
         LANGUAGE: GameLanguage
@@ -232,60 +232,30 @@ declare global {
     const KeyboardTrackerManager: {
         init(): void
         array: string[]
-        map: { [name: string]: boolean }
+        map: { [name: string]: boolean | undefined }
+        onkeydown(): void
+        onkeyup(): void
+        pressed(array: string[]): boolean
     }
 
     const MouseTrackerManager: {
+        holding: boolean
+        moving: boolean
+        lastMove: { [id: number]: { x: number, y: number, date: number, id: number } }
+        trueMove: { [id: number]: { x: number, y: number, date: number, id: number } }
+        spawnCoos: { [id: number]: { x: number, y: number, date: number, id: number } }
         init(): void
-        data: {
-            lastMove: {
-                x: number,
-                y: number
-            }
-            lastMoveTrue: {
-                x: number,
-                y: number
-            }
-            old: {
-                x: number,
-                y: number
-            }
-            click: { x: number, y: number, date: number }[]
-        }
-        /**
-         * Check whether or not the mouse is over the given rectangle. Every frame, reset to false coordinate and saves true ones.
-         * @param x
-         * @param y
-         * @param w
-         * @param h
-         * @param old If we include a check on old coordinates
-         * @returns {boolean} If it's over ot not.
-         */
-        checkOver(x: number, y: number, w: number, h: number, old?: boolean): boolean
-
-        /**
-         * Check whether or not the mouse is over the given rectangle. Always gives the current position.
-         * @param x
-         * @param y
-         * @param w
-         * @param h
-         * @returns {boolean} If it's over ot not.
-         */
-        trueCheckOver(x: number, y: number, w: number, h: number): boolean
-
-        /**
-         * Check whether or not there was a click in the given rectangle in the given past time.
-         * @param x
-         * @param y
-         * @param w
-         * @param h
-         * @param time How long should we look for a click, in ms. Default is 1000 / GameConfig.targetFps, if it's 60fps, time is 16.6ms.
-         * @returns {boolean} If there was a click or not.
-         */
-        checkClick(x: number, y: number, w: number, h: number, time?: number | 16.6): boolean
-
-        updated: boolean
-        waitTimeUpdate: number
+        OnTouchStart(): void
+        OnTouchEnd(): void
+        OnTouchMove(): void
+        OnMouseMove(): void
+        stopedMoved(): void
+        OnMouseClick(): void
+        OnMouseUnclick(): void
+        clickOver(x: number, y: number, w: number, h: number, mustMove?: boolean, time?: number): boolean
+        checkOver(x: number, y: number, w: number, h: number, old: boolean): boolean
+        getCursorVector(id: number): Vector2D
+        getClickSpawn(id: number): { x: number, y: number, date: number, id: number }
     }
 
     /**
@@ -556,6 +526,7 @@ declare global {
         activated: boolean
         spawned: boolean
         needsUpdate: boolean
+        resized: boolean
 
         validateOptions(options: GameInterfacesOptions, scope: GameScope): void
         render(scope: GameScope): void

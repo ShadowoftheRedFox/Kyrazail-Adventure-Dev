@@ -1,3 +1,10 @@
+import "./core"
+import "./data"
+import "./declaration"
+import "./event"
+import "./map"
+import "./type"
+
 export { }
 
 declare global {
@@ -58,7 +65,6 @@ declare global {
         }
         adventure: {}
     }
-
 
     type GameSpeciesBase = "elf" | "dwarf" | "demon" | "human" | "vampire" | "angel" | "fairy"
 

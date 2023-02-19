@@ -11,19 +11,7 @@ declare global {
         /**Height of the game screen.*/
         h: number
         /**State of the game.*/
-        state: {
-            menu: {
-                [name: string]: GameInterfaces
-                intro: GameIntroductionInterface
-                main: GameMainInterface
-                dialogue: GameDialogueInterface
-                entity: GameEntityInterface
-                introduction: GameIntroductionInterface
-                map: GameMapInterface
-                over: GameOverInterface
-                pause: GamePauseInterface
-            }
-        }
+        state: GameState
         /** Handle errors and corrupted data. */
         GameCrashHandler(): void;
         /** Update the state of the game. */
@@ -39,7 +27,7 @@ declare global {
         }
         /**The language wanted.*/
         language: GameLanguage
-        /**Game session relativ constants.*/
+        /**Game session relative constants.*/
         constants: {
             isNwjs: boolean
             isAndroidChrome: boolean
@@ -102,13 +90,21 @@ declare global {
                     lastnames: string[]
                 }
                 item: { [name: GameItemName]: GameItem }
-                event: {}
+                event: { [name: string]: GameEvent[] }
                 title: {}
                 monsters: {}
                 class: {}
                 skills: { [name: string]: GameSpecialAbility }
             }
             context: { [name: string]: CanvasRenderingContext2D }
+            layers: {
+                [mapName: string]: {
+                    ground: HTMLImageElement
+                    collision: HTMLImageElement
+                    over: HTMLImageElement,
+                    collisionPattern: boolean[]
+                }
+            }
         }
 
         /**
@@ -137,5 +133,23 @@ declare global {
         x: number
         y: number
         name: string
+    }
+
+    type GameState = {
+        menu: {
+            [name: string]: GameInterfaces
+            intro: GameIntroductionInterface
+            main: GameMainInterface
+            dialogue: GameDialogueInterface
+            entity: GameEntityInterface
+            introduction: GameIntroductionInterface
+            map: GameMapInterface
+            over: GameOverInterface
+            pause: GamePauseInterface
+        }
+        entities: {
+            [name: string]: GameEntitiesClass
+            player: GameEntityPlayer
+        }
     }
 }
