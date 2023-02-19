@@ -39,3 +39,7 @@ I try to comment my code as much as possible? It is still not a habit of mine, s
 
 - **Why two package.json and favicon?**
 Because it's how NW works. The main ones in the main folder are for github page icon, as well as the project package. The ones in the App folder are useful for NW, when building the project. The icon will be the window icon, and the package will be the data required by NW.
+- **Why is there mess everywhere, sometimes duplicates?**
+I work alone, and I started this project nearly at the same time I started coding, so it's old and I did a mess. I try to keep it clean now, and I check everything from time to time. Feel free to create an issue if you inf a proflem though.
+- **Why TS files if I'm doing it in JS?**
+That's... a good quesion. I don't want to transform everything in TS, so I just keeps the type to make my life easier between files. 
