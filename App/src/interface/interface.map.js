@@ -29,6 +29,9 @@ class GameMapInterface extends GameInterfaces {
         this.OverLayers = [];
         this.LayerMaxPositionX = 0;
         this.LayerMaxPositionY = 0;
+
+        this.CenteredPositionLayerX = 0;
+        this.CenteredPositionLayerY = 0;
     }
 
     /**
@@ -55,40 +58,26 @@ class GameMapInterface extends GameInterfaces {
 
         //STEP map
         const MapToRender = scope.cache.map[this.currentMapName];
+        const CachedMap = scope.cache.layers[this.currentMapName];
 
-        /*
-        ? What will we do?
-        We're gonna render the map, centered on the player
-        The player should always be in the center of the screen
-        So we need to get the center of the screen
-        Then the size of the map
-        then draw each layer  
-        
-        render ground first
-        then collision
-        then over
-
-        ? What order to render?
-        Logics want ground, then collision, then over
-
-        we want the player to be in the center of the screen at all time
-        so if he doesn't move, we only need to draw each layer on their canvas, then update them all only if player moves
-
-        the layer, from the farthest to the closest:
-        ground
-        collision
-        animated
-        entities
-        over
-        */
+        // TODO move this with the camera
+        ctx.drawImage(CachedMap.ground,
+            this.CenteredPositionLayerX,
+            this.CenteredPositionLayerY,
+            CachedMap.ground.width, CachedMap.ground.height);
+        ctx.drawImage(CachedMap.collision,
+            this.CenteredPositionLayerX,
+            this.CenteredPositionLayerY,
+            CachedMap.collision.width, CachedMap.collision.height);
+        ctx.drawImage(CachedMap.over,
+            this.CenteredPositionLayerX,
+            this.CenteredPositionLayerY,
+            CachedMap.over.width, CachedMap.over.height);
 
         //TODO also check if the tile is visible on screen, if no, don't draw it
         //TODO create multiple canvases for each layer
         //TODO to optimize, give as little info as possible to function
         //TODO to optimize, save coordinates etc so we don't need to re calculate them again
-        this.drawMap(scope, MapToRender, this.GroundLayers);
-        this.drawMap(scope, MapToRender, this.CollisionLayers);
-        this.drawMap(scope, MapToRender, this.OverLayers);
 
         //STEP map animated
         //STEP entities
@@ -102,6 +91,18 @@ class GameMapInterface extends GameInterfaces {
      * @param {GameScope} scope
      */
     update(scope) {
+        const Width = scope.w;
+        const Height = scope.h;
+
+        const MapToRender = scope.cache.map[this.currentMapName];
+        const CachedMap = scope.cache.layers[this.currentMapName];
+
+        if (this.resized) {
+            this.CenteredPositionLayerX = (Width - this.LayerMaxPositionX * MapToRender.tilewidth) / 2;
+            this.CenteredPositionLayerY = (Height - this.LayerMaxPositionY * MapToRender.tileheight) / 2;
+            this.resized = false;
+            this.needsUpdate = true;
+        }
         //STEP map
         //STEP map animated
         //STEP entities
@@ -115,6 +116,8 @@ class GameMapInterface extends GameInterfaces {
      * @returns {string} The image name.
      */
     getImageNameFromSource(source) {
+        // path to file: ../../folder/folder/file.ext
+        // return file
         return source.split("/").last().split(".")[0];
     }
 
@@ -135,7 +138,7 @@ class GameMapInterface extends GameInterfaces {
                 parameters: {},
                 objPath: "map"
             }], 0, () => {
-                this.changeMap(scope, map);
+                return this.changeMap(scope, map);
             });
         }
         this.currentMapName = map;
@@ -157,15 +160,132 @@ class GameMapInterface extends GameInterfaces {
         this.CollisionLayers = MapLoaded.layers.filter(layer => layer.name.includes("Collision"));
         this.OverLayers = MapLoaded.layers.filter(layer => layer.name.includes("Over"));
 
-        GameLoadImage(scope, MapTileSetsImageToLoad, () => {
-            this.isMapLoaded = true;
-            this.needsUpdate = true;
-        });
-
         // calculate the largest dimension of the layer to center them all
         MapLoaded.layers.forEach(layer => {
             if (this.LayerMaxPositionX < layer.width + layer.startx) this.LayerMaxPositionX = layer.width + layer.startx;
             if (this.LayerMaxPositionY < layer.height + layer.starty) this.LayerMaxPositionY = layer.height + layer.starty;
+        });
+
+        GameLoadImage(scope, MapTileSetsImageToLoad, () => {
+            //TODO STEP 1
+            if (!scope.cache.layers[map]) {
+                scope.cache.layers[map] = {
+                    collision: null,
+                    ground: null,
+                    over: null,
+                    collisionPattern: []
+                };
+            }
+
+            this.drawMap(scope, map);
+        });
+    }
+
+    /**
+    * 
+    * @param {GameScope} scope 
+    * @param {string} map 
+    */
+    async drawMap(scope, map) {
+        const CachedLayer = scope.cache.layers[map];
+        const CachedMap = scope.cache.map[map];
+        // draw ground
+        CachedLayer.ground = await this.drawLayer(scope, CachedMap, this.GroundLayers);
+        // draw over
+        CachedLayer.over = await this.drawLayer(scope, CachedMap, this.OverLayers);
+        // draw collision
+        CachedLayer.collision = await this.drawLayer(scope, CachedMap, this.CollisionLayers);
+        // get the collision pattern
+        // TODO
+
+        this.isMapLoaded = true;
+        this.resized = true;
+    }
+
+    /**
+     * @param {GameScope} scope 
+     * @param {GameMapPattern} map 
+     * @param {GameMapLayer[]} layers 
+     * @returns {Promise<HTMLImageElement>}
+     */
+    drawLayer(scope, map, layers) {
+        return new Promise((resolve, reject) => {
+            const Width = scope.w;
+            const Height = scope.h;
+
+            // create the canvas for the layer
+            const canvas = document.createElement('canvas');
+            // get the max size
+            let MaxWidth = Width, MaxHeight = Height;
+            map.layers.forEach(layer => {
+                if (layer.height > MaxHeight) { MaxHeight = layer.height; }
+                if (layer.width > MaxWidth) { MaxWidth = layer.width; }
+            });
+            canvas.width = MaxWidth;
+            canvas.height = MaxHeight;
+
+            // get context and constants
+            const ctx = canvas.getContext('2d');
+            const TileWidth = map.tilewidth;
+            const TileHeight = map.tileheight;
+
+            // make sure to smooth each pixel so it doesn't look rough
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = "high";
+
+            // draw everything
+            layers.forEach((layer, layerId) => {
+                if (layer.visible != false && layer.opacity != 0) {
+                    ctx.globalAlpha = layer.opacity;
+
+                    const LayerPositionX = 0;
+                    const LayerPositionY = 0;
+
+                    layer.chunks.forEach((chunk, chunkId) => {
+                        const ChunkPositionX = LayerPositionX + chunk.x * TileWidth;
+                        const ChunkPositionY = LayerPositionY + chunk.y * TileHeight;
+
+                        chunk.data.forEach((tile, tileId) => {
+                            if (tile !== 0) {
+                                const TilePositionX = ChunkPositionX + (tileId % chunk.width) * TileWidth;
+                                const TilePositionY = ChunkPositionY + (Math.floor(tileId / chunk.height) * TileHeight);
+
+                                // get the image depending of the tile value and image max tile value
+                                const TileData = this.getImageFromTile(map.tilesets, tile);
+                                const TileImage = scope.cache.image[TileData.source].image;
+
+                                // calculating the source coodinates of the tile on the source image
+                                const TileSourceX = ((tile - TileData.firstgid) * TileWidth) % TileImage.width;
+                                const TileSourceY = Math.floor(((tile - TileData.firstgid) * TileHeight) / TileImage.height) * TileHeight;
+
+                                ctx.drawImage(
+                                    TileImage,
+                                    // source coordinates to get the tile on image
+                                    TileSourceX, TileSourceY,
+                                    // dimension of the tile
+                                    TileWidth, TileHeight,
+                                    // source coordinates on the screen
+                                    TilePositionX, TilePositionY,
+                                    // dimension of the tile the screen
+                                    TileWidth, TileHeight
+                                );
+                            }
+                        });
+                    });
+                }
+            });
+
+            const i = document.createElement('img');
+            i.onerror = function () {
+                const e = new Error(`${i.src} failed (game map)`);
+                reject(e);
+                throw e;
+            };
+            i.onload = function () {
+                resolve(i);
+                return i;
+            }
+            i.src = canvas.toDataURL('image/png', 1.0);
         });
     }
 
@@ -201,7 +321,7 @@ class GameMapInterface extends GameInterfaces {
      * @param {GameMapPattern} map 
      * @param {GameMapLayer[]} layers 
      */
-    drawMap(scope, map, layers) {
+    drawMapOld(scope, map, layers) {
         const ctx = scope.cache.context[this.canvasGroup];
         const TileWidth = map.tilewidth;
         const TileHeight = map.tileheight;
@@ -284,57 +404,45 @@ class GameMapInterface extends GameInterfaces {
             });
         });
     }
+
+
 }
 
 // BUG over layer tiles have pixel of miss placement (again)
+// TODO save the image of the map once then move the camera
 
 /*
-Nous avons un Array de chiffre, correspondant a numéro d'ordre de la case.
-[Image jointe avec les cases.]
-Les case font:
-1 2 3 4 5 6 ....
-12 13 .....
-.....
-..... dernière case
+GOAL: render multiple layer of maps
 
-Chaque case a une taille de 16px fois 16px
-
-Fichier de dessin de carte: ./App/src/interface/interface.map.js
-Fichier source JSON de la carte: ./App/resources/Data/map/Map001.json
-Fichier source de la carte
-
-
-Lors de l'affichage de la carte, on récupère l'Array de chiffre, par exemple:
-[0,0,0,5,4,8,9,10,12]
-
-0 correspond à un case vide, donc on ne la dessine pas.
-Avec un chiffre, on doit récupérer les coordonées de la case sur l'image source
-
-On a cette carte en source:
-[Image de la carte]
-
-et on obtient cette image du dessin:
-[Image du jeux]
-
-
-
-{Si bug régler sur cette couche, enelever les commentaires lignes 90 et 91, et cela devrait donner cette image [image total]}
+STEP 1 load map and save each layer images in the cache
+STEP 2 create the camera and entities
+STEP 3 display in hte correct order
+Also, changing things on the map re create the image, replace it in cache
+TODO remake the code in a clearer manner
 */
 
 /*
-1 2 3 4 5 6 7 8 9 10
-11 12 13 14 15 16 17 18 19 20
-....
+? What will we do?
+We're gonna render the map, centered on the player
+The player should always be in the center of the screen
+So we need to get the center of the screen
+Then the size of the map
+then draw each layer  
 
-... 256
+render ground first
+then collision
+then over
 
-1 case = 16px * 16px
-Image = 160px * 160px
-tile = [1,2,3,12,13,14];
+? What order to render?
+Logics want ground, then collision, then over
 
-tile.forEach(tile=>{
-    x = ((tile - 1) * 16) % ImageWidth
-    y = Math.floor(((tile - 1) * 16) / ImageHeight) * 16
-})
+we want the player to be in the center of the screen at all time
+so if he doesn't move, we only need to draw each layer on their canvas, then update them all only if player moves
 
+the layer, from the farthest to the closest:
+ground
+collision
+animated
+entities
+over
 */

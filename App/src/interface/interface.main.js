@@ -624,7 +624,8 @@ class GameMainInterface extends GameInterfaces {
      * @param {this} that 
      */
     startNewGame(scope, that) {
-        GameEvent.emit("StartNewGame");
+        // GameEvent.emit("StartNewGame");
+        GameEventHandler.handle("NewGame");
         scope.cache.context[that.canvasGroup].clearRect(0, 0, scope.w, scope.h);
     }
 
@@ -1144,7 +1145,7 @@ class GameMainInterface extends GameInterfaces {
                             w: 0,
                             h: 0,
                             function: () => { GameGlobalObject.loadGame(file.content); }
-                            //TODO add infos relativ to the game, like current map, player name, wealth etc...
+                            //TODO add infos relative to the game, like current map, player name, wealth etc...
                         });
                     });
                     // also push the back button inside the new button list
@@ -1380,7 +1381,7 @@ class GameMainInterface extends GameInterfaces {
                     ctx.fillStyle = "green";
                     ctx.fillRect(b.x + b.w / 2, b.y, b.w / 2, b.h);
                 }
-                if (MouseTrackerManager.checkClick(b.x, b.y, b.w, b.h)) {
+                if (MouseTrackerManager.clickOver(b.x, b.y, b.w, b.h)) {
                     ctx.fillStyle = "blue";
                     ctx.fillRect(b.x, b.y, b.w, b.h);
                 }
@@ -1563,16 +1564,16 @@ class GameMainInterface extends GameInterfaces {
                 }
                 that.u();
             }
-            if (MouseTrackerManager.checkClick(b.x, b.y, b.w, b.h, time) && !b.special) {
+            if (MouseTrackerManager.clickOver(b.x, b.y, b.w, b.h, false, time) && !b.special) {
                 b.function(scope, that);
                 that.u();
             }
             if (b.special) {
-                if (MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time)) {
+                if (MouseTrackerManager.clickOver(b.x, b.y, b.w / 2, b.h, false, time)) {
                     b.function(0);
                     that.u();
                 }
-                if (MouseTrackerManager.checkClick(b.x + b.w / 2, b.y, b.w / 2, b.h, time)) {
+                if (MouseTrackerManager.clickOver(b.x + b.w / 2, b.y, b.w / 2, b.h, false, time)) {
                     b.function(1);
                     that.u();
                 }
@@ -1580,13 +1581,13 @@ class GameMainInterface extends GameInterfaces {
             if (b.keyboard && b.enabled) {
                 if (!that.awaitInput) {
                     // create input
-                    if (MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time)) {
+                    if (MouseTrackerManager.clickOver(b.x, b.y, b.w / 2, b.h, false, time)) {
                         that.oldKey = { key1: b.key1, key2: b.key2 };
                         b.key1 = "Press a key...";
                         that.awaitInput = true;
                         that.buttonToChange = { id: idx, key: 1 };
                         that.u();
-                    } else if (MouseTrackerManager.checkClick(b.x + b.w / 2, b.y, b.w / 2, b.h, time)) {
+                    } else if (MouseTrackerManager.clickOver(b.x + b.w / 2, b.y, b.w / 2, b.h, false, time)) {
                         that.oldKey = { key1: b.key1, key2: b.key2 };
                         b.key2 = "Press a key...";
                         that.awaitInput = true;
@@ -1597,14 +1598,14 @@ class GameMainInterface extends GameInterfaces {
                     // cancel input
                     // check if it's the same button
                     if (idx == that.buttonToChange.id &&
-                        ((MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time) && that.buttonToChange.key == 1) ||
-                            (MouseTrackerManager.checkClick(b.x + b.w / 2, b.y, b.w / 2, b.h, time) && that.buttonToChange.key == 2))) {
-                        if (MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time)) {
+                        ((MouseTrackerManager.clickOver(b.x, b.y, b.w / 2, b.h, false, time) && that.buttonToChange.key == 1) ||
+                            (MouseTrackerManager.clickOver(b.x + b.w / 2, b.y, b.w / 2, b.h, time) && that.buttonToChange.key == 2))) {
+                        if (MouseTrackerManager.clickOver(b.x, b.y, b.w / 2, b.h, false, time)) {
                             b.key1 = that.oldKey.key1;
                             that.awaitInput = false;
                             that.buttonToChange = { id: null, key: null };
                             that.u();
-                        } else if (MouseTrackerManager.checkClick(b.x + b.w / 2, b.y, b.w / 2, b.h, time)) {
+                        } else if (MouseTrackerManager.clickOver(b.x + b.w / 2, b.y, b.w / 2, b.h, false, time)) {
                             b.key2 = that.oldKey.key2;
                             that.awaitInput = false;
                             that.buttonToChange = { id: null, key: null };
@@ -1613,7 +1614,7 @@ class GameMainInterface extends GameInterfaces {
                     } else {
                         // if not, cancel last button and prepare that one
                         // create input for this current button
-                        if (MouseTrackerManager.checkClick(b.x, b.y, b.w / 2, b.h, time)) {
+                        if (MouseTrackerManager.clickOver(b.x, b.y, b.w / 2, b.h, false, time)) {
                             currentMenu.button[that.buttonToChange.id].key1 = that.oldKey.key1;
                             currentMenu.button[that.buttonToChange.id].key2 = that.oldKey.key2;
                             that.oldKey = { key1: b.key1, key2: b.key2 };
@@ -1621,7 +1622,7 @@ class GameMainInterface extends GameInterfaces {
                             that.awaitInput = true;
                             that.buttonToChange = { id: idx, key: 1 };
                             that.u();
-                        } else if (MouseTrackerManager.checkClick(b.x + b.w / 2, b.y, b.w / 2, b.h, time)) {
+                        } else if (MouseTrackerManager.clickOver(b.x + b.w / 2, b.y, b.w / 2, b.h, false, time)) {
                             currentMenu.button[that.buttonToChange.id].key1 = that.oldKey.key1;
                             currentMenu.button[that.buttonToChange.id].key2 = that.oldKey.key2;
                             that.oldKey = { key1: b.key1, key2: b.key2 };
@@ -1642,7 +1643,7 @@ class GameMainInterface extends GameInterfaces {
         BUG if key1 == key2, stuck on Awaiting key even if we can move freely
         */
         if (currentMenu.arrow) currentMenu.arrow.forEach(a => {
-            if (MouseTrackerManager.checkClick(a.x, a.y, a.w, a.h, time) && a.enabled) {
+            if (MouseTrackerManager.clickOver(a.x, a.y, a.w, a.h, false, time) && a.enabled) {
                 a.function(that, currentMenu);
                 that.u();
             }
@@ -1657,7 +1658,7 @@ class GameMainInterface extends GameInterfaces {
             } else {
                 a.hover = false;
             }
-            if (MouseTrackerManager.checkClick(a.x, a.y, a.w, a.h, time)) {
+            if (MouseTrackerManager.clickOver(a.x, a.y, a.w, a.h, false, time)) {
                 a.function(scope, that);
                 that.u();
             }

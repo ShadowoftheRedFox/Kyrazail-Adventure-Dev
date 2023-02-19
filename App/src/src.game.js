@@ -13,7 +13,7 @@ class Game {
         // get the current language from const
         this.language = ConfigConst.LANGUAGE;
 
-        // declare session relativ constants
+        // declare session relative constants
         this.constants = {
             /**Checks whether the platform is Nw.js. */
             isNwjs: Utils.isNwjs(),
@@ -40,7 +40,16 @@ class Game {
         this.h = ConfigConst.MAINCONTAINER.offsetHeight;
 
         // check if the game is running online or in the app, to correctly get ressources.
-        this.getGameMainPath();
+        const CurrentHref = this.constants.href.split("index.html");
+        if (CurrentHref.length > 1) {
+            this.constants.href = CurrentHref.join("");
+            console.log("Server detected, correcting source URL.");
+        } else if (this.constants.isNwjs === true) {
+            console.log("Running on app.");
+            this.constants.platform = process.platform;
+        } else {
+            console.log("Server not detected. Giving vanilla URL.");
+        }
 
         // add an property for all sounds
         this.soundsSettings = {
@@ -61,14 +70,18 @@ class Game {
             // we preloaded his data at the load of the dom
             data: DataLoaderManager._dataLoaded.Data,
             // store the interfaces contexts
-            context: {}
+            context: {},
+            layers: {}
         };
 
         try {
+            // initialise teh event system
+            GameEventHandler.init(this);
+
             // TODO add a share method so that every rendering object in their creating function share the same canavs
             //add every rendering object to their current object
             this.state.entities = this.state.entities || {};
-            this.state.entities.player = new GameEntityPlayer(0, 0, "east", "Characters/Spiritual", 0, 2, "Faces/Spiritual", 0, 2);
+            this.state.entities.player = new GameEntityPlayer(0, 0, "east", "Characters/Spiritual", 0, 2, "Faces/Spiritual", 0, 2); // TODO change this, if those are constants 
             // add a mob/NPC manager so it can be added anytime
 
             this.state.menu = this.state.menu || {};
@@ -78,9 +91,8 @@ class Game {
             this.state.menu.main = new GameMainInterface(this);
             this.state.menu.map = new GameMapInterface(this);
             // this.state.menu.pause = new Pause(this);
-            // this.state.menu.gameOver = new GameOver(this);
-            // TODO will be added later, because use a lot of data trafic and must manage the github API
-            // this.state.menu.checkUpdate = new updateMenu(this);
+            // this.state.menu.gameOver = new GameOver(this); // TODO this will be disactivated by default, but shown by event system
+            // this.state.menu.checkUpdate = new updateMenu(this); // TODO will be added later, because use a lot of data trafic and must manage the github API
 
             // Instantiate core modules with the current scope
             this.GameCrashHandler = GameCrashHandler(this);
@@ -105,19 +117,6 @@ class Game {
             });
         } catch (e) {
             WindowManager.fatal(e);
-        }
-    }
-
-    getGameMainPath() {
-        const t = this.constants.href.split("index.html");
-        if (t.length > 1) {
-            this.constants.href = t.join("");
-            console.log("Server detected, correcting source URL.");
-        } else if (this.constants.isNodejs === true) {
-            console.log("Running on app.");
-            this.constants.platform = process.platform;
-        } else {
-            console.log("Server not detected. Giving vanilla URL.");
         }
     }
 }
