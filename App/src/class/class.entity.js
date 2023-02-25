@@ -43,8 +43,8 @@ class GameEntitiesClass {
         if (options.type == "npc" && !options.dialog) throw new ReferenceError("You must pass dialog for a npc entity.");
         this.dialog = options.dialog;
 
-        if (!this.render || typeof this.render != "function") throw new ReferenceError("You must pass a render method.");
-        if (!this.update || typeof this.update != "function") throw new ReferenceError("You must pass an update method.");
+        // if (!this.render || typeof this.render != "function") throw new ReferenceError("You must pass a render method.");
+        // if (!this.update || typeof this.update != "function") throw new ReferenceError("You must pass an update method.");
 
         if (!options.character) throw new ReferenceError("You must pass a character object.");
         this.character = options.character;

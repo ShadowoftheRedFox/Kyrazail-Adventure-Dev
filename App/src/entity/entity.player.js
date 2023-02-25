@@ -33,8 +33,4 @@ class GameEntityPlayer extends GameEntitiesClass {
             speakRow: sr
         });
     }
-
-    render() {}
-
-    update() {}
 }
