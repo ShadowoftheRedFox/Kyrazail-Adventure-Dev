@@ -34,26 +34,26 @@ declare global {
     }
 
     type GameEntitiesOptions = {
-        name: string | GameLanguageObject
+        name: string | "unknown"
         /** If type is "hostile".*/
-        stats: GameEntitiesStats | undefined
+        stats?: GameEntitiesStats
         /** If type is marchand.*/
-        shop: {
+        shop?: {
             canPlayerSell: boolean
             canPlayerBuy: boolean
             canPlayerEquip: boolean
             items: GameItemName[]
             welcomeMessage: GameLanguageCodedString[]
-        } | undefined
+        }
         /** If type is npc.*/
         dialog: GameLanguageCodedString[] | ["..."]
 
         type: "hostile" | "npc" | "marchand" | "player"
         pattern: "follow" | "merge" | "idle" | "custom" | "player"
 
-        spawnX: number | 0
-        spawnY: number | 0
-        spawnOrientation: GameOrientation | "south"
+        x: number | 0
+        y: number | 0
+        orientation: GameOrientation | "south"
 
         character: GameIcon
 
@@ -268,7 +268,16 @@ declare global {
         tilewidth: number,
         type: "map",
         version: "1.8",
-        width: number
+        width: number,
+        data: GameMapPatternData
+    }
+
+    type GameMapPatternData = {
+        spawn: {
+            x: number,
+            y: number
+        },
+        entities: GameEntitiesOptions[]
     }
 
     type GameMapLayer = {

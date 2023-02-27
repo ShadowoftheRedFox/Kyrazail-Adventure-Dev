@@ -102,7 +102,7 @@ declare global {
                     ground: HTMLImageElement
                     collision: HTMLImageElement
                     over: HTMLImageElement,
-                    collisionPattern: boolean[]
+                    collisionPattern: boolean[][]
                 }
             }
         }

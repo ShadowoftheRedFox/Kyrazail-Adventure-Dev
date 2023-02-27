@@ -6,10 +6,11 @@ dist/
 build/
 *.bat
 
-# vscode parameters
+# vscode files
 !.vscode/settings.json
 **/.vscode
+jsconfig.json
 
 # test folders
-App/test/**
 test/**
+todo.txt

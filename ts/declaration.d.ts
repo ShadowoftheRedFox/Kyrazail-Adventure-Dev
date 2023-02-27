@@ -111,22 +111,6 @@ declare global {
         progressFunction(): void
     }
 
-    /**
-     * Event handler for the game.
-     */
-    const GameEvent: {
-        /** Will launch the given function when the given event is emited somewhere.*/
-        on(event: string, listener: (...any: any[]) => {} | any): () => void
-        /** Will launch the given function when the given event is emited somewhere, one time.*/
-        once(event: string, listener: (...any: any[]) => {} | any): void
-        /** Emit the given event, if there is a listener somewhere of the given event, he will fire.*/
-        emit(event: string, ...args: any[]): void
-        /** Remove a listener from an event.*/
-        removeListener(event: string, listener: () => {} | any): void
-        /** Remove all listener from an event is the event parameter is found, otherwise, delete all event.*/
-        removeAllListener(event: string): void
-    }
-
     const WindowManager: {
         data: {
             viewport: null

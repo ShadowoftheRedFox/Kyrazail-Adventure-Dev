@@ -27,9 +27,9 @@ The game will save data into the [save folder](./App/save/) under the extension 
 
 All game resources such as fonts, images, sounds etc... is stocked in the [resources folder](./App/resources/) and under sub folder named after their purpose.
 
-The [test folder](./App/test/) is purely for test. Maybe I will save example, maybe not. Except various change and maybe not a lot of senses here. Bigger tests will have a documented folder.
+The [test folder](./test/) is purely for test. Maybe I will save example, maybe not. Except various change and maybe not a lot of senses here. Bigger tests will have a documented folder.
 
-The [ts folder](./App/ts/) is here to keep track of the type. As you can see, I am writting the project in JavaScript, because I do not really know how to do it in TypeScript. I will try to get a better pattern for those files.
+The [ts folder](./ts/) is here to keep track of the type. As you can see, I am writting the project in JavaScript, because I do not really know how to do it in TypeScript. I will try to get a better pattern for those files.
 
 ## Scripts:
 
