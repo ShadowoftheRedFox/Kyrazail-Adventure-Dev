@@ -1,4 +1,4 @@
-/// <reference path="../../ts/type.d.ts"/>
+
 /**
  * Create a light effect. Add one pixel by one pixel.
  * @param {CanvasRenderingContext2D} ctx 

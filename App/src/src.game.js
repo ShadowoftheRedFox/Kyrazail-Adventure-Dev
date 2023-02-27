@@ -75,14 +75,14 @@ class Game {
         };
 
         try {
-            // initialise teh event system
+            // initialise the event system
             GameEventHandler.init(this);
 
             // TODO add a share method so that every rendering object in their creating function share the same canavs
             //add every rendering object to their current object
             this.state.entities = this.state.entities || {};
-            this.state.entities.player = new GameEntityPlayer(0, 0, "east", "Characters/Spiritual", 0, 2, "Faces/Spiritual", 0, 2); // TODO change this, if those are constants 
-            // add a mob/NPC manager so it can be added anytime
+            this.state.entities.player = null; // player is created with the map change
+            // others entities are added as they arrive
 
             this.state.menu = this.state.menu || {};
             this.state.menu.transition = new GameTransitionInterface(this);

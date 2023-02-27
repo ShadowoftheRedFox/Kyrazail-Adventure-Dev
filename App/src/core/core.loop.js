@@ -1,4 +1,4 @@
-/// <reference path="../../ts/type.d.ts"/>
+
 /** Game Loop Module
  * This module contains the game loop, which handles
  * updating the game state and re-rendering the canvas

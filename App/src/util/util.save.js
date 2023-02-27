@@ -1,4 +1,4 @@
-/// <reference path="../../ts/type.d.ts"/>
+
 /**
  * Used to save data.
  * @param {GameScope} scope

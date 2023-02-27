@@ -1,10 +1,10 @@
-/// <reference path="../../ts/type.d.ts"/>
+
 function GameEncryptData(data) {
     return CryptoJS.AES.encrypt(JSON.stringify(data), ConfigConst.KEY).toString();
 }
 
 function GameDecrytpData(data) {
-    return  CryptoJS.AES.decrypt(data, ConfigConst.KEY).toString(CryptoJS.enc.Utf8);
+    return CryptoJS.AES.decrypt(data, ConfigConst.KEY).toString(CryptoJS.enc.Utf8);
 }
 
 function GameTestCryptInsecure() {

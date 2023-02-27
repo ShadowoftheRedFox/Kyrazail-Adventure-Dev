@@ -1,4 +1,4 @@
-/// <reference path="../../ts/type.d.ts"/>
+
 function UpdateManager() {
     throw new Error("UpdateManager is a static class.");
 }

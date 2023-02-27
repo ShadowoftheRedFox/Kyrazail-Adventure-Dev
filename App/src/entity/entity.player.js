@@ -1,36 +1,35 @@
-/// <reference path="../../ts/type.d.ts"/>
+
 
 class GameEntityPlayer extends GameEntitiesClass {
     /**
+     * @param {GameScope} scope
      * @param {number} x spawn position x
      * @param {number} y spawn position y
      * @param {GameOrientation} o spawn orientation
-     * @param {string} i character image
-     * @param {number} c character image colon
-     * @param {number} r character image row
-     * @param {string} si speak image
-     * @param {number} sc speak image colon
-     * @param {number} sr speak image row
-     * @param  {...any} args arguments
      */
-    constructor(x, y, o, i, c, r, si, sc, sr, ...args) {
+    constructor(scope, x, y, o) {
         super({
-            name: { fr: "Joueur", en: "Player" },
+            // TODO change by the name of the player
+            name: "GamePlayer",
             type: "player",
             pattern: "player",
             movementSpeed: 1,
-            spawnX: x,
-            spawnY: y,
-            spawnOrientation: o,
+            x: x,
+            y: y,
+            orientation: o,
             character: {
                 invisible: false,
-                image: i,
-                col: c,
-                row: r
+                // TODO change below to be in accord to the character choosen
+                src: "Characters/Spiritual",
+                col: 0,
+                row: 0
             },
-            speakImage: si,
-            speakCol: sc,
-            speakRow: sr
+            speakImage: "Faces/Spiritual",
+            speakCol: 0,
+            speakRow: 0
         });
     }
+    /*
+    ! This class is only used to render the player on the map
+    */
 }

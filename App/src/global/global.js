@@ -1,4 +1,4 @@
-/// <reference path="../../ts/type.d.ts"/>
+
 
 function GameGlobalObject() {
     throw new Error("This is a static class.");

@@ -1,4 +1,4 @@
-/// <reference path="../../ts/type.d.ts"/>
+
 
 /**
  * Only loads if in the app.

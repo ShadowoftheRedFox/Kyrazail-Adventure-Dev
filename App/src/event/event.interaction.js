@@ -1,4 +1,4 @@
-/// <reference path="../../ts/type.d.ts"/>
+
 function MouseTrackerManager() {
     throw new Error("This is a static class.");
 }
@@ -216,10 +216,11 @@ KeyboardTrackerManager.init = function () {
 KeyboardTrackerManager.onkeydown = function (ev) {
     // remember this in map
     ev = ev || event; // to deal with IE
-    KeyboardTrackerManager.map[ev.key] = true;
+    let k = ev.key.toLowerCase();
+    KeyboardTrackerManager.map[k] = true;
 
     // remember this in array
-    if (KeyboardTrackerManager.array.indexOf(ev.key) == -1) KeyboardTrackerManager.array.push(ev.key);
+    if (KeyboardTrackerManager.array.indexOf(k) == -1) KeyboardTrackerManager.array.push(k);
 };
 
 /**
@@ -228,11 +229,12 @@ KeyboardTrackerManager.onkeydown = function (ev) {
 KeyboardTrackerManager.onkeyup = function (ev) {
     // remember this in map
     ev = ev || event; // to deal with IE
-    KeyboardTrackerManager.map[ev.key] = false;
+    let k = ev.key.toLowerCase();
+    KeyboardTrackerManager.map[k] = false;
 
     // remember this in array
-    if (KeyboardTrackerManager.array.indexOf(ev.key) > -1) {
-        KeyboardTrackerManager.array.splice(KeyboardTrackerManager.array.indexOf(ev.key), 1);
+    if (KeyboardTrackerManager.array.indexOf(k) > -1) {
+        KeyboardTrackerManager.array.splice(KeyboardTrackerManager.array.indexOf(k), 1);
     }
 };
 

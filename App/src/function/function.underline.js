@@ -1,4 +1,4 @@
-/// <reference path="../../ts/type.d.ts"/>
+
 /**
  * Draw an underline under a given text and position
  * @param {CanvasRenderingContext2D} context 

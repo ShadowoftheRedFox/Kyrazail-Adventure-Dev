@@ -1,4 +1,4 @@
-/// <reference path="../../ts/type.d.ts"/>
+
 
 /**
  * @param {CanvasRenderingContext2D} context 

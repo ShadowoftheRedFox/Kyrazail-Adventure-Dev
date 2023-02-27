@@ -1,4 +1,4 @@
-/// <reference path="../../ts/type.d.ts"/>
+
 
 class GameDialogueInterface extends GameInterfaces {
     /**

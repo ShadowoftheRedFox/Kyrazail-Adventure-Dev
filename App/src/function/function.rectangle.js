@@ -1,4 +1,4 @@
-/// <reference path="../../ts/type.d.ts"/>
+
 function RectangleCreator() {
     throw new Error("RectangleCreator is a static class.");
 }

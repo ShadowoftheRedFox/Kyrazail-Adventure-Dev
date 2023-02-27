@@ -1,5 +1,3 @@
-/// <reference path="../../ts/type.d.ts"/>
-
 /**
  * @param {GameScope} scope
  * @param {string[]} AudioArray 
@@ -16,11 +14,11 @@ function GameLoadAudio(scope, AudioArray, callback) {
     let c = AudioArray.length;
 
     AudioArray.forEach(audio => {
-        if (scope.cache.audio[audio]) console.log(`${audio} is already loaded`);
+        if (scope.cache.audio[audio]) { console.log(`${audio} is already loaded`); c--; }
         else {
             let src = scope.constants.href + "resources/Audio/" + audio + ".ogg";
             if (audio.split("/")[0] === "MAIN") src = scope.constants.href + "resources/Audio/" + audio + ".mp3";
-            const a = new Audio(src);
+            const a = new Audio();
             a.onabort = a.onerror = function () {
                 console.warn(`${a.src} failed`);
                 LoadingScreenManager.addProgress(1);
@@ -31,8 +29,9 @@ function GameLoadAudio(scope, AudioArray, callback) {
                 LoadingScreenManager.addProgress(1);
                 c--;
             }, false);
+            a.src = src;
         }
     });
 
-    const r = setInterval(() => { if (c == 0) { callback(); clearInterval(r); } }, 100);
+    const r = setInterval(() => { if (c == 0) { callback(); GameAudiosToLoad = []; clearInterval(r); } }, 100);
 }

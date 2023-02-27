@@ -18,3 +18,10 @@ const GameEventTypeEnum = [
     "LoadgingScreenEnd",
     "NewGame"
 ];
+
+const GameOrientation = [
+    "south",
+    "west",
+    "east",
+    "north"
+]

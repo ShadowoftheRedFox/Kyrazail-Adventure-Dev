@@ -1,4 +1,4 @@
-/// <reference path="../../ts/type.d.ts"/>
+
 
 /**
  * Return a random element of the array.

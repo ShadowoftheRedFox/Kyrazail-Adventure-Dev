@@ -1,4 +1,4 @@
-/// <reference path="../../ts/type.d.ts"/>
+
 
 class GameMapInterface extends GameInterfaces {
     /**
@@ -15,11 +15,6 @@ class GameMapInterface extends GameInterfaces {
 
         this.currentMapName = "";
         this.isMapLoaded = false;
-        /**
-         * Link the tilesetId to the firstgid.
-         * @type {Map<number, number>}
-         */
-        this.setMap = new Map();
 
         /**@type {GameMapLayer[]} */
         this.GroundLayers = [];
@@ -27,11 +22,12 @@ class GameMapInterface extends GameInterfaces {
         this.CollisionLayers = [];
         /**@type {GameMapLayer[]} */
         this.OverLayers = [];
-        this.LayerMaxPositionX = 0;
-        this.LayerMaxPositionY = 0;
 
         this.CenteredPositionLayerX = 0;
         this.CenteredPositionLayerY = 0;
+
+        this.stepAnimation = 0;
+        this.stepAnimationTimeout = 0;
     }
 
     /**
@@ -41,6 +37,7 @@ class GameMapInterface extends GameInterfaces {
         const ctx = scope.cache.context[this.canvasGroup];
         const Width = scope.w;
         const Height = scope.h;
+        const Player = scope.state.entities.player;
 
         ctx.clearRect(0, 0, Width, Height);
 
@@ -61,27 +58,27 @@ class GameMapInterface extends GameInterfaces {
         const CachedMap = scope.cache.layers[this.currentMapName];
 
         // TODO move this with the camera
-        ctx.drawImage(CachedMap.ground,
-            this.CenteredPositionLayerX,
-            this.CenteredPositionLayerY,
-            CachedMap.ground.width, CachedMap.ground.height);
-        ctx.drawImage(CachedMap.collision,
-            this.CenteredPositionLayerX,
-            this.CenteredPositionLayerY,
-            CachedMap.collision.width, CachedMap.collision.height);
-        ctx.drawImage(CachedMap.over,
-            this.CenteredPositionLayerX,
-            this.CenteredPositionLayerY,
-            CachedMap.over.width, CachedMap.over.height);
-
-        //TODO also check if the tile is visible on screen, if no, don't draw it
-        //TODO create multiple canvases for each layer
-        //TODO to optimize, give as little info as possible to function
-        //TODO to optimize, save coordinates etc so we don't need to re calculate them again
-
+        // draw ground
+        ctx.drawImage(CachedMap.ground, this.CenteredPositionLayerX, this.CenteredPositionLayerY, CachedMap.ground.width, CachedMap.ground.height);
         //STEP map animated
-        //STEP entities
-        //STEP map over
+        // draw collision layer
+        ctx.drawImage(CachedMap.collision, this.CenteredPositionLayerX, this.CenteredPositionLayerY, CachedMap.collision.width, CachedMap.collision.height);
+        // STEP render entities here
+        // draw the player
+        if (!Player.character.invisible && Player.character.src) {
+            ctx.imageSmoothingEnabled = false;
+            //BUG find a way to smooth without having the next image pixels
+            ctx.drawImage(scope.cache.image[Player.character.src].image,
+                Player.character.row + this.stepAnimation * 32,
+                (Player.character.col + GameOrientation.indexOf(Player.orientation)) * 32,
+                32, 32,
+                this.CenteredPositionLayerX + (Player.x) * MapToRender.tilewidth * 2,
+                this.CenteredPositionLayerY + (Player.y) * MapToRender.tileheight * 2,
+                32, 32);
+            ctx.imageSmoothingEnabled = true;
+        }
+        // draw over layer
+        ctx.drawImage(CachedMap.over, this.CenteredPositionLayerX, this.CenteredPositionLayerY, CachedMap.over.width, CachedMap.over.height);
         //STEP map effect
 
         this.needsUpdate = false;
@@ -91,22 +88,82 @@ class GameMapInterface extends GameInterfaces {
      * @param {GameScope} scope
      */
     update(scope) {
+        if (!this.isMapLoaded) return;
         const Width = scope.w;
         const Height = scope.h;
-
+        const Player = scope.state.entities.player;
         const MapToRender = scope.cache.map[this.currentMapName];
-        const CachedMap = scope.cache.layers[this.currentMapName];
+        const Collision = scope.cache.layers[this.currentMapName].collisionPattern;
+        let PlayerRunning = GameConfig.alwaysRun;
 
         if (this.resized) {
-            this.CenteredPositionLayerX = (Width - this.LayerMaxPositionX * MapToRender.tilewidth) / 2;
-            this.CenteredPositionLayerY = (Height - this.LayerMaxPositionY * MapToRender.tileheight) / 2;
+            this.CenteredPositionLayerX = Math.round((Width - MapToRender.width * MapToRender.tilewidth) / 2);
+            this.CenteredPositionLayerY = Math.round((Height - MapToRender.height * MapToRender.tileheight) / 2);
             this.resized = false;
             this.needsUpdate = true;
         }
-        //STEP map
+
+        /*
+        TODO for the playe movement, set a goalX and goalY
+        while the player isn't here, that means he's moving
+        player x and y will increase, and may not be integer value
+        */
+
+        if (KeyboardTrackerManager.pressed([GameConfig.keyBoard.run])) {
+            PlayerRunning = !GameConfig.alwaysRun;
+        }
+
+        if (Player.goalX == Player.x && Player.goalY == Player.y) {
+            let old = { x: Player.goalX, y: Player.goalY };
+            if (KeyboardTrackerManager.pressed(GameConfig.keyBoard.left)) { Player.goalX--; }
+            else if (KeyboardTrackerManager.pressed(GameConfig.keyBoard.up)) { Player.goalY--; }
+            else if (KeyboardTrackerManager.pressed(GameConfig.keyBoard.right)) { Player.goalX++; }
+            else if (KeyboardTrackerManager.pressed(GameConfig.keyBoard.down)) { Player.goalY++; }
+            // reset the step animation if the player doesn't move
+            else { this.stepAnimation = 1; this.needsUpdate = true; }
+            // check collision
+            if ((Player.goalX < 0 || Player.goalX >= MapToRender.width / 2) ||
+                (Player.goalY < 0 || Player.goalY > MapToRender.height / 2) ||
+                (!Collision[Player.goalY] || Collision[Player.goalY][Player.goalX])) {
+                Player.goalX = old.x;
+                Player.goalY = old.y;
+            }
+        } else if (this.stepAnimationTimeout + 200 / ((PlayerRunning ? 2 : 1)) <= Date.now()) {
+            // make the step animation
+            this.stepAnimationTimeout = Date.now();
+            this.stepAnimation = (this.stepAnimation == 0 ? 2 : 0);
+        }
+
+        //TODO might want to change this with the pathfinder
+        // move depending on the speed of the player
+        const speed = Player.movementSpeed * (PlayerRunning ? 2 : 1) / 10;
+        if (Player.goalX != Player.x) {
+            if (Player.goalX > Player.x) {
+                Player.x += speed;
+                Player.orientation = "east";
+                if (Player.x > Player.goalX) { Player.x = Player.goalX; }
+            } else {
+                Player.x -= speed;
+                Player.orientation = "west";
+                if (Player.x < Player.goalX) { Player.x = Player.goalX; }
+            }
+            this.needsUpdate = true;
+        }
+        if (Player.goalY != Player.y) {
+            if (Player.goalY > Player.y) {
+                Player.y += speed;
+                Player.orientation = "south";
+                if (Player.y > Player.goalY) { Player.y = Player.goalY; }
+            } else {
+                Player.y -= speed;
+                Player.orientation = "north";
+                if (Player.y < Player.goalY) { Player.y = Player.goalY; }
+            }
+            this.needsUpdate = true;
+        }
+
         //STEP map animated
         //STEP entities
-        //STEP map over
         //STEP map effect
     }
 
@@ -127,6 +184,7 @@ class GameMapInterface extends GameInterfaces {
      * @param {string} map The new map to render.
      */
     changeMap(scope, map) {
+        //TODO create the player 
         //? maybe put it in the if, because the map is "loaded", just not yet initialised
         this.isMapLoaded = false;
         if (!scope.cache.map[map]) {
@@ -146,13 +204,10 @@ class GameMapInterface extends GameInterfaces {
 
         // live load the map images
         const MapTileSetsImageToLoad = [];
-        MapLoaded.tilesets.forEach((tileset, tilesetId) => {
+        MapLoaded.tilesets.forEach(tileset => {
             // get the name of the image through the string pattern, and replace it for further use
             tileset.source = `Tilesets/${this.getImageNameFromSource(tileset.source)}`;
             MapTileSetsImageToLoad.push(tileset.source);
-
-            // create a map that link tileset id and the firstgid
-            this.setMap.set(tilesetId, tileset.firstgid);
         });
 
         // sort all layer to its respective class
@@ -160,25 +215,64 @@ class GameMapInterface extends GameInterfaces {
         this.CollisionLayers = MapLoaded.layers.filter(layer => layer.name.includes("Collision"));
         this.OverLayers = MapLoaded.layers.filter(layer => layer.name.includes("Over"));
 
-        // calculate the largest dimension of the layer to center them all
-        MapLoaded.layers.forEach(layer => {
-            if (this.LayerMaxPositionX < layer.width + layer.startx) this.LayerMaxPositionX = layer.width + layer.startx;
-            if (this.LayerMaxPositionY < layer.height + layer.starty) this.LayerMaxPositionY = layer.height + layer.starty;
-        });
+        // initialise the player here
+        //? might want to change if there is multiple spawns 
 
-        GameLoadImage(scope, MapTileSetsImageToLoad, () => {
-            //TODO STEP 1
-            if (!scope.cache.layers[map]) {
-                scope.cache.layers[map] = {
-                    collision: null,
-                    ground: null,
-                    over: null,
-                    collisionPattern: []
-                };
+        scope.state.entities.player = new GameEntityPlayer(scope, MapLoaded.data.spawn.x, MapLoaded.data.spawn.y, "east");
+
+        GameLoadImage(scope, MapTileSetsImageToLoad.concat(GameImagesToLoad), () => {
+            try {
+                if (!scope.cache.layers[map]) {
+                    scope.cache.layers[map] = {
+                        collision: null,
+                        ground: null,
+                        over: null,
+                        collisionPattern: this.getCollisionPattern(scope, MapLoaded)
+                    };
+                }
+
+                this.drawMap(scope, map);
+            } catch (e) { WindowManager.fatal(e); }
+        });
+    }
+
+    /**
+     * @param {GameScope} scope
+     * @param {GameMapPattern} map 
+     * @returns {boolean[][]}
+     */
+    getCollisionPattern(scope, map) {
+        /**@type {boolean[][]} */
+        const collision = [];
+        // since we have the max length and height for the whole map, make the array accordingly
+        for (let y = 0; y < map.height; y += 2) {
+            const lineCollision = [];
+            for (let x = 0; x < map.width; x += 2) {
+                lineCollision.push(0);
             }
+            collision.push(lineCollision);
+        }
 
-            this.drawMap(scope, map);
+        this.CollisionLayers.forEach(layer => {
+            layer.chunks.forEach(chunk => {
+                for (let tileId = 0; tileId < chunk.data.length; tileId += 2) {
+                    const X = tileId % chunk.width;
+                    const Y = Math.floor(tileId / chunk.height);
+                    //only check if we're on the top left corner of the collision tile
+                    if (X % 2 == 0 && Y % 2 == 0) {
+                        const d = chunk.data;
+                        collision[(chunk.y + Y) / 2][(chunk.x + X) / 2] =
+                            (d[tileId] == 0 && // top left
+                                d[tileId + 1] == 0 && // top right
+                                d[tileId + chunk.width] == 0 && // bottom left
+                                d[tileId + chunk.width + 1] == 0 // bottom right
+                            ) ? 0 : 1;
+                    }
+                }
+            });
         });
+
+        return collision;
     }
 
     /**
@@ -210,38 +304,32 @@ class GameMapInterface extends GameInterfaces {
      */
     drawLayer(scope, map, layers) {
         return new Promise((resolve, reject) => {
-            const Width = scope.w;
-            const Height = scope.h;
+            // constants
+            const TileWidth = map.tilewidth;
+            const TileHeight = map.tileheight;
 
             // create the canvas for the layer
             const canvas = document.createElement('canvas');
-            // get the max size
-            let MaxWidth = Width, MaxHeight = Height;
-            map.layers.forEach(layer => {
-                if (layer.height > MaxHeight) { MaxHeight = layer.height; }
-                if (layer.width > MaxWidth) { MaxWidth = layer.width; }
-            });
-            canvas.width = MaxWidth;
-            canvas.height = MaxHeight;
 
-            // get context and constants
+            canvas.width = map.width * TileWidth;
+            canvas.height = map.height * TileHeight;
+
+            // get context 
             const ctx = canvas.getContext('2d');
-            const TileWidth = map.tilewidth;
-            const TileHeight = map.tileheight;
 
             // make sure to smooth each pixel so it doesn't look rough
             ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = "high";
 
             // draw everything
-            layers.forEach((layer, layerId) => {
+            layers.forEach(layer => {
                 if (layer.visible != false && layer.opacity != 0) {
                     ctx.globalAlpha = layer.opacity;
 
                     const LayerPositionX = 0;
                     const LayerPositionY = 0;
 
-                    layer.chunks.forEach((chunk, chunkId) => {
+                    layer.chunks.forEach(chunk => {
                         const ChunkPositionX = LayerPositionX + chunk.x * TileWidth;
                         const ChunkPositionY = LayerPositionY + chunk.y * TileHeight;
 
@@ -304,9 +392,6 @@ class GameMapInterface extends GameInterfaces {
 
         // until the firstgid is < tile, replace the source
         // so when it's not true anymore, we know we have the right source
-        // while (setIndex + 1 < sets.length && sets[setIndex].firstgid <= tile) {
-        //     setIndex++;
-        // }
         sets.forEach((set, setId) => {
             lastGid = set.firstgid;
             if (tile >= lastGid) setIndex = setId;
@@ -314,98 +399,6 @@ class GameMapInterface extends GameInterfaces {
 
         return { source: "Tilesets/" + this.getImageNameFromSource(sets[setIndex].source), firstgid: sets[setIndex].firstgid };
     }
-
-    /**
-     * 
-     * @param {GameScope} scope 
-     * @param {GameMapPattern} map 
-     * @param {GameMapLayer[]} layers 
-     */
-    drawMapOld(scope, map, layers) {
-        const ctx = scope.cache.context[this.canvasGroup];
-        const TileWidth = map.tilewidth;
-        const TileHeight = map.tileheight;
-        const Width = scope.w;
-        const Height = scope.h;
-
-        // make sure to smooth each pixel so it doesn't look rough
-        ctx.imageSmoothingEnabled = true;
-
-        layers.forEach((layer, layerId) => {
-            if (!layer.visible || layer.opacity == 0) return;
-            ctx.globalAlpha = layer.opacity;
-            /*
-            coordinates: layer.x and layer.y indicates the top left corner of the layer on the whole map
-            start: layer.startx layer.starty is the starting point compared to the rest of the grid
-            size: layer.width and layer.height means the total tile on the layer
-            */
-            // where the tile is on the whole map grid
-            // we now set the top left corner
-            const LayerPositionX = (Width - this.LayerMaxPositionX * TileWidth) / 2;
-            const LayerPositionY = (Height - this.LayerMaxPositionY * TileWidth) / 2;
-
-            //TEST
-            // ctx.fillStyle = "white";
-            // ctx.fillRect(LayerPositionX, LayerPositionY, layer.width * TileWidth, layer.height * TileHeight);
-            //TEST END
-
-            layer.chunks.forEach((chunk, chunkId) => {
-                // set the top left corner of the current chunk
-                const ChunkPositionX = LayerPositionX + chunk.x * TileWidth;
-                const ChunkPositionY = LayerPositionY + chunk.y * TileHeight;
-
-                //TEST
-                // const ChunkColor = ["#555555", "#666666", "#777777", "#888888", "#999999", "#AAAAAA", "#BBBBBB", "#CCCCCC", "#DDDDDD"];
-                // ctx.fillStyle = ChunkColor[chunkId];
-                // ctx.fillRect(ChunkPositionX, ChunkPositionY, chunk.width * TileWidth, chunk.height * TileHeight);
-                // return;
-                //TEST END
-
-                /*
-                size: chunk.width and chunk.height means the total tile on the chunk
-                coordinates: chunk.x and chunk.y indicates the top left corner of the layer on the whole layer/map?
-                */
-                chunk.data.forEach((tile, tileId) => {
-                    // get the exact position of the current tile
-                    const TilePositionX = ChunkPositionX + (tileId % chunk.width) * TileWidth;
-                    const TilePositionY = ChunkPositionY + (Math.floor(tileId / chunk.height) * TileHeight);
-
-                    //TEST
-                    // ctx.fillStyle = (((tileId % chunk.width + Math.floor(tileId / chunk.height)) % 2 == 0) ? "white" : "darkgrey");
-                    // if (tileId == 0) ctx.fillStyle = "green";
-                    // else if (tileId == chunk.data.length - 1) ctx.fillStyle = "green";
-                    // ctx.fillRect(TilePositionX, TilePositionY, TileWidth, TileHeight);
-                    // return;
-                    //TEST END
-
-                    // if tile == 0, it means it's empty, so just skip it
-                    if (tile !== 0) {
-                        // get the image depending of the tile value and image max tile value
-                        const TileData = this.getImageFromTile(map.tilesets, tile);
-                        const TileImage = scope.cache.image[TileData.source].image;
-
-                        // calculating the source coodinates of the tile on the source image
-                        const TileSourceX = ((tile - TileData.firstgid) * TileWidth) % TileImage.width;
-                        const TileSourceY = Math.floor(((tile - TileData.firstgid) * TileHeight) / TileImage.height) * TileHeight;
-
-                        // if (TileSourceY == 6) TileSourceY = (Math.floor((tile - TileData.firstgid) / (TileImage.height / TileHeight)) - 1) * TileHeight;
-                        // console.log(TileSourceX / TileWidth, TileSourceY / TileHeight);
-                        if (Math.floor(((tile - TileData.firstgid) * TileHeight) / TileImage.height) == 6) return;
-                        // BUG image smoothing can take a pixel on the next image, divide the images in pixel?
-                        ctx.drawImage(
-                            TileImage,
-                            TileSourceX, TileSourceY,
-                            TileWidth, TileHeight,
-                            TilePositionX, TilePositionY,
-                            TileWidth, TileHeight
-                        );
-                    }
-                });
-            });
-        });
-    }
-
-
 }
 
 // BUG over layer tiles have pixel of miss placement (again)

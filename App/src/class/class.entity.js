@@ -1,22 +1,21 @@
-/// <reference path="../../ts/type.d.ts"/>
-
 class GameEntitiesClass {
     /**
-     * 
      * @param {GameEntitiesOptions} options 
      */
     constructor(options) {
-        this.name = {};
-        this.name.en = options.name.en || options.name;
-        this.name.fr = options.name.fr || options.name;
+        this.name = options.name || "unknown";
 
         this.type = options.type || "npc";
         this.dialog = options.dialog || ["..."];
         this.pattern = options.pattern || "idle";
 
-        this.spawnX = options.spawnX || 0;
-        this.spawnY = options.spawnY || 0;
-        this.spawnOrientation = options.spawnOrientation || "south";
+        this.x = options.x || 0;
+        this.y = options.y || 0;
+        // between 0 and 1, to smooth the change between tiles
+        this.goalX = this.x;
+        // between 0 and 1, to smooth the change between tiles
+        this.goalY = this.y;
+        this.orientation = options.orientation || "south";
 
         this.movementSpeed = options.movementSpeed || 0;
         this.speakImage = options.speakImage || null;
@@ -48,10 +47,11 @@ class GameEntitiesClass {
 
         if (!options.character) throw new ReferenceError("You must pass a character object.");
         this.character = options.character;
-        if (this.character.invisible == false) GameImagesToLoad.push(this.character.image);
+        if (this.character.invisible == false) GameImagesToLoad.push(this.character.src);
 
         if (this.speakImage) GameImagesToLoad.push(this.speakImage);
 
+        // TODO later
         if (this.stats) this.stats.special.forEach(a => { if (a.animationImage) GameImagesToLoad.push(a.animationImage); if (a.skillImage) GameImagesToLoad.push(a.skillImage); });
     }
 }

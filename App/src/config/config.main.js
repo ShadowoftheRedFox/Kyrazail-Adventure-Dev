@@ -14,14 +14,14 @@ const GameConfig = {
     targetFps: 60,
     alwaysRun: false,
     keyBoard: {
-        up: ["ArrowUp", "z"],
-        down: ["ArrowDown", "s"],
-        right: ["ArrowRight", "d"],
-        left: ["ArrowLeft", "q"],
-        run: ["Shift"],
-        pause: ["p", "Escape"],
-        back: ["Backspace", "x"],
-        confirm: ["e", "Enter"],
+        up: ["arrowup", "z"],
+        down: ["arrowdown", "s"],
+        right: ["arrowright", "d"],
+        left: ["arrowleft", "q"],
+        run: ["shift"],
+        pause: ["p", "escape"],
+        back: ["backspace", "x"],
+        confirm: ["e", "enter"],
         inventory: ["i", "a"]
     }
 };

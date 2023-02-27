@@ -1,4 +1,4 @@
-/// <reference path="../../ts/type.d.ts"/>
+
 function LoadingScreenManager() {
     throw new Error("LoadingScreenmanager is a static class.");
 }
@@ -90,7 +90,6 @@ LSM.init = function (callOnEqual) {
         if (LSM.progress == LSM.progressMax && LSM.calledEqual === false) {
             if (callOnEqual && typeof callOnEqual == "function") {
                 callOnEqual();
-                GameEvent.emit("LoadingScreenFinishProgress");
                 console.log("called");
             }
             LSM.calledEqual = true;

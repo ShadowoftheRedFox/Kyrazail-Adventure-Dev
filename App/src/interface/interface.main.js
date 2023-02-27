@@ -1,4 +1,4 @@
-/// <reference path="../../ts/type.d.ts"/>
+
 
 const GameMainInterfaceTopBackground = [
     ["Battlebacks1/Ship", "Battlebacks2/Ship", "white"],
@@ -25,8 +25,7 @@ class GameMainInterface extends GameInterfaces {
             requiredImage: [
                 "System/Window",
                 GameMainInterfaceChoosen[0], GameMainInterfaceChoosen[1],
-                "Icons/Account", "Icons/Discord", "Icons/Github", "Icons/Website",
-                "Faces/Spiritual"
+                "Icons/Account", "Icons/Discord", "Icons/Github", "Icons/Website"
             ],
             requiredAudio: ["MAIN/Adeste", "MAIN/Dramatic", "MAIN/Moon", "MAIN/Silence"],
             transitionLeave: true,
@@ -624,7 +623,6 @@ class GameMainInterface extends GameInterfaces {
      * @param {this} that 
      */
     startNewGame(scope, that) {
-        // GameEvent.emit("StartNewGame");
         GameEventHandler.handle("NewGame");
         scope.cache.context[that.canvasGroup].clearRect(0, 0, scope.w, scope.h);
     }

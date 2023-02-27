@@ -1,4 +1,4 @@
-/// <reference path="../../ts/type.d.ts"/>
+
 function WindowManager() {
     throw new Error("WindowManager is a static class.");
 }

@@ -1,5 +1,3 @@
-/// <reference path="../../ts/type.d.ts"/>
-
 /**
  * @param {GameScope} scope
  * @param {string[]} imageArray 
@@ -16,16 +14,19 @@ function GameLoadImage(scope, imageArray, callback) {
     let c = imageArray.length;
 
     imageArray.forEach(image => {
-        if (scope.cache.image[image]) console.log(`${image} is already loaded`);
+        if (scope.cache.image[image]) { console.log(`${image} is already loaded`); c--; }
         else {
             const i = new Image();
-            i.onerror = function () {
+            i.onerror = () => {
+                // warn and add progress
                 console.warn(`${i.src} failed`);
                 LoadingScreenManager.addProgress(1);
                 c--;
             };
-            i.onload = function () {
+            i.onload = () => {
+                // push the loaded image in the cache
                 scope.cache.image[image] = GameLoadImage.structure(i, image);
+                // add the progress
                 LoadingScreenManager.addProgress(1);
                 c--;
             };
@@ -33,7 +34,7 @@ function GameLoadImage(scope, imageArray, callback) {
         }
     });
 
-    const r = setInterval(() => { if (c == 0) { callback(); clearInterval(r); } }, 100);
+    const r = setInterval(() => { if (c == 0) { callback(); GameImagesToLoad = []; clearInterval(r); } }, 100);
 }
 
 /**

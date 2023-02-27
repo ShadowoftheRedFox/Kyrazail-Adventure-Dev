@@ -1,4 +1,4 @@
-/// <reference path="../../ts/type.d.ts"/>
+
 /**
  * Create a bubble reaction on top (32px higher) of the given coordinate. Bubble time recommended: 3.6s
  * @param {scope} scope The scope.

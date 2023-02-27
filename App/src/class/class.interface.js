@@ -1,4 +1,4 @@
-/// <reference path="../../ts/type.d.ts"/>
+
 
 class GameInterfaces {
     /**
@@ -45,5 +45,7 @@ class GameInterfaces {
             if (!scope.cache.context[this.canvasGroup]) throw new ReferenceError(`${this.canvasGroup} has not yet been created.`);
             this.interfaceCanvas = document.getElementById(this.canvasGroup);
         }
+
+        // push the entity to the cache
     }
 }

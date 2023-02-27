@@ -1,4 +1,4 @@
-/// <reference path="../../ts/type.d.ts"/>
+
 /**
  * Translate a code message and return the translated message.
  * @param {string} messageCode The code message to translate.
