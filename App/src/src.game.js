@@ -62,7 +62,7 @@ class Game {
             playingSE: null
         };
 
-        //create a cache element where all data can be stored/erased
+        // create a cache element where all data can be stored/erased
         this.cache = {
             image: {},
             audio: {},
@@ -73,6 +73,9 @@ class Game {
             context: {},
             layers: {}
         };
+
+        // Where all data relativ to the game itself will be stored
+        this.global = {}
 
         try {
             // initialise the event system
@@ -88,9 +91,9 @@ class Game {
             this.state.menu.transition = new GameTransitionInterface(this);
             this.state.menu.intro = new GameIntroductionInterface(this);
             this.state.menu.dialogue = new GameDialogueInterface(this);
-            this.state.menu.main = new GameMainInterface(this);
+            this.state.menu.main = new GameMainMenuInterface(this);
             this.state.menu.map = new GameMapInterface(this);
-            // this.state.menu.pause = new Pause(this);
+            this.state.menu.pause = new GamePauseInterface(this);
             // this.state.menu.gameOver = new GameOver(this); // TODO this will be disactivated by default, but shown by event system
             // this.state.menu.checkUpdate = new updateMenu(this); // TODO will be added later, because use a lot of data trafic and must manage the github API
 
@@ -118,5 +121,74 @@ class Game {
         } catch (e) {
             WindowManager.fatal(e);
         }
+    }
+
+    /**
+     * Calculate the level, total needed and xp left given xp amount and level.
+     * @param {number} level The current level
+     * @param {number} xp The amount of experience 
+     * @returns {{l:number,r:number,t:number}} l is the amount of level, r the amount of xp left, and t the total amount to level up  
+     */
+    calculateXp(level = 1, xp = 0) {
+        if (isNaN(xp)) throw new TypeError("xp must be a number");
+        // formula: Math.pow((level/x), y) = xp
+        // reverse: Math.pow(xp, 1/y) * x = level
+        // x affect the amount of xp, lower value = more xp required per level
+        // y affect the amount to get per level, higher value = larger gap between levels
+        const X = 0.07;
+        const Y = 2;
+        const r = {};
+        // xp for the next level
+        r.t = Math.pow(((level + 1) / X), Y) - Math.pow((level / X), Y);
+        // while the xp is bigger than the xp needed, level up
+        while (xp >= r.t) {
+            level++;
+            xp -= r.t;
+            r.t = Math.pow(((level + 1) / X), Y) - Math.pow((level / X), Y);
+        }
+
+        // return results
+        r.t = Math.floor(r.t);
+        r.r = Math.floor(xp);
+        r.l = Math.floor(level);
+
+        return r;
+    }
+
+    /**
+     * Divide the given string to fit in the given dimension.
+     * @param {CanvasRenderingContext2D} ctx Metrics function
+     * @param {string} string Text to split
+     * @param {number} w Max width
+     * @param {number} h Max height
+     * @returns {string[]} The splited text
+     */
+    divideText(ctx, string, w, h) {
+        const result = [];
+        let tempstr = "";
+        // split with width
+        string.split(" ").forEach(word => {
+            if (ctx.measureText(tempstr).width + ctx.measureText(word).width > w) {
+                result.push(tempstr);
+                tempstr = word + ' ';
+            } else {
+                tempstr += word + ' ';
+            }
+        });
+        result.push(tempstr);
+        // split with height
+        let tot = 0;
+        let i = 0;
+        for (const line of result) {
+            if (tot > h) {
+                result.splice(i, result.length - i + 1);
+                break;
+            } else {
+                tot += ((e) => { (e.actualBoundingBoxAscent + e.actualBoundingBoxDescent) })(ctx.measureText(line));
+                i++;
+            }
+        }
+
+        return result;
     }
 }

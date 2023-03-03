@@ -33,6 +33,7 @@ GameEventHandler.handle = function (EventName, ...args) {
             // TODO create a save file
             // TODO start reminder
             GameEventHandler.run(data[EventName]);
+            GameGlobalObject.newGame();
             break;
     }
 };
@@ -63,7 +64,7 @@ GameEventHandler.run = function (event) {
     if (["text", "announcement", "dialogue", "keyboard"].includes(event.data.type)) {
         this.scope.state.menu.dialogue.currentEvent = event;
     } else if (event.data.type === "map") {
-        this.scope.state.menu.map.changeMap(this.scope, event.data.map);
+        this.scope.state.menu.map.changeMap(this.scope, event.data.map, event.data.spawn);
     } else if (event.data.type === "timeout") {
         setTimeout(() => {
             GameEventHandler.handle(event.callbackEvent);

@@ -9,8 +9,8 @@ build/
 # vscode files
 !.vscode/settings.json
 **/.vscode
-jsconfig.json
+**/jsconfig.json
 
 # test folders
-test/**
+**/test
 todo.txt

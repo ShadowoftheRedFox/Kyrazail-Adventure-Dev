@@ -12,8 +12,8 @@ const GameMainInterfaceTopBackground = [
     ["Battlebacks1/GrassMaze", "Battlebacks2/Forest2", "white"],
     ["Battlebacks1/Cobblestones4", "Battlebacks2/Bridge", "black"]
 ];
-const GameMainInterfaceChoosen = GameMainInterfaceTopBackground[Math.floor(Math.random() * GameMainInterfaceTopBackground.length)];
-class GameMainInterface extends GameInterfaces {
+const GameMainInterfacechosen = GameMainInterfaceTopBackground[Math.floor(Math.random() * GameMainInterfaceTopBackground.length)];
+class GameMainMenuInterface extends GameInterfaces {
     /**
      * @param {GameScope} scope
      */
@@ -24,7 +24,7 @@ class GameMainInterface extends GameInterfaces {
             canvasGroup: "GameMainGroup",
             requiredImage: [
                 "System/Window",
-                GameMainInterfaceChoosen[0], GameMainInterfaceChoosen[1],
+                GameMainInterfacechosen[0], GameMainInterfacechosen[1],
                 "Icons/Account", "Icons/Discord", "Icons/Github", "Icons/Website"
             ],
             requiredAudio: ["MAIN/Adeste", "MAIN/Dramatic", "MAIN/Moon", "MAIN/Silence"],
@@ -32,7 +32,7 @@ class GameMainInterface extends GameInterfaces {
             transitionSpawn: true
         }, scope);
 
-        this.choosen = GameMainInterfaceChoosen;
+        this.chosen = GameMainInterfacechosen;
         this.menu = [
             {
                 name: "",
@@ -40,69 +40,45 @@ class GameMainInterface extends GameInterfaces {
                 button: [
                     {
                         name: "NewGameButton",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        x: 0, y: 0, w: 0, h: 0,
                         function: this.startNewGame
                     }, {
-                        name: "Load",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "LoadButton",
+                        x: 0, y: 0, w: 0, h: 0,
                         function: this.toLoad
                     }, {
-                        name: "Settings",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "SettingsButton",
+                        x: 0, y: 0, w: 0, h: 0,
                         function: this.toSettings
                     }, {
-                        name: "Credits",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
-                        function: () => { open("./credits.html"); }
+                        name: "CreditsButton",
+                        x: 0, y: 0, w: 0, h: 0,
+                        function: () => { open("./credits.html", "_blank"); }
                     }, {
-                        name: "Quit Game",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "QuitGameButton",
+                        x: 0, y: 0, w: 0, h: 0,
                         function: WindowManager.closeGame
                     }
                 ],
                 focusedButton: 0
             },
             {
-                name: "Load game",
+                name: "LoadGameTitle",
                 function: this.loadMenuFct,
                 button: [
                     {
-                        name: "Retry",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "RetryButton",
+                        x: 0, y: 0, w: 0, h: 0,
                         function: this.loadSaveFileRetry
                     }, {
-                        name: "Load",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "LoadButton",
+                        x: 0, y: 0, w: 0, h: 0,
                         function: this.loadSave,
                         loader: true
                     },
                     {
-                        name: "Back",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "BackButton",
+                        x: 0, y: 0, w: 0, h: 0,
                         function: this.toMain,
                         back: true
                     }
@@ -110,43 +86,28 @@ class GameMainInterface extends GameInterfaces {
                 focusedButton: 0
             },
             {
-                name: "Settings",
+                name: "SettingsButton",
                 function: this.settingsMenuFct,
                 button: [
                     {
-                        name: "General",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "GeneralButton",
+                        x: 0, y: 0, w: 0, h: 0,
                         function: this.toGeneral
                     }, {
-                        name: "Audio",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "AudioButton",
+                        x: 0, y: 0, w: 0, h: 0,
                         function: this.toAudio
                     }, {
-                        name: "Control",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "ControlButton",
+                        x: 0, y: 0, w: 0, h: 0,
                         function: this.toKeyBind
                     }, {
-                        name: "Language",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "LanguageButton",
+                        x: 0, y: 0, w: 0, h: 0,
                         function: this.toLanguage
                     }, {
-                        name: "Back",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "BackButton",
+                        x: 0, y: 0, w: 0, h: 0,
                         function: this.toMain,
                         back: true
                     }
@@ -154,23 +115,17 @@ class GameMainInterface extends GameInterfaces {
                 focusedButton: 0
             },
             {
-                name: "Settings: General",
+                name: "SettingsGeneralTitle",
                 function: this.settingsGeneralMenuFct,
                 button: [
                     {
-                        name: "Always run:",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "AlwaysRunSetting",
+                        x: 0, y: 0, w: 0, h: 0,
                         function: () => { GameConfig.alwaysRun = (GameConfig.alwaysRun ? false : true); }
                     },
                     {
-                        name: "   Game fps:",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "FPSSetting",
+                        x: 0, y: 0, w: 0, h: 0,
                         special: true,
                         function: (dir) => {
                             if (dir == 1 && GameConfig.targetFps + 10 <= 140) { GameConfig.targetFps += 10; }
@@ -178,11 +133,8 @@ class GameMainInterface extends GameInterfaces {
                         }
                     },
                     {
-                        name: "Debug mode:",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "DebugSetting",
+                        x: 0, y: 0, w: 0, h: 0,
                         function: () => {
                             ConfigConst.DEBUG = (ConfigConst.DEBUG ? false : true);
                             // clear fps if debug has been disabled
@@ -190,11 +142,8 @@ class GameMainInterface extends GameInterfaces {
                         }
                     },
                     {
-                        name: "Back",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "BackButton",
+                        x: 0, y: 0, w: 0, h: 0,
                         function: this.toSettings,
                         back: true
                     }
@@ -202,15 +151,12 @@ class GameMainInterface extends GameInterfaces {
                 focusedButton: 0
             },
             {
-                name: "Settings: Audio",
+                name: "SettingsAudioTitle",
                 function: this.settingsAudioMenuFct,
                 button: [
                     {
-                        name: "Musics volume:",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "MusicVolumeSetting",
+                        x: 0, y: 0, w: 0, h: 0,
                         special: true,
                         function: (dir) => {
                             var s = scope.soundsSettings.volumeBG * 100;
@@ -223,11 +169,8 @@ class GameMainInterface extends GameInterfaces {
                         }
                     },
                     {
-                        name: "Sounds volume:",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "SoundVolumeSetting",
+                        x: 0, y: 0, w: 0, h: 0,
                         special: true,
                         function: (dir) => {
                             var s = scope.soundsSettings.volumeEFX * 100;
@@ -240,11 +183,8 @@ class GameMainInterface extends GameInterfaces {
                         }
                     },
                     {
-                        name: "Back",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "BackButton",
+                        x: 0, y: 0, w: 0, h: 0,
                         function: this.toSettings,
                         back: true
                     }
@@ -252,15 +192,12 @@ class GameMainInterface extends GameInterfaces {
                 focusedButton: 0
             },
             {
-                name: "Settings: Control",
+                name: "SettingsControlTitle",
                 function: this.settingsKeyBindMenuFct,
                 button: [
                     {
-                        name: "Up",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "ControlUp",
+                        x: 0, y: 0, w: 0, h: 0,
                         keyboard: true,
                         enabled: true,
                         key1: GameConfig.keyBoard.up[0],
@@ -275,11 +212,8 @@ class GameMainInterface extends GameInterfaces {
                             }
                         }
                     }, {
-                        name: "Down",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "ControlDown",
+                        x: 0, y: 0, w: 0, h: 0,
                         keyboard: true,
                         enabled: true,
                         key1: GameConfig.keyBoard.down[0],
@@ -294,11 +228,8 @@ class GameMainInterface extends GameInterfaces {
                             }
                         }
                     }, {
-                        name: "Left",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "ControlRight",
+                        x: 0, y: 0, w: 0, h: 0,
                         keyboard: true,
                         enabled: true,
                         key1: GameConfig.keyBoard.left[0],
@@ -313,11 +244,8 @@ class GameMainInterface extends GameInterfaces {
                             }
                         }
                     }, {
-                        name: "Right",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "ControlLeft",
+                        x: 0, y: 0, w: 0, h: 0,
                         keyboard: true,
                         enabled: true,
                         key1: GameConfig.keyBoard.right[0],
@@ -332,11 +260,8 @@ class GameMainInterface extends GameInterfaces {
                             }
                         }
                     }, {
-                        name: "Run",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "ControlRun",
+                        x: 0, y: 0, w: 0, h: 0,
                         keyboard: true,
                         enabled: true,
                         key1: GameConfig.keyBoard.run[0],
@@ -351,11 +276,8 @@ class GameMainInterface extends GameInterfaces {
                             }
                         }
                     }, {
-                        name: "Pause",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "ControlPause",
+                        x: 0, y: 0, w: 0, h: 0,
                         keyboard: true,
                         enabled: true,
                         key1: GameConfig.keyBoard.pause[0],
@@ -370,11 +292,8 @@ class GameMainInterface extends GameInterfaces {
                             }
                         }
                     }, {
-                        name: "Back",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "BackButton",
+                        x: 0, y: 0, w: 0, h: 0,
                         keyboard: true,
                         enabled: true,
                         key1: GameConfig.keyBoard.back[0],
@@ -389,11 +308,8 @@ class GameMainInterface extends GameInterfaces {
                             }
                         }
                     }, {
-                        name: "Interaction",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "ControlInteraction",
+                        x: 0, y: 0, w: 0, h: 0,
                         keyboard: true,
                         enabled: true,
                         key1: GameConfig.keyBoard.confirm[0],
@@ -408,11 +324,8 @@ class GameMainInterface extends GameInterfaces {
                             }
                         }
                     }, {
-                        name: "Inventory",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "ControlInventory",
+                        x: 0, y: 0, w: 0, h: 0,
                         keyboard: true,
                         enabled: true,
                         key1: GameConfig.keyBoard.inventory[0],
@@ -427,11 +340,8 @@ class GameMainInterface extends GameInterfaces {
                             }
                         }
                     }, {
-                        name: "Back",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "BackButton",
+                        x: 0, y: 0, w: 0, h: 0,
                         function: this.toSettings,
                         back: true
                     }
@@ -439,20 +349,14 @@ class GameMainInterface extends GameInterfaces {
                 arrow: [
                     {
                         name: "",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        x: 0, y: 0, w: 0, h: 0,
                         function: (that, f) => { that.arrowHeightChange += 52;/*f is the button focused var*/f++; },
                         draw: (c) => { return ArrowDrawer.pixel("up", c); },
                         arrowUp: true,
                         enabled: false
                     }, {
                         name: "",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        x: 0, y: 0, w: 0, h: 0,
                         function: (that, f) => { that.arrowHeightChange -= 52;/*f is the button focused var*/f--; },
                         draw: (c) => { return ArrowDrawer.pixel("down", c); },
                         arrowDown: true,
@@ -463,15 +367,12 @@ class GameMainInterface extends GameInterfaces {
                 sideButton: 1
             },
             {
-                name: "Kyrazail Account",
+                name: "GameAccount",
                 function: this.accountFct,
                 button: [
                     {
-                        name: "Back",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "BackButton",
+                        x: 0, y: 0, w: 0, h: 0,
                         function: this.toMain,
                         back: true
                     }
@@ -479,30 +380,21 @@ class GameMainInterface extends GameInterfaces {
                 focusedButton: 0
             },
             {
-                name: "Language",
+                name: "LanguageButton",
                 function: this.accountFct,
                 button: [
                     {
                         name: "English",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        x: 0, y: 0, w: 0, h: 0,
                         function: (scope, that) => { scope.language = "en"; ConfigConst.LANGUAGE = "en"; }
                     }, {
                         name: "Français",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        x: 0, y: 0, w: 0, h: 0,
                         function: (scope, that) => { scope.language = "fr"; ConfigConst.LANGUAGE = "fr"; }
                     },
                     {
-                        name: "Back",
-                        x: 0,
-                        y: 0,
-                        w: 0,
-                        h: 0,
+                        name: "BackButton",
+                        x: 0, y: 0, w: 0, h: 0,
                         function: this.toSettings,
                         back: true
                     }
@@ -511,17 +403,18 @@ class GameMainInterface extends GameInterfaces {
             }
         ];
         this.social = [
+            // {
+            //TODO add a global var that save the account, if online server is setup one day
+            //     name: "Coming soon!",//"Account",
+            //     x: 0,
+            //     y: 0,
+            //     w: 0,
+            //     h: 0,
+            //     function: () => { },//this.toAccount,
+            //     icon: "Icons/Account",
+            //     hover: false
+            // },
             {
-                //TODO add a global var that save the account, if online server is setup one day
-                name: "Coming soon!",//"Account",
-                x: 0,
-                y: 0,
-                w: 0,
-                h: 0,
-                function: () => { },//this.toAccount,
-                icon: "Icons/Account",
-                hover: false
-            }, {
                 name: "Discord",
                 x: 0,
                 y: 0,
@@ -552,7 +445,7 @@ class GameMainInterface extends GameInterfaces {
                 icon: "Icons/Github",
                 hover: false
             }, {
-                name: "Online game",
+                name: "SocialOnlineGame",
                 x: 0,
                 y: 0,
                 w: 0,
@@ -615,6 +508,9 @@ class GameMainInterface extends GameInterfaces {
             error: [],
             try: 0
         };
+
+        // delay to scroll with keyboard
+        this.KeyboardDelay = 0;
     }
 
     /**
@@ -637,7 +533,7 @@ class GameMainInterface extends GameInterfaces {
             w = scope.w,
             h = scope.h,
             currentMenu = that.menu[that.focusedMenu];
-        that.drawTitle(ctx, currentMenu.name, that, scope.w, scope.h);
+        that.drawTitle(ctx, GameTranslate(currentMenu.name), that, scope.w, scope.h);
 
         var gradient = ctx.createLinearGradient(w / 2 - 200, h / 1.8, w / 2 + 200, h / 1.8);
         gradient.addColorStop(0, "#F3C12600");
@@ -651,19 +547,19 @@ class GameMainInterface extends GameInterfaces {
                 ctx.fillStyle = gradient;
                 if (index == currentMenu.button.reverseIndex()) {
                     that.createGradient(ctx, button);
-                    const metrics = ctx.measureText(button.name);
+                    const metrics = ctx.measureText(GameTranslate(button.name));
                     const actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
                     ctx.fillRect(0, h - actualHeight - 40, metrics.width + 40, + actualHeight + 40);
                 } else {
                     ctx.fillRect(w / 2 - 200, h / 1.8 + 52 * index - 16, 400, 40);
                 }
             }
-            ctx.fillStyle = that.choosen[2];
+            ctx.fillStyle = that.chosen[2];
             //? back button will always be the last one in the array
             if (index == currentMenu.button.reverseIndex()) {
                 that.createBackButton(ctx, button, w, h);
             } else {
-                ctx.fillText(button.name, w / 2, h / 1.8 + 52 * index, w);
+                ctx.fillText(GameTranslate(button.name), w / 2, h / 1.8 + 52 * index, w);
                 button.x = w / 2 - 200;
                 button.y = h / 1.8 + 52 * index - 16;
                 button.w = 400;
@@ -714,14 +610,13 @@ class GameMainInterface extends GameInterfaces {
         ctx.fillStyle = gradient;
         ctx.fillRect(w / 2 - 200, h - 45 * currentMenu.button.reverseIndex(currentMenu.focusedButton) - 66, 400, 40);
 
-        ctx.fillStyle = that.choosen[2];
+        ctx.fillStyle = that.chosen[2];
         currentMenu.button.forEach((button, index) => {
             button.x = w / 2 - 200;
             button.y = h - 45 * currentMenu.button.reverseIndex(index) - 66;
             button.w = 400;
             button.h = 40;
-            const name = GameTranslate(button.name);
-            ctx.fillText((name ? name : button.name), w / 2, h - 45 * currentMenu.button.reverseIndex(index) - 50, w);
+            ctx.fillText(GameTranslate(button.name), w / 2, h - 45 * currentMenu.button.reverseIndex(index) - 50, w);
         });
 
         // prevent the canvas from getting unwanted pixel
@@ -755,7 +650,7 @@ class GameMainInterface extends GameInterfaces {
                 ctx.textAlign = (b.x < currentMenu.button[0].x ? "left" : "right");
                 ctx.font = "20px Azure";
                 ctx.textBaseline = "bottom";
-                ctx.fillText(b.name, b.x + socialImageSize + spaceBetweenButton / 2, b.y);
+                ctx.fillText(GameTranslate(b.name), b.x + socialImageSize + spaceBetweenButton / 2, b.y);
                 ctx.textAlign = "center";
                 ctx.font = "150% Azure";
                 ctx.textBaseline = "middle";
@@ -764,7 +659,7 @@ class GameMainInterface extends GameInterfaces {
     }
 
     drawTitle(ctx, title, that, w, h) {
-        ctx.fillStyle = that.choosen[2];
+        ctx.fillStyle = that.chosen[2];
         ctx.font = '200% Azure';
         ctx.imageSmoothingQuality = "high";
         ctx.textAlign = "center";
@@ -782,7 +677,7 @@ class GameMainInterface extends GameInterfaces {
             w = scope.w,
             h = scope.h,
             currentMenu = that.menu[that.focusedMenu];
-        that.drawTitle(ctx, currentMenu.name, that, scope.w, scope.h);
+        that.drawTitle(ctx, GameTranslate(currentMenu.name), that, scope.w, scope.h);
 
         var gradient = ctx.createLinearGradient(w / 2 - 200, h / 1.8, w / 2 + 200, h / 1.8);
         gradient.addColorStop(0, "#F3C12600");
@@ -794,14 +689,14 @@ class GameMainInterface extends GameInterfaces {
                 ctx.fillStyle = gradient;
                 if (index == currentMenu.button.reverseIndex()) {
                     that.createGradient(ctx, button);
-                    const metrics = ctx.measureText(button.name);
+                    const metrics = ctx.measureText(GameTranslate(button.name));
                     const actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
                     ctx.fillRect(0, h - actualHeight - 40, metrics.width + 40, + actualHeight + 40);
                 } else {
                     ctx.fillRect(0, h / 1.8 + 52 * index - 16, w, 40);
                 }
             }
-            ctx.fillStyle = that.choosen[2];
+            ctx.fillStyle = that.chosen[2];
             //? back button will always be the last one in the array
             if (index == currentMenu.button.reverseIndex()) {
                 that.createBackButton(ctx, button, w, h);
@@ -810,7 +705,7 @@ class GameMainInterface extends GameInterfaces {
                 switch (index) {
                     case 0:
                         ctx.textAlign = "left";
-                        ctx.fillText(button.name, w / 10, h / 1.8 + 52 * index, w);
+                        ctx.fillText(GameTranslate(button.name), w / 10, h / 1.8 + 52 * index, w);
                         button.x = 0;
                         button.y = h / 1.8 + 52 * index - 16;
                         button.w = w;
@@ -820,7 +715,7 @@ class GameMainInterface extends GameInterfaces {
                         break;
                     case 1:
                         ctx.textAlign = "left";
-                        ctx.fillText(button.name, w / 10, h / 1.8 + 52 * index, w);
+                        ctx.fillText(GameTranslate(button.name), w / 10, h / 1.8 + 52 * index, w);
                         button.x = 0;
                         button.y = h / 1.8 + 52 * index - 16;
                         button.w = w;
@@ -830,7 +725,7 @@ class GameMainInterface extends GameInterfaces {
                         break;
                     case 2:
                         ctx.textAlign = "left";
-                        ctx.fillText(button.name, w / 10, h / 1.8 + 52 * index, w);
+                        ctx.fillText(GameTranslate(button.name), w / 10, h / 1.8 + 52 * index, w);
                         button.x = 0;
                         button.y = h / 1.8 + 52 * index - 16;
                         button.w = w;
@@ -854,9 +749,9 @@ class GameMainInterface extends GameInterfaces {
     createBackButton(ctx, button, w, h) {
         ctx.textAlign = "left";
         ctx.textBaseline = "bottom";
-        const metrics = ctx.measureText(button.name);
+        const metrics = ctx.measureText(GameTranslate(button.name));
         const actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
-        ctx.fillText(button.name, 20, h - 20, w);
+        ctx.fillText(GameTranslate(button.name), 20, h - 20, w);
         // bigger hitbox, that's why it's different than the text coos
         button.x = 0;
         button.y = h - actualHeight - 40;
@@ -875,7 +770,7 @@ class GameMainInterface extends GameInterfaces {
             w = scope.w,
             h = scope.h,
             currentMenu = that.menu[that.focusedMenu];
-        that.drawTitle(ctx, currentMenu.name, that, scope.w, scope.h);
+        that.drawTitle(ctx, GameTranslate(currentMenu.name), that, scope.w, scope.h);
 
         var gradient = ctx.createLinearGradient(w / 2 - 200, h / 1.8, w / 2 + 200, h / 1.8);
         gradient.addColorStop(0, "#F3C12600");
@@ -887,14 +782,14 @@ class GameMainInterface extends GameInterfaces {
                 ctx.fillStyle = gradient;
                 if (index == currentMenu.button.reverseIndex()) {
                     that.createGradient(ctx, button);
-                    const metrics = ctx.measureText(button.name);
+                    const metrics = ctx.measureText(GameTranslate(button.name));
                     const actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
                     ctx.fillRect(0, h - actualHeight - 40, metrics.width + 40, + actualHeight + 40);
                 } else {
                     ctx.fillRect(w / 2 - w / 4, h / 1.8 + 52 * index - 16, w, 40);
                 }
             }
-            ctx.fillStyle = that.choosen[2];
+            ctx.fillStyle = that.chosen[2];
             //? back button will always be the last one in the array
             if (index == currentMenu.button.reverseIndex()) {
                 that.createBackButton(ctx, button, w, h);
@@ -903,7 +798,7 @@ class GameMainInterface extends GameInterfaces {
                 switch (index) {
                     case 0:
                         ctx.textAlign = "left";
-                        ctx.fillText(button.name, w / 18, h / 1.8 + 52 * index, w);
+                        ctx.fillText(GameTranslate(button.name), w / 18, h / 1.8 + 52 * index, w);
                         button.x = 0;
                         button.y = h / 1.8 + 52 * index - 16;
                         button.w = w;
@@ -913,7 +808,7 @@ class GameMainInterface extends GameInterfaces {
                         break;
                     case 1:
                         ctx.textAlign = "left";
-                        ctx.fillText(button.name, w / 18, h / 1.8 + 52 * index, w);
+                        ctx.fillText(GameTranslate(button.name), w / 18, h / 1.8 + 52 * index, w);
                         button.x = 0;
                         button.y = h / 1.8 + 52 * index - 16;
                         button.w = w;
@@ -934,7 +829,7 @@ class GameMainInterface extends GameInterfaces {
             w = scope.w,
             h = scope.h,
             currentMenu = that.menu[that.focusedMenu];
-        that.drawTitle(ctx, currentMenu.name, that, scope.w, scope.h);
+        that.drawTitle(ctx, GameTranslate(currentMenu.name), that, scope.w, scope.h);
         ctx.lineWidth = 3;
 
         var gradient = ctx.createLinearGradient(w / 2 - 200, h / 1.8, w / 2 + 200, h / 1.8);
@@ -944,22 +839,22 @@ class GameMainInterface extends GameInterfaces {
 
         // get the size of the title
         ctx.font = '200% Azure';
-        const metrics = ctx.measureText(currentMenu.name);
+        const metrics = ctx.measureText(GameTranslate(currentMenu.name));
 
         currentMenu.button.forEach((button, index) => {
-            ctx.fillStyle = that.choosen[2];
-            ctx.strokeStyle = that.choosen[2];
+            ctx.fillStyle = that.chosen[2];
+            ctx.strokeStyle = that.chosen[2];
             //? back button will always be the last one in the array
             if (index == currentMenu.button.reverseIndex()) {
                 ctx.font = '150% Azure';
                 if (currentMenu.focusedButton == currentMenu.button.reverseIndex()) {
                     that.createGradient(ctx, button);
-                    const metrics = ctx.measureText(button.name);
+                    const metrics = ctx.measureText(GameTranslate(button.name));
                     const actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
                     ctx.fillRect(0, h - actualHeight - 40, metrics.width + 40, + actualHeight + 40);
                     ctx.fillRect(button.x, button.y, button.w, button.h);
                 }
-                ctx.fillStyle = that.choosen[2];
+                ctx.fillStyle = that.chosen[2];
                 that.createBackButton(ctx, button, w, h);
             } else {
                 ctx.textAlign = "left";
@@ -975,7 +870,7 @@ class GameMainInterface extends GameInterfaces {
                 //if we can see the button, draw them
                 if (button.y > h / 6 + metrics.actualBoundingBoxDescent + 10 && button.y + button.h < h - 10) {
                     button.enabled = true;
-                    ctx.fillText(button.name, w / 6, button.y + 16, w);
+                    ctx.fillText(GameTranslate(button.name), w / 6, button.y + 16, w);
                     ctx.fillText(b1, button.x + button.w / 4, button.y + 16);
                     ctx.fillText(b2, button.x + 3 * button.w / 4, button.y + 16);
 
@@ -1035,7 +930,7 @@ class GameMainInterface extends GameInterfaces {
                     ctx.fillStyle = "red";
                     ctx.fillRect(a.x, a.y, a.w, a.h);
                 }
-                ctx.drawImage(a.draw(that.choosen[2]), w - 10 - arrowOffset, h / 6 + metrics.actualBoundingBoxDescent + arrowOffset, arrowSize, arrowSize);
+                ctx.drawImage(a.draw(that.chosen[2]), w - 10 - arrowOffset, h / 6 + metrics.actualBoundingBoxDescent + arrowOffset, arrowSize, arrowSize);
             } else if (i == 1 && (a.enabled || ConfigConst.DEBUG)) {
                 a.w = arrowSize + arrowOffset;
                 a.h = arrowSize + arrowOffset;
@@ -1045,7 +940,7 @@ class GameMainInterface extends GameInterfaces {
                     ctx.fillStyle = "red";
                     ctx.fillRect(a.x, a.y, a.w, a.h);
                 }
-                ctx.drawImage(a.draw(that.choosen[2]), w - 10 - arrowOffset, h - 10 - arrowOffset, arrowSize, arrowSize);
+                ctx.drawImage(a.draw(that.chosen[2]), w - 10 - arrowOffset, h - 10 - arrowOffset, arrowSize, arrowSize);
             }
         });
     }
@@ -1080,7 +975,7 @@ class GameMainInterface extends GameInterfaces {
             w = scope.w,
             h = scope.h,
             currentMenu = that.menu[that.focusedMenu];
-        that.drawTitle(ctx, currentMenu.name, that, scope.w, scope.h);
+        that.drawTitle(ctx, GameTranslate(currentMenu.name), that, scope.w, scope.h);
 
         var gradient = ctx.createLinearGradient(w / 2 - 200, h / 1.8, w / 2 + 200, h / 1.8);
         gradient.addColorStop(0, "#F3C12600");
@@ -1092,19 +987,19 @@ class GameMainInterface extends GameInterfaces {
                 ctx.fillStyle = gradient;
                 if (index == currentMenu.button.reverseIndex()) {
                     that.createGradient(ctx, button);
-                    const metrics = ctx.measureText(button.name);
+                    const metrics = ctx.measureText(GameTranslate(button.name));
                     const actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
                     ctx.fillRect(0, h - actualHeight - 40, metrics.width + 40, + actualHeight + 40);
                 } else {
                     ctx.fillRect(w / 2 - 200, h / 1.8 + 52 * index - 16, 400, 40);
                 }
             }
-            ctx.fillStyle = that.choosen[2];
+            ctx.fillStyle = that.chosen[2];
             //? back button will always be the last one in the array
             if (index == currentMenu.button.reverseIndex()) {
                 that.createBackButton(ctx, button, w, h);
             } else {
-                ctx.fillText(button.name, w / 2, h / 1.8 + 52 * index, w);
+                ctx.fillText(GameTranslate(button.name), w / 2, h / 1.8 + 52 * index, w);
                 button.x = w / 2 - 200;
                 button.y = h / 1.8 + 52 * index - 16;
                 button.w = 400;
@@ -1184,7 +1079,7 @@ class GameMainInterface extends GameInterfaces {
                 const metrics = ctx.measureText(currentMenu.button.last().name);
                 const actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
                 ctx.fillRect(0, h - actualHeight - 40, metrics.width + 40, + actualHeight + 40);
-                ctx.fillStyle = that.choosen[2];
+                ctx.fillStyle = that.chosen[2];
                 currentMenu.focusedButton = currentMenu.button.reverseIndex();
                 that.createBackButton(ctx, currentMenu.button.last(), w, h);
                 ctx.fillText(that.loadSaveFileAppMessage, w / 2, h / 2, w);
@@ -1204,19 +1099,19 @@ class GameMainInterface extends GameInterfaces {
                     ctx.fillStyle = gradient;
                     if (index == currentMenu.button.reverseIndex()) {
                         that.createGradient(ctx, button);
-                        const metrics = ctx.measureText(button.name);
+                        const metrics = ctx.measureText(GameTranslate(button.name));
                         const actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
                         ctx.fillRect(0, h - actualHeight - 40, metrics.width + 40, + actualHeight + 40);
                     } else {
                         ctx.fillRect(w / 2 - 200, h / 3 + 52 * index - 16, 400, 40);
                     }
                 }
-                ctx.fillStyle = that.choosen[2];
+                ctx.fillStyle = that.chosen[2];
                 //? back button will always be the last one in the array
                 if (index == currentMenu.button.reverseIndex()) {
                     that.createBackButton(ctx, button, w, h);
                 } else {
-                    ctx.fillText(button.name, w / 2, h / 3 + 52 * index, w);
+                    ctx.fillText(GameTranslate(button.name), w / 2, h / 3 + 52 * index, w);
                     button.x = w / 2 - 200;
                     button.y = h / 3 + 52 * index - 16;
                     button.w = 400;
@@ -1355,21 +1250,10 @@ class GameMainInterface extends GameInterfaces {
             h = scope.h;
         ctx.clearRect(0, 0, w, h);
         // render the background
-        ctx.drawImage(scope.cache.image[this.choosen[0]].image, 0, 0, w, h);
-        ctx.drawImage(scope.cache.image[this.choosen[1]].image, 0, 0, w, h);
+        ctx.drawImage(scope.cache.image[this.chosen[0]].image, 0, 0, w, h);
+        ctx.drawImage(scope.cache.image[this.chosen[1]].image, 0, 0, w, h);
 
         if (ConfigConst.DEBUG) {
-            ctx.fillStyle = "red";
-            ctx.beginPath();
-            ctx.arc(MouseTrackerManager.data.lastMove.x, MouseTrackerManager.data.lastMove.y, 10, 0, 2 * Math.PI, false);
-            ctx.fill();
-            ctx.closePath();
-            ctx.fillStyle = "blue";
-            ctx.beginPath();
-            ctx.arc(MouseTrackerManager.data.click[MouseTrackerManager.data.click.length - 1].x, MouseTrackerManager.data.click[MouseTrackerManager.data.click.length - 1].y, 10, 0, 2 * Math.PI, false);
-            ctx.fill();
-            ctx.closePath();
-
             this.menu[this.focusedMenu].button.forEach((b, idx) => {
                 ctx.fillStyle = "red";
                 if (!b.special) ctx.fillRect(b.x, b.y, b.w, b.h);
@@ -1379,7 +1263,7 @@ class GameMainInterface extends GameInterfaces {
                     ctx.fillStyle = "green";
                     ctx.fillRect(b.x + b.w / 2, b.y, b.w / 2, b.h);
                 }
-                if (MouseTrackerManager.clickOver(b.x, b.y, b.w, b.h)) {
+                if (MTM.clickOver(b.x, b.y, b.w, b.h)) {
                     ctx.fillStyle = "blue";
                     ctx.fillRect(b.x, b.y, b.w, b.h);
                 }
@@ -1404,7 +1288,7 @@ class GameMainInterface extends GameInterfaces {
     checkNoDuplicateKey(key) {
         let validation = false;
         for (var keysCategory in GameConfig.keyBoard) {
-            if (GameConfig.keyBoard[keysCategory].includes(key)) { validation = true; break; }
+            if (GameConfig.keyBoard[keysCategory].includes(key.toLowerCase())) { validation = true; break; }
         }
         return validation;
     }
@@ -1424,19 +1308,25 @@ class GameMainInterface extends GameInterfaces {
         const that = this,
             k = GameConfig.keyBoard,
             currentMenu = this.menu[this.focusedMenu];
+        const kup = KTM.pressed(k.up),
+            kdown = KTM.pressed(k.down),
+            kright = KTM.pressed(k.right),
+            kleft = KTM.pressed(k.left),
+            kconfirm = KTM.pressed(k.confirm),
+            kback = KTM.pressed(k.back);
 
         if (this.awaitInput && that.keyboardConfirmDelay + 150 < Date.now()) {
             onkeydown = (ev) => {
                 // the current button
                 const b = that.menu[5].button[that.buttonToChange.id];
-                if (that.buttonToChange.key == 1 && ev.key != b.key2 && !that.checkNoDuplicateKey(ev.key)) {
-                    b.key1 = ev.key;
+                if (that.buttonToChange.key == 1 && ev.key.toLowerCase() != b.key2 && !that.checkNoDuplicateKey(ev.key.toLowerCase())) {
+                    b.key1 = ev.key.toLowerCase();
                     // change the correct data in the config
                     b.function(0, b);
                     that.endOfInput(that);
                 }
-                if (that.buttonToChange.key == 2 && b.key1 != ev.key && !that.checkNoDuplicateKey(ev.key)) {
-                    b.key2 = ev.key;
+                if (that.buttonToChange.key == 2 && b.key1.toLowerCase() != ev.key && !that.checkNoDuplicateKey(ev.key.toLowerCase())) {
+                    b.key2 = ev.key.toLowerCase();
                     // change the correct data in the config
                     b.function(1, b);
                     that.endOfInput(that);
@@ -1444,48 +1334,96 @@ class GameMainInterface extends GameInterfaces {
             };
         }
 
-        document.onkeydown = function (ev) {
-            if (!that.awaitInput) {
-                if (k.down.includes(ev.key) && currentMenu.focusedButton < currentMenu.button.reverseIndex()) {
-                    currentMenu.focusedButton++;
-                    that.u();
-                }
-                if (k.up.includes(ev.key) && currentMenu.focusedButton > 0) {
-                    currentMenu.focusedButton--;
-                    that.u();
-                }
-                if (k.confirm.includes(ev.key) && !currentMenu.button[currentMenu.focusedButton].special &&
-                    !currentMenu.button[currentMenu.focusedButton].keyboard) {
-                    currentMenu.button[currentMenu.focusedButton].function(scope, that);
-                    that.u();
-                }
-                if (currentMenu.button[currentMenu.focusedButton].special) {
-                    if (k.right.includes(ev.key)) { currentMenu.button[currentMenu.focusedButton].function(1); that.u(); }
-                    if (k.left.includes(ev.key)) { currentMenu.button[currentMenu.focusedButton].function(0); that.u(); }
-                } else if (k.left.includes(ev.key) && currentMenu.button[currentMenu.button.reverseIndex()].back &&
-                    (!currentMenu.sideButton || currentMenu.sideButton == 1)) {
-                    // to focus on the back button
-                    currentMenu.focusedButton = currentMenu.button.reverseIndex();
-                    that.u();
-                }
-                if (k.back.includes(ev.key) && currentMenu.button[currentMenu.button.reverseIndex()].back) {
-                    currentMenu.button[currentMenu.button.reverseIndex()].function(scope, that);
-                    that.u();
-                }
-                if (currentMenu.sideButton) {
-                    if (k.right.includes(ev.key)) { currentMenu.sideButton = 2; that.u(); }
-                    if (k.left.includes(ev.key)) { currentMenu.sideButton = 1; that.u(); }
-                }
+        // to apply the delay for the keyboard
+        if (kup || kdown || kright || kleft || kconfirm || kback) {
+            if (this.KeyboardDelay + 100 >= Date.now()) {
+                return;
+            } else {
+                this.KeyboardDelay = Date.now();
             }
-            if (k.confirm.includes(ev.key) && currentMenu.button[currentMenu.focusedButton].keyboard &&
-                currentMenu.button[currentMenu.focusedButton].enabled) {
-                const b = currentMenu.button[currentMenu.focusedButton];
-                if (!that.awaitInput && that.keyboardConfirmDelay + 150 < Date.now()) {
+        }
+
+        if (!that.awaitInput) {
+            // scroll up and down in the buttons of the current menu
+            if (kdown && currentMenu.focusedButton < currentMenu.button.reverseIndex()) {
+                currentMenu.focusedButton++;
+                that.u();
+            }
+            if (kup && currentMenu.focusedButton > 0) {
+                currentMenu.focusedButton--;
+                that.u();
+            }
+            if (kconfirm && !currentMenu.button[currentMenu.focusedButton].special &&
+                !currentMenu.button[currentMenu.focusedButton].keyboard) {
+                currentMenu.button[currentMenu.focusedButton].function(scope, that);
+                that.u();
+            }
+            if (currentMenu.button[currentMenu.focusedButton].special) {
+                if (kright) { currentMenu.button[currentMenu.focusedButton].function(1); that.u(); }
+                if (kleft) { currentMenu.button[currentMenu.focusedButton].function(0); that.u(); }
+            } else if (kleft && currentMenu.button[currentMenu.button.reverseIndex()].back &&
+                (!currentMenu.sideButton || currentMenu.sideButton == 1)) {
+                // to focus on the back button
+                currentMenu.focusedButton = currentMenu.button.reverseIndex();
+                that.u();
+            }
+            if (kback && currentMenu.button[currentMenu.button.reverseIndex()].back) {
+                currentMenu.button[currentMenu.button.reverseIndex()].function(scope, that);
+                that.u();
+            }
+            if (currentMenu.sideButton) {
+                if (kright) { currentMenu.sideButton = 2; that.u(); }
+                if (kleft) { currentMenu.sideButton = 1; that.u(); }
+            }
+        }
+        if (kconfirm && currentMenu.button[currentMenu.focusedButton].keyboard &&
+            currentMenu.button[currentMenu.focusedButton].enabled) {
+            const b = currentMenu.button[currentMenu.focusedButton];
+            if (!that.awaitInput && that.keyboardConfirmDelay + 150 < Date.now()) {
+                that.keyboardConfirmDelay = Date.now();
+                // create input
+                console.log("create");
+                switch (currentMenu.sideButton) {
+                    case 1:
+                        that.oldKey = { key1: b.key1, key2: b.key2 };
+                        b.key1 = "Press a key...";
+                        that.awaitInput = true;
+                        that.buttonToChange = { id: currentMenu.focusedButton, key: 1 };
+                        that.u();
+                        break;
+                    case 2:
+                        that.oldKey = { key1: b.key1, key2: b.key2 };
+                        b.key2 = "Press a key...";
+                        that.awaitInput = true;
+                        that.buttonToChange = { id: currentMenu.focusedButton, key: 2 };
+                        that.u();
+                        break;
+                }
+            } else {
+                // cancel input
+                // check if it's the same button
+                if (currentMenu.focusedButton == that.buttonToChange.id && currentMenu.sideButton == that.buttonToChange.key && that.keyboardConfirmDelay + 150 < Date.now()) {
+                    console.log("cancel");
                     that.keyboardConfirmDelay = Date.now();
-                    // create input
-                    console.log("create");
                     switch (currentMenu.sideButton) {
                         case 1:
+                            b.key1 = that.oldKey.key1;
+                            that.endOfInput(that);
+                            break;
+                        case 2:
+                            b.key2 = that.oldKey.key2;
+                            that.endOfInput(that);
+                            break;
+                    }
+                } else if (that.keyboardConfirmDelay + 150 < Date.now()) {
+                    // if not, cancel last button and prepare that one
+                    // create input for this current button
+                    that.keyboardConfirmDelay = Date.now();
+                    console.log("cancel then create");
+                    switch (currentMenu.sideButton) {
+                        case 1:
+                            currentMenu.button[that.buttonToChange.id].key1 = that.oldKey.key1;
+                            currentMenu.button[that.buttonToChange.id].key2 = that.oldKey.key2;
                             that.oldKey = { key1: b.key1, key2: b.key2 };
                             b.key1 = "Press a key...";
                             that.awaitInput = true;
@@ -1493,6 +1431,8 @@ class GameMainInterface extends GameInterfaces {
                             that.u();
                             break;
                         case 2:
+                            currentMenu.button[that.buttonToChange.id].key1 = that.oldKey.key1;
+                            currentMenu.button[that.buttonToChange.id].key2 = that.oldKey.key2;
                             that.oldKey = { key1: b.key1, key2: b.key2 };
                             b.key2 = "Press a key...";
                             that.awaitInput = true;
@@ -1500,78 +1440,36 @@ class GameMainInterface extends GameInterfaces {
                             that.u();
                             break;
                     }
-                } else {
-                    // cancel input
-                    // check if it's the same button
-                    if (currentMenu.focusedButton == that.buttonToChange.id && currentMenu.sideButton == that.buttonToChange.key && that.keyboardConfirmDelay + 150 < Date.now()) {
-                        console.log("cancel");
-                        that.keyboardConfirmDelay = Date.now();
-                        switch (currentMenu.sideButton) {
-                            case 1:
-                                b.key1 = that.oldKey.key1;
-                                that.endOfInput(that);
-                                break;
-                            case 2:
-                                b.key2 = that.oldKey.key2;
-                                that.endOfInput(that);
-                                break;
-                        }
-                    } else if (that.keyboardConfirmDelay + 150 < Date.now()) {
-                        // if not, cancel last button and prepare that one
-                        // create input for this current button
-                        that.keyboardConfirmDelay = Date.now();
-                        console.log("cancel then create");
-                        switch (currentMenu.sideButton) {
-                            case 1:
-                                currentMenu.button[that.buttonToChange.id].key1 = that.oldKey.key1;
-                                currentMenu.button[that.buttonToChange.id].key2 = that.oldKey.key2;
-                                that.oldKey = { key1: b.key1, key2: b.key2 };
-                                b.key1 = "Press a key...";
-                                that.awaitInput = true;
-                                that.buttonToChange = { id: currentMenu.focusedButton, key: 1 };
-                                that.u();
-                                break;
-                            case 2:
-                                currentMenu.button[that.buttonToChange.id].key1 = that.oldKey.key1;
-                                currentMenu.button[that.buttonToChange.id].key2 = that.oldKey.key2;
-                                that.oldKey = { key1: b.key1, key2: b.key2 };
-                                b.key2 = "Press a key...";
-                                that.awaitInput = true;
-                                that.buttonToChange = { id: currentMenu.focusedButton, key: 2 };
-                                that.u();
-                                break;
-                        }
-                    }
                 }
             }
-        };
+        }
 
 
         // time between two frame
         const time = 1000 / scope.GameLoop.fps;
         currentMenu.button.forEach((b, idx) => {
-            if (MouseTrackerManager.checkOver(b.x, b.y, b.w, b.h)) {
+            if (MTM.checkOver(b.x, b.y, b.w, b.h, true)) {
                 currentMenu.focusedButton = idx;
                 // underline the button
                 if (currentMenu.button[idx].keyboard) {
-                    if (MouseTrackerManager.checkOver(b.x, b.y, b.w / 2, b.h)) {
+                    if (MTM.checkOver(b.x, b.y, b.w / 2, b.h)) {
                         currentMenu.sideButton = 1;
-                    } else if (MouseTrackerManager.checkOver(b.x + b.w / 2, b.y, b.w / 2, b.h)) {
+                    } else if (MTM.checkOver(b.x + b.w / 2, b.y, b.w / 2, b.h)) {
                         currentMenu.sideButton = 2;
                     }
                 }
                 that.u();
             }
-            if (MouseTrackerManager.clickOver(b.x, b.y, b.w, b.h, false, time) && !b.special) {
+            if (MTM.clickOver(b.x, b.y, b.w, b.h, false, time) && !b.special) {
                 b.function(scope, that);
                 that.u();
             }
             if (b.special) {
-                if (MouseTrackerManager.clickOver(b.x, b.y, b.w / 2, b.h, false, time)) {
+                if (MTM.clickOver(b.x, b.y, b.w / 2, b.h, false, time)) {
                     b.function(0);
                     that.u();
                 }
-                if (MouseTrackerManager.clickOver(b.x + b.w / 2, b.y, b.w / 2, b.h, false, time)) {
+                if (MTM.clickOver(b.x + b.w / 2, b.y, b.w / 2, b.h, false, time)) {
                     b.function(1);
                     that.u();
                 }
@@ -1579,13 +1477,13 @@ class GameMainInterface extends GameInterfaces {
             if (b.keyboard && b.enabled) {
                 if (!that.awaitInput) {
                     // create input
-                    if (MouseTrackerManager.clickOver(b.x, b.y, b.w / 2, b.h, false, time)) {
+                    if (MTM.clickOver(b.x, b.y, b.w / 2, b.h, false, time)) {
                         that.oldKey = { key1: b.key1, key2: b.key2 };
                         b.key1 = "Press a key...";
                         that.awaitInput = true;
                         that.buttonToChange = { id: idx, key: 1 };
                         that.u();
-                    } else if (MouseTrackerManager.clickOver(b.x + b.w / 2, b.y, b.w / 2, b.h, false, time)) {
+                    } else if (MTM.clickOver(b.x + b.w / 2, b.y, b.w / 2, b.h, false, time)) {
                         that.oldKey = { key1: b.key1, key2: b.key2 };
                         b.key2 = "Press a key...";
                         that.awaitInput = true;
@@ -1596,14 +1494,14 @@ class GameMainInterface extends GameInterfaces {
                     // cancel input
                     // check if it's the same button
                     if (idx == that.buttonToChange.id &&
-                        ((MouseTrackerManager.clickOver(b.x, b.y, b.w / 2, b.h, false, time) && that.buttonToChange.key == 1) ||
-                            (MouseTrackerManager.clickOver(b.x + b.w / 2, b.y, b.w / 2, b.h, time) && that.buttonToChange.key == 2))) {
-                        if (MouseTrackerManager.clickOver(b.x, b.y, b.w / 2, b.h, false, time)) {
+                        ((MTM.clickOver(b.x, b.y, b.w / 2, b.h, false, time) && that.buttonToChange.key == 1) ||
+                            (MTM.clickOver(b.x + b.w / 2, b.y, b.w / 2, b.h, false, time) && that.buttonToChange.key == 2))) {
+                        if (MTM.clickOver(b.x, b.y, b.w / 2, b.h, false, time)) {
                             b.key1 = that.oldKey.key1;
                             that.awaitInput = false;
                             that.buttonToChange = { id: null, key: null };
                             that.u();
-                        } else if (MouseTrackerManager.clickOver(b.x + b.w / 2, b.y, b.w / 2, b.h, false, time)) {
+                        } else if (MTM.clickOver(b.x + b.w / 2, b.y, b.w / 2, b.h, false, time)) {
                             b.key2 = that.oldKey.key2;
                             that.awaitInput = false;
                             that.buttonToChange = { id: null, key: null };
@@ -1612,7 +1510,7 @@ class GameMainInterface extends GameInterfaces {
                     } else {
                         // if not, cancel last button and prepare that one
                         // create input for this current button
-                        if (MouseTrackerManager.clickOver(b.x, b.y, b.w / 2, b.h, false, time)) {
+                        if (MTM.clickOver(b.x, b.y, b.w / 2, b.h, false, time)) {
                             currentMenu.button[that.buttonToChange.id].key1 = that.oldKey.key1;
                             currentMenu.button[that.buttonToChange.id].key2 = that.oldKey.key2;
                             that.oldKey = { key1: b.key1, key2: b.key2 };
@@ -1620,7 +1518,7 @@ class GameMainInterface extends GameInterfaces {
                             that.awaitInput = true;
                             that.buttonToChange = { id: idx, key: 1 };
                             that.u();
-                        } else if (MouseTrackerManager.clickOver(b.x + b.w / 2, b.y, b.w / 2, b.h, false, time)) {
+                        } else if (MTM.clickOver(b.x + b.w / 2, b.y, b.w / 2, b.h, false, time)) {
                             currentMenu.button[that.buttonToChange.id].key1 = that.oldKey.key1;
                             currentMenu.button[that.buttonToChange.id].key2 = that.oldKey.key2;
                             that.oldKey = { key1: b.key1, key2: b.key2 };
@@ -1641,7 +1539,7 @@ class GameMainInterface extends GameInterfaces {
         BUG if key1 == key2, stuck on Awaiting key even if we can move freely
         */
         if (currentMenu.arrow) currentMenu.arrow.forEach(a => {
-            if (MouseTrackerManager.clickOver(a.x, a.y, a.w, a.h, false, time) && a.enabled) {
+            if (MTM.clickOver(a.x, a.y, a.w, a.h, false, time) && a.enabled) {
                 a.function(that, currentMenu);
                 that.u();
             }
@@ -1649,24 +1547,22 @@ class GameMainInterface extends GameInterfaces {
 
         var alreadyHovered = false;
         if (that.focusedMenu == 0) that.social.forEach(a => {
-            if (MouseTrackerManager.checkOver(a.x, a.y, a.w, a.h, true) && !alreadyHovered) {
+            if (MTM.checkOver(a.x, a.y, a.w, a.h, true) && !alreadyHovered) {
                 a.hover = true;
                 alreadyHovered = true;
                 that.u();
             } else {
                 a.hover = false;
             }
-            if (MouseTrackerManager.clickOver(a.x, a.y, a.w, a.h, false, time)) {
+            if (MTM.clickOver(a.x, a.y, a.w, a.h, false, time)) {
                 a.function(scope, that);
                 that.u();
             }
         });
-
-        if (ConfigConst.DEBUG && MouseTrackerManager.data.click[MouseTrackerManager.data.click.length - 1].date + 1000 >= Date.now()) that.u();
     }
 
     u() { this.needsUpdate = true; }
 }
 
 
-//BUG save can be created and downloaded at the start of teh game? (spam keys?)
+//BUG save can be created and downloaded at the start of the game? (spam keys?)

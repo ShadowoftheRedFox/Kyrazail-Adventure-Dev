@@ -23,8 +23,8 @@ window.onload = ScriptLoaderManager.setup(StackLoadPlugin, 0, () => {
             try {
                 // launch manager
                 LoadingScreenManager.init();
-                KeyboardTrackerManager.init();
-                MouseTrackerManager.init();
+                KTM.init();
+                MTM.init();
                 // set a random title
                 document.getElementById("title").innerText += `: ${ConfigConst.TITLE.random()}`;
                 // start the game

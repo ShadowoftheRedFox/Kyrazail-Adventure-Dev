@@ -49,7 +49,8 @@ declare global {
             font: string
         } | {
             type: "map",
-            map: string
+            map: string,
+            spawn: number
         } | {
             type: "timeout",
             time: number

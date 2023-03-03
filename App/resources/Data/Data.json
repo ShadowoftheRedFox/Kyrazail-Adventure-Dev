@@ -13,7 +13,8 @@
             "callbackEvent": null,
             "data": {
                 "type": "map",
-                "map": "Map001"
+                "map": "Map001",
+                "spawn": 0
             }
         }
     },
@@ -2383,5 +2384,17 @@
             "Williams",
             "Wilson"
         ]
+    },
+    "map": {
+        "Map001": {
+            "player": [
+                {
+                    "x": 0,
+                    "y": 23,
+                    "o": "east"
+                }
+            ],
+            "entities": []
+        }
     }
 }

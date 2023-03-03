@@ -213,7 +213,7 @@ declare global {
         convertDate(ms: number): string
     }
 
-    const KeyboardTrackerManager: {
+    type KTM = {
         init(): void
         array: string[]
         map: { [name: string]: boolean | undefined }
@@ -222,7 +222,7 @@ declare global {
         pressed(array: string[]): boolean
     }
 
-    const MouseTrackerManager: {
+    type MTM = {
         holding: boolean
         moving: boolean
         lastMove: { [id: number]: { x: number, y: number, date: number, id: number } }

@@ -1,5 +1,3 @@
-
-
 class GameMapInterface extends GameInterfaces {
     /**
      * @param {GameScope} scope
@@ -9,7 +7,7 @@ class GameMapInterface extends GameInterfaces {
             asOwnCanvas: true,
             zindex: ConfigConst.ZINDEX.MAP,
             canvasGroup: "GameMapGroup",
-            requiredImage: [],
+            requiredImage: ["System/Shadow"],
             requiredAudio: []
         }, scope);
 
@@ -28,6 +26,7 @@ class GameMapInterface extends GameInterfaces {
 
         this.stepAnimation = 0;
         this.stepAnimationTimeout = 0;
+        this.keyPressDelay = 0;
     }
 
     /**
@@ -61,20 +60,16 @@ class GameMapInterface extends GameInterfaces {
         // draw ground
         ctx.drawImage(CachedMap.ground, this.CenteredPositionLayerX, this.CenteredPositionLayerY, CachedMap.ground.width, CachedMap.ground.height);
         //STEP map animated
+        // draw the shadow
+        ctx.drawImage(scope.cache.image["System/Shadow"].image, Width / 2, Height / 2 + 4);
+        // TODO draw entities shadow
         // draw collision layer
         ctx.drawImage(CachedMap.collision, this.CenteredPositionLayerX, this.CenteredPositionLayerY, CachedMap.collision.width, CachedMap.collision.height);
         // STEP render entities here
         // draw the player
         if (!Player.character.invisible && Player.character.src) {
             ctx.imageSmoothingEnabled = false;
-            //BUG find a way to smooth without having the next image pixels
-            ctx.drawImage(scope.cache.image[Player.character.src].image,
-                Player.character.row + this.stepAnimation * 32,
-                (Player.character.col + GameOrientation.indexOf(Player.orientation)) * 32,
-                32, 32,
-                this.CenteredPositionLayerX + (Player.x) * MapToRender.tilewidth * 2,
-                this.CenteredPositionLayerY + (Player.y) * MapToRender.tileheight * 2,
-                32, 32);
+            ctx.drawImage(scope.cache.image[Player.character.src].image, Player.character.row + this.stepAnimation * 32, (Player.character.col + GameOrientation.indexOf(Player.orientation)) * 32, 32, 32, Width / 2, Height / 2, 32, 32);
             ctx.imageSmoothingEnabled = true;
         }
         // draw over layer
@@ -97,28 +92,33 @@ class GameMapInterface extends GameInterfaces {
         let PlayerRunning = GameConfig.alwaysRun;
 
         if (this.resized) {
-            this.CenteredPositionLayerX = Math.round((Width - MapToRender.width * MapToRender.tilewidth) / 2);
-            this.CenteredPositionLayerY = Math.round((Height - MapToRender.height * MapToRender.tileheight) / 2);
             this.resized = false;
             this.needsUpdate = true;
         }
 
-        /*
-        TODO for the playe movement, set a goalX and goalY
-        while the player isn't here, that means he's moving
-        player x and y will increase, and may not be integer value
-        */
+        // center everything from the player
+        this.CenteredPositionLayerX = Width / 2 - Player.x * MapToRender.tilewidth * 2;
+        this.CenteredPositionLayerY = Height / 2 - Player.y * MapToRender.tileheight * 2;
 
-        if (KeyboardTrackerManager.pressed([GameConfig.keyBoard.run])) {
+        // detect run
+        if (KTM.pressed(GameConfig.keyBoard.run)) {
             PlayerRunning = !GameConfig.alwaysRun;
         }
 
+        // pause
+        if (KTM.pressed(GameConfig.keyBoard.pause) && this.keyPressDelay + 150 < Date.now()) {
+            scope.state.menu.pause.pause(scope);
+            this.activated = false;
+            return;
+        }
+
+        // if the player isn't moving
         if (Player.goalX == Player.x && Player.goalY == Player.y) {
             let old = { x: Player.goalX, y: Player.goalY };
-            if (KeyboardTrackerManager.pressed(GameConfig.keyBoard.left)) { Player.goalX--; }
-            else if (KeyboardTrackerManager.pressed(GameConfig.keyBoard.up)) { Player.goalY--; }
-            else if (KeyboardTrackerManager.pressed(GameConfig.keyBoard.right)) { Player.goalX++; }
-            else if (KeyboardTrackerManager.pressed(GameConfig.keyBoard.down)) { Player.goalY++; }
+            if (KTM.pressed(GameConfig.keyBoard.left)) { Player.goalX--; }
+            else if (KTM.pressed(GameConfig.keyBoard.up)) { Player.goalY--; }
+            else if (KTM.pressed(GameConfig.keyBoard.right)) { Player.goalX++; }
+            else if (KTM.pressed(GameConfig.keyBoard.down)) { Player.goalY++; }
             // reset the step animation if the player doesn't move
             else { this.stepAnimation = 1; this.needsUpdate = true; }
             // check collision
@@ -182,8 +182,9 @@ class GameMapInterface extends GameInterfaces {
      * Change the map to display from the current one to the wanted one.
      * @param {GameScope} scope
      * @param {string} map The new map to render.
+     * @param {number} spawn Player spawn number on the map
      */
-    changeMap(scope, map) {
+    changeMap(scope, map, spawn = 0) {
         //TODO create the player 
         //? maybe put it in the if, because the map is "loaded", just not yet initialised
         this.isMapLoaded = false;
@@ -201,6 +202,7 @@ class GameMapInterface extends GameInterfaces {
         }
         this.currentMapName = map;
         const MapLoaded = scope.cache.map[map];
+        const MapData = scope.cache.data.map[map];
 
         // live load the map images
         const MapTileSetsImageToLoad = [];
@@ -215,10 +217,12 @@ class GameMapInterface extends GameInterfaces {
         this.CollisionLayers = MapLoaded.layers.filter(layer => layer.name.includes("Collision"));
         this.OverLayers = MapLoaded.layers.filter(layer => layer.name.includes("Over"));
 
-        // initialise the player here
-        //? might want to change if there is multiple spawns 
+        // initialise the player here, at the wanted spawn
+        scope.state.entities.player = new GameEntityPlayer(scope, MapData.player[spawn].x, MapData.player[spawn].y, MapData.player[spawn].o);
 
-        scope.state.entities.player = new GameEntityPlayer(scope, MapLoaded.data.spawn.x, MapLoaded.data.spawn.y, "east");
+        // TODO remove old and spawn the new entities
+        MapData.entities.forEach(entity => { });
+        // TODO also spawn the player party
 
         GameLoadImage(scope, MapTileSetsImageToLoad.concat(GameImagesToLoad), () => {
             try {
@@ -400,42 +404,3 @@ class GameMapInterface extends GameInterfaces {
         return { source: "Tilesets/" + this.getImageNameFromSource(sets[setIndex].source), firstgid: sets[setIndex].firstgid };
     }
 }
-
-// BUG over layer tiles have pixel of miss placement (again)
-// TODO save the image of the map once then move the camera
-
-/*
-GOAL: render multiple layer of maps
-
-STEP 1 load map and save each layer images in the cache
-STEP 2 create the camera and entities
-STEP 3 display in hte correct order
-Also, changing things on the map re create the image, replace it in cache
-TODO remake the code in a clearer manner
-*/
-
-/*
-? What will we do?
-We're gonna render the map, centered on the player
-The player should always be in the center of the screen
-So we need to get the center of the screen
-Then the size of the map
-then draw each layer  
-
-render ground first
-then collision
-then over
-
-? What order to render?
-Logics want ground, then collision, then over
-
-we want the player to be in the center of the screen at all time
-so if he doesn't move, we only need to draw each layer on their canvas, then update them all only if player moves
-
-the layer, from the farthest to the closest:
-ground
-collision
-animated
-entities
-over
-*/

@@ -9,51 +9,11 @@ export { }
 
 declare global {
     type GameGlobalState = {
-        player: {
-            firstName: string
-            lastName: string
-
-            /** 
-             * We calculate the player level with xp. So there is no need for an level object. 
-             * Same goes for mana and special point. It also depends the species
-             */
-            xp: number
-            species: GameSpeciesBase | GameSpeciesAdvanced
-            advancedSpecies: boolean
-
-            face: GameIcon
-            character: GameIcon
-
-            stats: {
-                pv: number
-                mp: number
-                sp: number
-
-                def: number
-                magicdef: number
-                atk: number
-                magicatk: number
-                agi: number
-                luck: number
-
-                special: GameSpecialAbility[]
-
-                /** Regenerate by himself.*/
-                regeneration: number
-
-                /** Reduce by 2 the damage taken.*/
-                resistance: GameAttackType[]
-                /** Increase by 2 the damage taken.*/
-                weakness: GameAttackType[]
-
-                status: GameStatusEffect[]
-            }
-            equipment: GameEntitiesEquipment
-        }
-        party: {}
+        player: GamePlayerMember
+        party: GamePartyMember[]
         inventory: {}
-        map: {}
         quest: {
+            active: GameQuest
             finished: GameQuest[]
             ongoing: GameQuest[]
             failed: GameQuest[]
@@ -67,8 +27,8 @@ declare global {
     }
 
     type GameSpeciesBase = "elf" | "dwarf" | "demon" | "human" | "vampire" | "angel" | "fairy"
-
     type GameSpeciesAdvanced = "high elf" | "ancient dwarf" | "archi demon" | "ancient vampire" | "archangel" | "high fairy" | "human heroe"
+    type GameFigthClass = "Assasin" | "Warrior" | "Bersek" | "Mage" | "Long range" | "Tank"
 
     type GameQuest = {
         name: string
@@ -83,6 +43,8 @@ declare global {
             /** If important is true, this requirement must be finished for the quest to be valid. */
             important: boolean
         }[]
+        /**Help for certain point of the progression */
+        help: string[]
         /** Condition to enable the quest. */
         condition: {
             /** Name of the condition. */
@@ -198,9 +160,12 @@ declare global {
     type GameItemType = "resource" | "equipement" | "potion"
 
     type GameEntitiesStats = {
-        pv: number
+        hp: number
+        maxhp: number
         mp: number
+        maxmp: number
         sp: number
+        maxsp: number
 
         def: number
         magicdef: number
@@ -228,18 +193,71 @@ declare global {
         bossLoot: { item: GameItemName, amount: number }[]
     }
 
-    type GamePartyMember = {
-        name: string
+    type GamePlayerMember = {
+        firstName: string
+        lastName: string
+
+        lvl: number
+        xp: number
         species: GameSpeciesBase | GameSpeciesAdvanced
-        face: GameIcon
-        character: GameIcon
-        exp: number
+        advancedSpecies: boolean
+        class: GameEntitiesClass
         description: string
 
+        face: GameIcon
+        character: GameIcon
+
         stats: {
-            pv: number
+            hp: number
+            maxhp: number
             mp: number
+            maxmp: number
             sp: number
+            maxsp: number
+
+            def: number
+            magicdef: number
+            atk: number
+            magicatk: number
+            agi: number
+            luck: number
+
+            special: GameSpecialAbility[]
+
+            /** Regenerate by himself.*/
+            regeneration: number
+
+            /** Reduce by 2 the damage taken.*/
+            resistance: GameAttackType[]
+            /** Increase by 2 the damage taken.*/
+            weakness: GameAttackType[]
+
+            status: GameStatusEffect[]
+        }
+        equipment: GameEntitiesEquipment
+    }
+
+    type GamePartyMember = {
+        name: string
+
+        lvl: number
+        xp: number
+        species: GameSpeciesBase | GameSpeciesAdvanced
+        advancedSpecies: boolean
+        class: GameFigthClass
+        description: string
+
+        face: GameIcon
+        character: GameIcon
+
+
+        stats: {
+            hp: number
+            maxhp: number
+            mp: number
+            maxmp: number
+            sp: number
+            maxsp: number
 
             def: number
             magicdef: number

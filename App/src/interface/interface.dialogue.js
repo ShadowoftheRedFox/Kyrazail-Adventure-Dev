@@ -140,7 +140,7 @@ class GameDialogueInterface extends GameInterfaces {
             if (GameConfig.keyBoard.confirm.includes(ev.key)) { }
         };
         // also await click and do the same
-        if (MouseTrackerManager.clickOver(0, 0, scope.w, scope.h)) { }
+        if (MTM.clickOver(0, 0, scope.w, scope.h)) { }
     }
 
     /**

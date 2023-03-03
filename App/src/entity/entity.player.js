@@ -9,8 +9,7 @@ class GameEntityPlayer extends GameEntitiesClass {
      */
     constructor(scope, x, y, o) {
         super({
-            // TODO change by the name of the player
-            name: "GamePlayer",
+            name: scope.global.player.firstName,
             type: "player",
             pattern: "player",
             movementSpeed: 1,
@@ -18,18 +17,14 @@ class GameEntityPlayer extends GameEntitiesClass {
             y: y,
             orientation: o,
             character: {
-                invisible: false,
-                // TODO change below to be in accord to the character choosen
-                src: "Characters/Spiritual",
-                col: 0,
-                row: 0
+                invisible: scope.global.player.character.invisible,
+                src: scope.global.player.character.src,
+                col: scope.global.player.character.col,
+                row: scope.global.player.character.row
             },
-            speakImage: "Faces/Spiritual",
-            speakCol: 0,
-            speakRow: 0
+            speakImage: scope.global.player.face.src,
+            speakRow: scope.global.player.face.row,
+            speakCol: scope.global.player.face.col
         });
     }
-    /*
-    ! This class is only used to render the player on the map
-    */
 }

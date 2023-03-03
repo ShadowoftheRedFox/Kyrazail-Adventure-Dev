@@ -48,8 +48,8 @@ declare global {
         /** If type is npc.*/
         dialog: GameLanguageCodedString[] | ["..."]
 
-        type: "hostile" | "npc" | "marchand" | "player"
-        pattern: "follow" | "merge" | "idle" | "custom" | "player"
+        type: "hostile" | "npc" | "marchand"
+        pattern: "follow" | "merge" | "idle" | "custom"
 
         x: number | 0
         y: number | 0
@@ -161,42 +161,6 @@ declare global {
 
         boss: boolean
         bossLoot: { item: GameItemName, amount: number }[]
-    }
-
-    type GamePartyMember = {
-        name: string
-        species: GameSpeciesBase | GameSpeciesAdvanced
-        face: GameIcon
-        character: GameIcon
-        exp: number
-        description: string
-
-        stats: {
-            pv: number
-            mp: number
-            sp: number
-
-            def: number
-            magicdef: number
-            atk: number
-            magicatk: number
-            agi: number
-            luck: number
-
-            special: GameSpecialAbility[]
-
-            /** Regenerate by himself.*/
-            regeneration: number
-
-            /** Reduce by 2 the damage taken.*/
-            resistance: GameAttackType[]
-            /** Increase by 2 the damage taken.*/
-            weakness: GameAttackType[]
-
-            status: GameStatusEffect[]
-        }
-
-        equipment: GameEntitiesEquipment
     }
 
     type GameEntitiesEquipment = {

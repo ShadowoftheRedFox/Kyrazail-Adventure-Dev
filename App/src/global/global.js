@@ -1,5 +1,3 @@
-
-
 function GameGlobalObject() {
     throw new Error("This is a static class.");
 }
@@ -12,23 +10,23 @@ GameGlobalObject.newGame = function (scope = window.game) {
     //TODO save the game in an auto save if a game is currently being played
 
     // check if global object is empty, if not, save those data
-    if (scope.global && scope.global?.player) {
-        GameSaveManager.save(scope.global);
-        return;
-    }
+    // if (scope.global && scope.global?.player) {
+    //     GameSaveManager.save(scope.global);
+    //     return;
+    // }
+
     // create the object
     scope.global = {
         player: {
-            firstName: "none",
-            lastName: "none",
+            firstName: "Player",
+            lastName: "Name",
 
-            /** 
-             * We calculate the player level with xp. So there is no need for an level object. 
-             * Same goes for mana and special point. It also depends the species
-             */
+            lvl: 1,
             xp: 0,
-            species: "none",
+            species: "Monstruosity",
+            class: "Miscellaneous",
             advancedSpecies: false,
+            description: "You should know yourself! You are the main character of this game, the great hero that will bring peace a properity. Or you could succomb to your greed and take control of this world.",
 
             face: {
                 invisible: false,
@@ -44,9 +42,12 @@ GameGlobalObject.newGame = function (scope = window.game) {
             },
 
             stats: {
-                pv: 100,
+                hp: 100,
+                maxhp: 100,
                 mp: 10,
+                maxmp: 10,
                 sp: 10,
+                maxsp: 10,
 
                 def: 0,
                 magicdef: 0,
@@ -81,6 +82,7 @@ GameGlobalObject.newGame = function (scope = window.game) {
         inventory: {},
         map: {},
         quest: {
+            active: null,
             finished: [],
             ongoing: [],
             failed: []

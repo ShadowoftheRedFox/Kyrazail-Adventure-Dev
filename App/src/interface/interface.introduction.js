@@ -1,5 +1,3 @@
-
-
 class GameIntroductionInterface extends GameInterfaces {
     /**
      * @param {GameScope} scope 
@@ -149,7 +147,7 @@ class GameIntroductionInterface extends GameInterfaces {
      * @param {GameScope} scope 
      */
     update(scope) {
-        if (KeyboardTrackerManager.map[" "] === true) {
+        if (KTM.map[" "] === true) {
             // stops introduction when all phase have been shown
             TransitionEffectCancel(scope);
             this.activated = false;

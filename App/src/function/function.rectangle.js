@@ -22,10 +22,10 @@ function RectangleCreator() {
  */
 RectangleCreator.roundRect = function (ctx, x, y, width, height, radius, fill, stroke) {
     if (!ctx) throw new ReferenceError(`Context is not defined.`);
-    if (isNaN(x) === true) throw new TypeError(`x is not a number.`);
-    if (isNaN(y) === true) throw new TypeError(`y is not a number.`);
-    if (isNaN(width) === true) throw new TypeError(`w is not a number.`);
-    if (isNaN(height) === true) throw new TypeError(`h is not a number.`);
+    if (isNaN(x)) throw new TypeError(`x is not a number.`);
+    if (isNaN(y)) throw new TypeError(`y is not a number.`);
+    if (isNaN(width)) throw new TypeError(`w is not a number.`);
+    if (isNaN(height)) throw new TypeError(`h is not a number.`);
 
     if (typeof stroke === 'undefined') {
         stroke = true;
@@ -79,10 +79,10 @@ RectangleCreator.frameRectangleTrans = function (scope, ctx, x, y, w, h) {
     if (!scope) throw new ReferenceError(`Scope is not defined.`);
     if (!ctx) throw new ReferenceError(`Context is not defined.`);
     if (!scope.cache) throw new ReferenceError(`Cache is not defined.`);
-    if (isNaN(x) === true) throw new TypeError(`x is not a number.`);
-    if (isNaN(y) === true) throw new TypeError(`y is not a number.`);
-    if (isNaN(w) === true) throw new TypeError(`w is not a number.`);
-    if (isNaN(h) === true) throw new TypeError(`h is not a number.`);
+    if (isNaN(x)) throw new TypeError(`x is not a number.`);
+    if (isNaN(y)) throw new TypeError(`y is not a number.`);
+    if (isNaN(w)) throw new TypeError(`w is not a number.`);
+    if (isNaN(h)) throw new TypeError(`h is not a number.`);
     const i = scope.cache.image["System/Window"].image,
         oldAlpha = ctx.globalAlpha,
         oldFillStyle = ctx.fillStyle;
@@ -138,37 +138,74 @@ RectangleCreator.frameRectangle = function (scope, ctx, x, y, w, h, imageToDraw,
     if (!scope) throw new ReferenceError(`Scope is not defined.`);
     if (!ctx) throw new ReferenceError(`Context is not defined.`);
     if (!scope.cache) throw new ReferenceError(`Cache is not defined.`);
-    if (isNaN(x) === true) throw new TypeError(`x is not a number.`);
-    if (isNaN(y) === true) throw new TypeError(`y is not a number.`);
-    if (isNaN(w) === true) throw new TypeError(`w is not a number.`);
-    if (isNaN(h) === true) throw new TypeError(`h is not a number.`);
+    if (isNaN(x)) throw new TypeError(`x is not a number.`);
+    if (isNaN(y)) throw new TypeError(`y is not a number.`);
+    if (isNaN(w)) throw new TypeError(`w is not a number.`);
+    if (isNaN(h)) throw new TypeError(`h is not a number.`);
     if (imageToDraw && imageToDraw.tagName != "IMG") throw new ReferenceError(`imageToDraw is not a HTMLImageElement.`);
-    if (imageToDraw && isNaN(ix) === true) throw new TypeError(`ix is not a number.`);
-    if (imageToDraw && isNaN(iy) === true) throw new TypeError(`iy is not a number.`);
-    if (imageToDraw && isNaN(iw) === true) throw new TypeError(`iw is not a number.`);
-    if (imageToDraw && isNaN(ih) === true) throw new TypeError(`ih is not a number.`);
+    if (imageToDraw && isNaN(ix)) throw new TypeError(`ix is not a number.`);
+    if (imageToDraw && isNaN(iy)) throw new TypeError(`iy is not a number.`);
+    if (imageToDraw && isNaN(iw)) throw new TypeError(`iw is not a number.`);
+    if (imageToDraw && isNaN(ih)) throw new TypeError(`ih is not a number.`);
     const i = scope.cache.image["System/Window"].image;
 
-    //? we'll need to draw border one by one
     if (imageToDraw) ctx.drawImage(imageToDraw, ix, iy, iw, ih, x + 3, y + 3, w - 6, h - 6);
-    //? then draw border
-    //upper left corner
+    //? draw corner
+    // upper left corner
     ctx.drawImage(i, 64, 0, 24, 24, x, y, 24, 24);
-    //upper right corner
+    // upper right corner
     ctx.drawImage(i, 104, 0, 24, 24, w + x - 24, y, 24, 24);
-    //lower left corner
+    // lower left corner
     ctx.drawImage(i, 64, 40, 24, 24, x, y + h - 24, 24, 24);
-    //lower right corner
+    // lower right corner
     ctx.drawImage(i, 104, 40, 24, 24, x + w - 24, y + h - 24, 24, 24);
 
     //? then draw side lines
-    //NB: lines width are 6px
-    //upper
-    ctx.drawImage(i, 88, 0, 2, 6, x + 24, y, w - 48, 6);
-    //lower 
-    ctx.drawImage(i, 88, 0, 2, 6, x + 24, y + h - 6, w - 48, 6);
-    //left
-    ctx.drawImage(i, 64, 24, 6, 2, x, y + 24, 6, h - 48);
-    //right
-    ctx.drawImage(i, 64, 24, 6, 2, x + w - 6, y + 24, 6, h - 48);
+    // NB: lines width are 6px, frame image start at (64,0), end at (128,64)
+    // upper
+    ctx.drawImage(i, 64 + 24, 0, 2, 8, x + 24, y, w - 48, 8);
+    // lower 
+    ctx.drawImage(i, 64 + 24, 64 - 8, 2, 8, x + 24, y + h - 8, w - 48, 8);
+    // left
+    ctx.drawImage(i, 64, 24, 8, 2, x, y + 24, 8, h - 48);
+    // right
+    ctx.drawImage(i, 128 - 8, 24, 8, 2, x + w - 8, y + 24, 8, h - 48);
 };
+
+/**
+ * Draw a line of frame with the given parameters.
+ * @param {GameScope} scope 
+ * @param {CanvasRenderingContext2D} ctx 
+ * @param {number} x 
+ * @param {number} y 
+ * @param {number} l length of the line
+ * @param {boolean} horizontal horizontal line if true, vertical if false
+ * @param {boolean} facing facing the origin or no
+ */
+RectangleCreator.frameLine = function (scope, ctx, x, y, l, horizontal = true, facing = true) {
+    if (!scope) throw new ReferenceError(`Scope is not defined.`);
+    if (!ctx) throw new ReferenceError(`Context is not defined.`);
+    if (!scope.cache) throw new ReferenceError(`Cache is not defined.`);
+    if (isNaN(x)) throw new TypeError(`x is not a number.`);
+    if (isNaN(y)) throw new TypeError(`y is not a number.`);
+    if (isNaN(l)) throw new TypeError(`l is not a number.`);
+    const i = scope.cache.image["System/Window"].image;
+
+    if (horizontal) {
+        if (facing) {
+            // upper
+            ctx.drawImage(i, 64 + 24, 0, 2, 8, x, y - 4, l, 8);
+        } else {
+            // lower 
+            ctx.drawImage(i, 64 + 24, 64 - 6, 2, 8, x, y - 4, l, 8);
+        }
+    } else {
+        if (facing) {
+            // left
+            ctx.drawImage(i, 64, 24, 8, 2, x - 4, y, 8, l);
+        } else {
+            // right
+            ctx.drawImage(i, 128 - 8, 24, 8, 2, x - 4, y, 8, l);
+        }
+    }
+}

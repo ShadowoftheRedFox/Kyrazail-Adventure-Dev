@@ -95,6 +95,13 @@ declare global {
                 monsters: {}
                 class: {}
                 skills: { [name: string]: GameSpecialAbility }
+                map: {
+                    [number: string]: {
+                        /** Player spawn possibilities. */
+                        player: { x: number, y: number, o: GameOrientation }[],
+                        entities: GameEntitiesOptions[]
+                    }
+                }
             }
             context: { [name: string]: CanvasRenderingContext2D }
             layers: {
@@ -112,6 +119,24 @@ declare global {
          * If we load a save, that's here that the data are fully changed.
          */
         global: GameGlobalState
+
+        /**
+         * Calculate the level, total needed and xp left given xp amount and level.
+         * @param level The current level
+         * @param xp The amount of experience 
+         * @returns l is the amount of level, r the amount of xp left, and t the total amount to level up  
+         */
+        calculateXp(level: number, xp: number): { l: number, r: number, t: number }
+
+        /**
+         * Divide the given string to fit in the given dimension.
+         * @param ctx context where the text that will be printed 
+         * @param string Text to split
+         * @param w Max width
+         * @param h Max height
+         * @returns The splited text
+         */
+        divideText(ctx: CanvasRenderingContext2D, string: string, w: number, h: number): string[]
     }
 
     type GameInterfacesOptions = {
@@ -138,13 +163,10 @@ declare global {
     type GameState = {
         menu: {
             [name: string]: GameInterfaces
-            intro: GameIntroductionInterface
             main: GameMainInterface
+            intro: GameIntroductionInterface
             dialogue: GameDialogueInterface
-            entity: GameEntityInterface
-            introduction: GameIntroductionInterface
             map: GameMapInterface
-            over: GameOverInterface
             pause: GamePauseInterface
         }
         entities: {
