@@ -27,7 +27,7 @@ class GameMainMenuInterface extends GameInterfaces {
                 GameMainInterfacechosen[0], GameMainInterfacechosen[1],
                 "Icons/Account", "Icons/Discord", "Icons/Github", "Icons/Website"
             ],
-            requiredAudio: ["MAIN/Adeste", "MAIN/Dramatic", "MAIN/Moon", "MAIN/Silence"],
+            requiredAudio: ["MAIN/Adeste", "MAIN/Dramatic", "MAIN/Moon", "MAIN/Silence", "SE/Cancel1", "SE/Cursor1"],
             transitionLeave: true,
             transitionSpawn: true
         }, scope);
@@ -159,13 +159,14 @@ class GameMainMenuInterface extends GameInterfaces {
                         x: 0, y: 0, w: 0, h: 0,
                         special: true,
                         function: (dir) => {
-                            var s = scope.soundsSettings.volumeBG * 100;
-                            if (dir == 1 && s + 5 <= 100) {
+                            var s = 0;
+                            if (dir == 1) {
                                 s += 5;
-                            } else if (dir == 0 && s - 5 >= 0) {
+                            } else {
                                 s -= 5;
                             }
-                            scope.soundsSettings.volumeBG = Math.round((s / 100 + Number.EPSILON) * 100) / 100;
+                            scope.soundsSettings.volumeBG = Math.round((scope.soundsSettings.volumeBG * 100 + s).clamp(0, 100)) / 100;
+                            GameSoundManager.changeVolume();
                         }
                     },
                     {
@@ -173,13 +174,14 @@ class GameMainMenuInterface extends GameInterfaces {
                         x: 0, y: 0, w: 0, h: 0,
                         special: true,
                         function: (dir) => {
-                            var s = scope.soundsSettings.volumeEFX * 100;
-                            if (dir == 1 && s + 5 <= 100) {
+                            var s = 0;
+                            if (dir == 1) {
                                 s += 5;
-                            } else if (dir == 0 && s - 5 >= 0) {
+                            } else {
                                 s -= 5;
                             }
-                            scope.soundsSettings.volumeEFX = Math.round((s / 100 + Number.EPSILON) * 100) / 100;
+                            scope.soundsSettings.volumeEFX = Math.round((scope.soundsSettings.volumeEFX * 100 + s).clamp(0, 100)) / 100;
+                            GameSoundManager.changeVolume();
                         }
                     },
                     {
@@ -1336,7 +1338,7 @@ class GameMainMenuInterface extends GameInterfaces {
 
         // to apply the delay for the keyboard
         if (kup || kdown || kright || kleft || kconfirm || kback) {
-            if (this.KeyboardDelay + 100 >= Date.now()) {
+            if (this.KeyboardDelay + 150 >= Date.now()) {
                 return;
             } else {
                 this.KeyboardDelay = Date.now();
@@ -1356,6 +1358,7 @@ class GameMainMenuInterface extends GameInterfaces {
             if (kconfirm && !currentMenu.button[currentMenu.focusedButton].special &&
                 !currentMenu.button[currentMenu.focusedButton].keyboard) {
                 currentMenu.button[currentMenu.focusedButton].function(scope, that);
+                GameSoundManager.playSound("SE/Cursor1");
                 that.u();
             }
             if (currentMenu.button[currentMenu.focusedButton].special) {
@@ -1369,6 +1372,7 @@ class GameMainMenuInterface extends GameInterfaces {
             }
             if (kback && currentMenu.button[currentMenu.button.reverseIndex()].back) {
                 currentMenu.button[currentMenu.button.reverseIndex()].function(scope, that);
+                GameSoundManager.playSound("SE/Cancel1");
                 that.u();
             }
             if (currentMenu.sideButton) {
@@ -1561,7 +1565,9 @@ class GameMainMenuInterface extends GameInterfaces {
         });
     }
 
-    u() { this.needsUpdate = true; }
+    u() {
+        this.needsUpdate = true;
+    }
 }
 
 

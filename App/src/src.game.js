@@ -115,6 +115,7 @@ class Game {
                     // Start off main loop
                     that.GameLoop.main();
                     LoadingScreenManager.end();
+                    GameSoundManager.playMusic(["MAIN/Adeste", "MAIN/Dramatic", "MAIN/Moon", "MAIN/Silence"].random());
                     console.timeEnd("Started game in");
                 });
             });

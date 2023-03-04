@@ -59,11 +59,21 @@ class GamePauseInterface extends GameInterfaces {
         this.keyboardDelay = 0;
         this.partyMenu = {
             chosen: 0,
-            inMenu: false
+            inMenu: false,
+            chosenInEntity: 0,
+            inEntity: false,
+
+            equipmentToChange: 0,
+            equipmentToChangeValidate: false,
+            equipmentChosen: 0,
+            equipmentChosenValidate: false
         }
         this.questMenu = {
             chosen: 0,
             inMenu: false
+        }
+        this.settingsMenu = {
+            chosen: 0
         }
         this.mainMenuButtonHitbox(scope);
     }
@@ -135,7 +145,7 @@ class GamePauseInterface extends GameInterfaces {
                 this.renderhelp(scope);
                 break;
             case 5: // Settings
-                // TODO settings, quick version of main menu
+                this.renderSettings(scope);
                 break;
             case 6: // Save
                 ctx.fillText("Game saves coming soon.", Width / 2, Height / 2);
@@ -190,15 +200,42 @@ class GamePauseInterface extends GameInterfaces {
         const Width = scope.w;
         const Height = scope.h;
 
-        // TODO show the player
         // TODO show it's party in the fighting group
         // TODO then show other members
         // if not in menu, just show the quick data
         // in in menu, choose one and you get the full data with the usable oustide fight skills
         // TODO create a pattern for an entity and replicate it
         // TODO create a scroll functionnality
-        this.displayEntityInfos(scope, scope.global.player, 20, 110, this.partyMenu.chosen == 0 && this.inMenu);
 
+        if (this.partyMenu.inMenu) {
+            if (this.partyMenu.chosen == 0) {
+                this.displayEntityInfos(scope, scope.global.player);
+            } else {
+                this.displayEntityInfos(scope, scope.global.party[this.partyMenu.chosen - 1]);
+            }
+            return;
+        }
+
+        // show the player
+        this.displayEntityInfosShort(scope, scope.global.player, 20, 110, this.partyMenu.chosen == 0 && this.inMenu);
+
+    }
+
+    /**@param {GameScope} scope*/
+    renderSettings(scope) {
+        const ctx = scope.cache.context[this.canvasGroup];
+        const Width = scope.w;
+        const Height = scope.h;
+
+        ctx.fillStyle = "white";
+        ctx.textAlign = "left";
+
+        if (this.settingsMenu.chosen == 0 && this.inMenu) { ctx.font = "bold 20px Azure"; } else { ctx.font = "20px Azure"; }
+        ctx.fillText(`Always run: ${GameConfig.alwaysRun}`, 30, 120);
+        if (this.settingsMenu.chosen == 1 && this.inMenu) { ctx.font = "bold 20px Azure"; } else { ctx.font = "20px Azure"; }
+        ctx.fillText(`Music volume: - ${Math.floor(scope.soundsSettings.volumeBG * 100)}% + `, 30, 150);
+        if (this.settingsMenu.chosen == 2 && this.inMenu) { ctx.font = "bold 20px Azure"; } else { ctx.font = "20px Azure"; }
+        ctx.fillText(`Sound volume: - ${Math.floor(scope.soundsSettings.volumeEFX * 100)}% + `, 30, 180);
     }
 
     /**@param {GameScope} scope*/
@@ -266,10 +303,10 @@ class GamePauseInterface extends GameInterfaces {
 
         // menus and everything
         if (!this.inMenu) {
-            if (kconfirm) { this.inMenu = true; this.u(); return; }
+            if (kconfirm) { this.inMenu = true; GameSoundManager.playSound("SE/Cursor1"); this.u(); return; }
             // choose through the main menu
-            if (kright) { this.mainMenuChosen++; this.u(); }
-            if (kleft) { this.mainMenuChosen--; this.u(); }
+            if (kright) { this.mainMenuChosen++; GameSoundManager.playSound("SE/Cursor1"); this.u(); }
+            if (kleft) { this.mainMenuChosen--; GameSoundManager.playSound("SE/Cursor1"); this.u(); }
             this.mainMenuChosen = this.mainMenuChosen.clamp(0, this.mainMenuName.length - 1);
             // choose with mouse
             this.mainMenuName.forEach((b, i) => {
@@ -285,19 +322,52 @@ class GamePauseInterface extends GameInterfaces {
         if (this.mainMenuChosen === 1) {
             if (this.questMenu.inMenu) {
                 // TODO when quests are here
-                if (kback && this.questMenu.inMenu) { this.questMenu.inMenu = false; this.u(); return; }
+                if (kback && this.questMenu.inMenu) { this.questMenu.inMenu = false; GameSoundManager.playSound("SE/Cancel1"); this.u(); return; }
             }
 
-            if (kconfirm) { this.questMenu.inMenu = true; this.u(); return; }
-            // choose through the main menu
-            if (kright) { this.questMenu.chosen++; this.u(); }
-            if (kleft) { this.questMenu.chosen--; this.u(); }
+            if (kconfirm) { this.questMenu.inMenu = true; GameSoundManager.playSound("SE/Cursor1"); this.u(); return; }
+            // choose through the menu
+            if (kright) { this.questMenu.chosen++; GameSoundManager.playSound("SE/Cursor1"); this.u(); }
+            if (kleft) { this.questMenu.chosen--; GameSoundManager.playSound("SE/Cursor1"); this.u(); }
             this.questMenu.chosen = this.questMenu.chosen.clamp(0, 2);
-            return;
         }
 
         // Party
-        if (this.mainMenuChosen === 2) { }
+        if (this.mainMenuChosen === 2) {
+            // chose the entity menu
+            if (this.partyMenu.inEntity && this.partyMenu.chosenInEntity == 1) {
+                if (kback) {
+                    this.partyMenu.inEntity = false;
+                    this.partyMenu.equipmentToChange = 0; this.partyMenu.equipmentToChangeValidate = false;
+                    this.partyMenu.equipmentChosen = 0; this.partyMenu.equipmentChosenValidate = false;
+                    GameSoundManager.playSound("SE/Cancel1");
+                    this.u(); return;
+                }
+                // move through the equipment to change
+                if (kdown) { this.partyMenu.equipmentToChange++; GameSoundManager.playSound("SE/Cursor1"); this.u(); }
+                if (kup) { this.partyMenu.equipmentToChange--; GameSoundManager.playSound("SE/Cursor1"); this.u(); }
+                this.partyMenu.equipmentToChange = this.partyMenu.equipmentToChange.clamp(0, 6);
+                // TODO finish the equipment to choose
+                return;
+            }
+
+            // chose the entity
+            if (this.partyMenu.inMenu) {
+                if (kback) { this.partyMenu.inMenu = false; this.partyMenu.chosenInEntity = 0; GameSoundManager.playSound("SE/Cancel1"); this.u(); return; }
+                if (kconfirm) { this.partyMenu.inEntity = true; GameSoundManager.playSound("SE/Cursor1"); this.u(); return; }
+                // choose through general, formation, skill and equipment
+                if (kright) { this.partyMenu.chosenInEntity++; GameSoundManager.playSound("SE/Cursor1"); this.u(); }
+                if (kleft) { this.partyMenu.chosenInEntity--; GameSoundManager.playSound("SE/Cursor1"); this.u(); }
+                this.partyMenu.chosenInEntity = this.partyMenu.chosenInEntity.clamp(0, 3);
+                return;
+            }
+
+            if (kconfirm) { this.partyMenu.inMenu = true; GameSoundManager.playSound("SE/Cursor1"); this.u(); return; }
+            // choose through the entities
+            if (kdown) { this.partyMenu.chosen++; GameSoundManager.playSound("SE/Cursor1"); this.u(); }
+            if (kup) { this.partyMenu.chosen--; GameSoundManager.playSound("SE/Cursor1"); this.u(); }
+            this.partyMenu.chosen = this.partyMenu.chosen.clamp(0, scope.global.party.length);
+        }
 
         // Skill
         if (this.mainMenuChosen === 3) { }
@@ -306,7 +376,40 @@ class GamePauseInterface extends GameInterfaces {
         if (this.mainMenuChosen === 4) { }
 
         // Settings
-        if (this.mainMenuChosen === 5) { }
+        if (this.mainMenuChosen === 5) {
+            // always run
+            if (kconfirm && this.settingsMenu.chosen == 0) {
+                GameConfig.alwaysRun = !GameConfig.alwaysRun; GameSoundManager.playSound("SE/Cursor1");
+                this.u();
+            }
+            // music volume
+            if (kright && this.settingsMenu.chosen == 1) {
+                scope.soundsSettings.volumeBG = Math.round((scope.soundsSettings.volumeBG * 100 + 5).clamp(0, 100)) / 100;
+                GameSoundManager.changeVolume();
+                this.u();
+            }
+            if (kleft && this.settingsMenu.chosen == 1) {
+                scope.soundsSettings.volumeBG = Math.round((scope.soundsSettings.volumeBG * 100 - 5).clamp(0, 100)) / 100;
+                GameSoundManager.changeVolume();
+                this.u();
+            }
+            // sound volume
+            if (kright && this.settingsMenu.chosen == 2) {
+                scope.soundsSettings.volumeEFX = Math.round((scope.soundsSettings.volumeEFX * 100 + 5).clamp(0, 100)) / 100;
+                GameSoundManager.changeVolume();
+                this.u();
+            }
+            if (kleft && this.settingsMenu.chosen == 2) {
+                scope.soundsSettings.volumeEFX = Math.round((scope.soundsSettings.volumeEFX * 100 - 5).clamp(0, 100)) / 100;
+                GameSoundManager.changeVolume();
+                this.u();
+            }
+
+            // choose through the entities
+            if (kdown) { this.settingsMenu.chosen++; GameSoundManager.playSound("SE/Cursor1"); this.u(); }
+            if (kup) { this.settingsMenu.chosen--; GameSoundManager.playSound("SE/Cursor1"); this.u(); }
+            this.settingsMenu.chosen = this.settingsMenu.chosen.clamp(0, 2);
+        }
 
         // Save
         if (this.mainMenuChosen === 6) { }
@@ -319,8 +422,15 @@ class GamePauseInterface extends GameInterfaces {
             // TODO 
         }
 
-        // back to main menu
-        if (kback) { this.inMenu = false; this.u(); return; }
+        // back to menu
+        if (kback) {
+            this.inMenu = false;
+            this.questMenu.chosen = 0;
+            this.partyMenu.chosen = 0;
+            this.settingsMenu.chosen = 0;
+            GameSoundManager.playSound("SE/Cancel1");
+            this.u(); return;
+        }
         // TODO back button/system
     }
 
@@ -365,13 +475,12 @@ class GamePauseInterface extends GameInterfaces {
         scope.cache.context[this.canvasGroup].clearRect(0, 0, scope.w, scope.h);
         this.interfaceCanvas.hidden = true;
         this.mainMenuChosen = 0;
-        this.questMenu.inMenu = false;
-        this.questMenu.chosen = 0;
 
         scope.state.menu.map.interfaceCanvas.hidden = false;
         scope.state.menu.map.activated = true;
         scope.state.menu.map.needsUpdate = true;
         scope.state.menu.map.keyPressDelay = Date.now();
+        GameSoundManager.playSound("SE/Cancel1");
     }
 
     /**@param {GameScope} scope */
@@ -420,7 +529,7 @@ class GamePauseInterface extends GameInterfaces {
      * @param {number} y 
      * @param {boolean} focused
      */
-    displayEntityInfos(scope, entity, x, y, focused = false) {
+    displayEntityInfosShort(scope, entity, x, y, focused = false) {
         const ctx = scope.cache.context[this.canvasGroup];
         const Width = scope.w;
         const Height = scope.h;
@@ -442,7 +551,7 @@ class GamePauseInterface extends GameInterfaces {
             96, 96
         );
 
-        const xps = scope.calculateXp(entity.lvl, entity.xp + 300);
+        const xps = scope.calculateXp(entity.lvl, entity.xp);
 
         // draw the name
         ctx.fillStyle = "white";
@@ -486,5 +595,127 @@ class GamePauseInterface extends GameInterfaces {
         scope.divideText(ctx, entity.description, Width - 440, 100).forEach((line, id) => {
             ctx.fillText(line, x + 380, y + 40 + id * 20);
         });
+    }
+
+    /**
+     * Draw the infos about the given entity
+     * @param {GameScope} scope 
+     * @param {GamePlayerMember | GamePartyMember} entity 
+     */
+    displayEntityInfos(scope, entity) {
+        const ctx = scope.cache.context[this.canvasGroup];
+        const Width = scope.w;
+        const Height = scope.h;
+
+        ctx.font = "15px Azure";
+        ctx.fillStyle = "white";
+
+        // line between the entity menu
+        RectangleCreator.frameLine(scope, ctx, 16, 140, Width - 32, true, true);
+        if (0 == this.partyMenu.chosenInEntity) { ctx.font = "bold 18px Azure"; } else { ctx.font = "15px Azure"; }
+        ctx.fillText("General", ((Width - 40) / 5), 115);
+        if (1 == this.partyMenu.chosenInEntity) { ctx.font = "bold 18px Azure"; } else { ctx.font = "15px Azure"; }
+        ctx.fillText("Equipment", ((Width - 40) / 5) * 2, 115);
+        if (2 == this.partyMenu.chosenInEntity) { ctx.font = "bold 18px Azure"; } else { ctx.font = "15px Azure"; }
+        ctx.fillText("Formation", ((Width - 40) / 5) * 3, 115);
+        if (3 == this.partyMenu.chosenInEntity) { ctx.font = "bold 18px Azure"; } else { ctx.font = "15px Azure"; }
+        ctx.fillText("Skills", ((Width - 40) / 5) * 4, 115);
+
+        if (0 == this.partyMenu.chosenInEntity) {
+            // draw the face
+            RectangleCreator.frameRectangle(scope, ctx, 20, 150, 150, 150,
+                scope.cache.image[entity.face.src].image,
+                entity.face.col * 96, entity.face.row * 96,
+                96, 96
+            );
+
+            const xps = scope.calculateXp(entity.lvl, entity.xp);
+
+            // draw the name
+            ctx.fillStyle = "white";
+            ctx.font = "18px Azure";
+            ctx.textAlign = "left";
+            ctx.fillText(`${entity.firstName} ${entity.lastName} | Level ${xps.l} | ${entity.species} | ${entity.class}`, 180, 170, Width - 230);
+
+            // draw xp bar
+            ctx.font = "15px Azure";
+            ctx.fillStyle = "white";
+            ctx.lineWidth = 2;
+            ctx.fillText(`Xp: ${xps.r} / ${xps.t}`, 180, 190);
+            ctx.fillStyle = "green";
+            ctx.fillRect(180, 205, (xps.r / xps.t) * 200, 8);
+            ctx.strokeStyle = "white";
+            ctx.strokeRect(180, 205, 200, 8);
+
+            // draw health bar
+            ctx.font = "15px Azure";
+            ctx.fillStyle = "white";
+            ctx.lineWidth = 2;
+            ctx.fillText(`Hp: ${entity.stats.hp} / ${entity.stats.maxhp}`, 180, 225);
+            ctx.fillStyle = "red";
+            ctx.fillRect(180, 240, (entity.stats.hp / entity.stats.maxhp) * 200, 8);
+            ctx.strokeStyle = "white";
+            ctx.strokeRect(180, 240, 200, 8);
+
+            // draw magic point bar
+            ctx.font = "15px Azure";
+            ctx.fillStyle = "white";
+            ctx.lineWidth = 2;
+            ctx.fillText(`Mp: ${entity.stats.mp} / ${entity.stats.maxmp}`, 180, 260);
+            ctx.fillStyle = "blue";
+            ctx.fillRect(180, 275, (entity.stats.mp / entity.stats.maxmp) * 200, 8);
+            ctx.strokeStyle = "white";
+            ctx.strokeRect(180, 275, 200, 8);
+
+            // say the description
+            ctx.font = "15px Azure";
+            ctx.fillStyle = "white";
+            scope.divideText(ctx, entity.description, Width - 440, 100).forEach((line, id) => {
+                ctx.fillText(line, 400, 190 + id * 20);
+            });
+
+            // show stats
+            // def and magicdef
+            ctx.fillText(`Def: ${entity.stats.def}`, 20, 270 + 40);
+            ctx.fillText(`| Mdef: ${entity.stats.magicdef}`, 140, 270 + 40);
+            // atk and magicatk
+            ctx.fillText(`Atk: ${entity.stats.atk}`, 20, 270 + 55);
+            ctx.fillText(`| Matk: ${entity.stats.magicatk}`, 140, 270 + 55);
+            // agi and luck
+            ctx.fillText(`Agi: ${entity.stats.agi}`, 20, 270 + 70);
+            ctx.fillText(`| Luck: ${entity.stats.luck}`, 140, 270 + 70);
+
+            // show equipment
+            ctx.fillText(`| Head : ${entity.equipment.head}`, 260, 270 + 40);
+            ctx.fillText(`| Torso: ${entity.equipment.torso}`, 260, 270 + 55);
+            ctx.fillText(`| Foot : ${entity.equipment.foot}`, 260, 270 + 70);
+
+            ctx.fillText(`| Jewel: ${entity.equipment.jewel1}`, 450, 270 + 40);
+            ctx.fillText(`| Jewel: ${entity.equipment.jewel2}`, 450, 270 + 55);
+
+            ctx.fillText(`| Weapon: ${entity.equipment.weapon1}`, 650, 270 + 40);
+            ctx.fillText(`| Weapon: ${entity.equipment.weapon2}`, 650, 270 + 55);
+
+            //TODO show effects
+            return;
+        }
+
+        // equipment
+        if (1 == this.partyMenu.chosenInEntity) {
+            // TODO
+            return;
+        }
+
+        // formation
+        if (2 == this.partyMenu.chosenInEntity) {
+
+            return;
+        }
+
+        // skills
+        if (3 == this.partyMenu.chosenInEntity) {
+
+            return;
+        }
     }
 }

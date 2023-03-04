@@ -1,8 +1,8 @@
 {
     "name": "kyrazail-adventure",
     "description": "Kyrazail adventure game. Maybe a real description soon, who knows?",
-    "version": "1.2.5.10",
-    "lastUpdate": "03/03/2023",
+    "version": "1.2.6.0",
+    "lastUpdate": "04/03/2023",
     "main": "./index.html",
     "keywords": [
         "game",
@@ -20,7 +20,8 @@
         "Map is rendering correctly!",
         "Better inputs handling.",
         "Pause menu!",
-        "Started translation."
+        "Started translation.",
+        "Added sounds!"
     ],
     "window": {
         "title": "Kyrazail Adventure",
