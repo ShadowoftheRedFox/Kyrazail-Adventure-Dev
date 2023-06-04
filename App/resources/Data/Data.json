@@ -1,21 +1,51 @@
 {
-    "item": {},
+    "item": {
+        "Wood": {
+            "name": "ItemWood",
+            "image": "System/IconSet",
+            "col": 11,
+            "row": 20,
+            "description": "ItemWoodDescription",
+            "special": 0,
+            "usable": 1,
+            "usageAmount": 1,
+            "helmet": 0,
+            "torso": 0,
+            "legging": 0,
+            "boot": 0,
+            "singleHanded": 0,
+            "twoHanded": 0,
+            "type": [
+                "resource"
+            ]
+        }
+    },
     "event": {
         "NewGame": {
             "id": 0,
             "start": [
                 "map",
-                "player"
+                "player",
+                "mapUI"
             ],
             "stop": [
                 "main"
             ],
             "callbackEvent": null,
+            "argumentsNb": 0,
             "data": {
                 "type": "map",
                 "map": "Map001",
                 "spawn": 0
             }
+        },
+        "giveItem": {
+            "id": 1,
+            "start": [],
+            "stop": [],
+            "callbackEvent": null,
+            "argumentsNb": 2,
+            "data": {}
         }
     },
     "title": {},
@@ -2389,12 +2419,25 @@
         "Map001": {
             "player": [
                 {
-                    "x": 0,
-                    "y": 23,
-                    "o": "east"
+                    "x": 11,
+                    "y": 9,
+                    "o": "south"
                 }
             ],
-            "entities": []
+            "entities": [],
+            "events": [
+                {
+                    "x": 17,
+                    "y": 13,
+                    "o": "north",
+                    "e": "giveItem",
+                    "a": [
+                        "wood",
+                        1
+                    ],
+                    "t": 4
+                }
+            ]
         }
     }
 }

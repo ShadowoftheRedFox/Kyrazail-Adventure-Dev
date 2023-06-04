@@ -15,7 +15,7 @@ class GameEntitiesClass {
         this.goalX = this.x;
         // between 0 and 1, to smooth the change between tiles
         this.goalY = this.y;
-        this.orientation = options.orientation || "south";
+        this.orientation = options.spawnOrientation || "south";
 
         this.movementSpeed = options.movementSpeed || 0;
         this.speakImage = options.speakImage || null;

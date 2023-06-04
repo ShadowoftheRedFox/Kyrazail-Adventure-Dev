@@ -10,7 +10,12 @@ build/
 !.vscode/settings.json
 **/.vscode
 **/jsconfig.json
+**/tsconfig.json
+ts-build/
 
 # test folders
 **/test
 todo.txt
+
+#ts files
+App/ts

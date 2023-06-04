@@ -23,27 +23,29 @@ const ConfigConst = {
     },
     TIP: [
         "Why is mana blue?",
-        "Found a bug? Check out our Discord to report it!",
-        "Stronger monsters give you better loots!",
-        "Bosses can give you special items!",
-        "Search around the map, maybe you will find something interesting...",
-        "The most expensive equipement is not always the best...",
-        "Use potions if the fight is too tough.",
         "Don't forget to save often!",
+        "Bosses can give you special items!",
+        "Use potions if the fight is too tough.",
+        "Stronger monsters give you better loots!",
+        "Found a bug? Check out our Discord to report it!",
         "Monsters respawn after a certain amount of time...",
-        "There is a land were God left something... It's a myth of course, right?",
+        "The most expensive equipement is not always the best...",
         "You can try to escape any fight, but you better be lucky.",
-        "You can find Dinarks everywhere. You can even make them if you know how!"
+        "Search around the map, maybe you will find something interesting...",
+        "There is a land were God left something... It's a myth of course, right?",
+        "You can find Dinarks everywhere. You can even make them if you know how!",
     ],
     TITLE: [
-        "Maybe gold is useless...",
-        "Don't drink pure mana!",
-        "The forbidden name...",
-        "Violence is not a solution, it's THE solution.",
         "e^(iπ)+1=0",
-        "erutnevdA liazaryK"
+        "Touch grass.",
+        "erutnevdA liazaryK",
+        "The forbidden name...",
+        "Don't drink pure mana!",
+        "Maybe gold is useless...",
+        "Violence is not a solution, it's THE solution.",
     ],
     CONTAINER: (function () { return document.getElementById("container"); })(),
     MAINCONTAINER: (function () { return document.body; })(),
     DEBUG: false
 };
+//TODO add constants for animation speed, click, frame time etc

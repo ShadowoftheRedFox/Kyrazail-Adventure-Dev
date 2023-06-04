@@ -58,6 +58,7 @@ class GameMainMenuInterface extends GameInterfaces {
                         name: "QuitGameButton",
                         x: 0, y: 0, w: 0, h: 0,
                         function: WindowManager.closeGame
+                        //BUG spam quit
                     }
                 ],
                 focusedButton: 0

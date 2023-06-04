@@ -34,6 +34,10 @@ class GamePauseInterface extends GameInterfaces {
                 x: 0, y: 60, w: 0, h: 30
             },
             {
+                name: "Bag",
+                x: 0, y: 60, w: 0, h: 30
+            },
+            {
                 name: "Help",
                 x: 0, y: 60, w: 0, h: 30
             },
@@ -108,7 +112,7 @@ class GamePauseInterface extends GameInterfaces {
 
         // write buttons
         ctx.fillStyle = "white";
-        ctx.font = "15px Azure";
+        ctx.font = "2vmin Azure";
         ctx.textBaseline = "middle";
         ctx.textAlign = "center";
 
@@ -117,7 +121,7 @@ class GamePauseInterface extends GameInterfaces {
             if (id == this.mainMenuChosen) {
                 ctx.font = "bold 18px Azure";
             } else {
-                ctx.font = "15px Azure";
+                ctx.font = "2vmin Azure";
             }
             ctx.fillStyle = "white";
             ctx.fillText(b.name, ((Width - 20) / (this.mainMenuName.length + 1)) * (id + 1) + 10, 75);
@@ -141,21 +145,24 @@ class GamePauseInterface extends GameInterfaces {
                 ctx.fillText("Skill tree coming soon.", Width / 2, Height / 2);
                 // ? create an interface for this ?
                 break;
-            case 4: // Help
-                this.renderhelp(scope);
+            case 4: // Helbag
+                this.renderBag(scope);
                 break;
-            case 5: // Settings
+            case 5: // Help
+                this.renderHelp(scope);
+                break;
+            case 6: // Settings
                 this.renderSettings(scope);
                 break;
-            case 6: // Save
+            case 7: // Save
                 ctx.fillText("Game saves coming soon.", Width / 2, Height / 2);
                 break;
-            case 7: // Load
+            case 8: // Load
                 ctx.fillText("Game loads coming soon.", Width / 2, Height / 2);
                 break;
-            case 8: // Quit
+            case 9: // Quit
                 ctx.fillText("Back to the main menu.", Width / 2, Height / 2 - 15);
-                ctx.font = "15px Azure";
+                ctx.font = "2vmin Azure";
                 ctx.fillText("All unsaved progress will be lost.", Width / 2, Height / 2 + 10);
                 break;
             default:
@@ -178,7 +185,7 @@ class GamePauseInterface extends GameInterfaces {
     }
 
     /**@param {GameScope} scope*/
-    renderhelp(scope) {
+    renderHelp(scope) {
         const ctx = scope.cache.context[this.canvasGroup];
         const Width = scope.w;
         const Height = scope.h;
@@ -186,7 +193,7 @@ class GamePauseInterface extends GameInterfaces {
         if (!scope.global.quest.active) {
             // if no quest is active, show this
             ctx.textAlign = "center";
-            ctx.font = "15px Azure"
+            ctx.font = "2vmin Azure"
             ctx.fillText("You have no active quest yet.", Width / 2, Height / 2 - 10);
             ctx.fillText("Set one active or explore the world to get new quests.", Width / 2, Height / 2 + 10);
         } else {
@@ -249,29 +256,42 @@ class GamePauseInterface extends GameInterfaces {
         const menu = this.questMenu;
 
         // quests category
-        if (menu.chosen == 0 && this.questMenu.inMenu) { ctx.font = "bold 18px Azure"; } else { ctx.font = "15px Azure"; }
+        if (menu.chosen == 0 && this.questMenu.inMenu) { ctx.font = "bold 18px Azure"; } else { ctx.font = "2vmin Azure"; }
         ctx.fillText(`Ongoing (${ongoing.length})`, ((Width - 40) / 4) + 20, 120);
-        if (menu.chosen == 1 && this.questMenu.inMenu) { ctx.font = "bold 18px Azure"; } else { ctx.font = "15px Azure"; }
+        if (menu.chosen == 1 && this.questMenu.inMenu) { ctx.font = "bold 18px Azure"; } else { ctx.font = "2vmin Azure"; }
         ctx.fillText(`Finished (${finished.length})`, ((Width - 40) / 4) * 2 + 20, 120);
-        if (menu.chosen == 2 && this.questMenu.inMenu) { ctx.font = "bold 18px Azure"; } else { ctx.font = "15px Azure"; }
+        if (menu.chosen == 2 && this.questMenu.inMenu) { ctx.font = "bold 18px Azure"; } else { ctx.font = "2vmin Azure"; }
         ctx.fillText(`Failed (${failed.length})`, ((Width - 40) / 4) * 3 + 20, 120);
 
         // if not quests
         if (failed.length + ongoing.length + 1 + finished.length == 0) {
             ctx.font = "30px Azure";
             ctx.fillText("No quests available right now.", Width / 2, Height / 2 - 15);
-            ctx.font = "15px Azure";
+            ctx.font = "2vmin Azure";
             ctx.fillText("Explore the world to get new quests.", Width / 2, Height / 2 + 10);
             return;
         }
+    }
 
+    /**@param {GameScope} scope*/
+    renderBag(scope) {
+        const ctx = scope.cache.context[this.canvasGroup];
+        const Width = scope.w;
+        const Height = scope.h;
+        const inventory = scope.global.inventory;
+
+        // if no quest is active, show this
+        ctx.textAlign = "center";
+        ctx.font = "2vmin Azure"
+
+        //TODO sort items
+        Object.keys(inventory).forEach((itemName, id) => {
+            ctx.fillText(`${itemName.CapitalizeFirstLetterWord()}: ${inventory[itemName]}`, Width / 2, Height / 2 + 15 * id);
+        });
     }
 
     /**@param {GameScope} scope */
     update(scope) {
-        const Width = scope.w;
-        const Height = scope.h;
-
         if (this.resized) {
             this.resized = false;
             this.mainMenuButtonHitbox(scope);
@@ -284,10 +304,12 @@ class GamePauseInterface extends GameInterfaces {
             kright = KTM.pressed(k.right),
             kleft = KTM.pressed(k.left),
             kconfirm = KTM.pressed(k.confirm),
-            kback = KTM.pressed(k.back);
+            kback = KTM.pressed(k.back),
+            kpause = KTM.pressed(k.pause),
+            kb = KTM.pressed(["control"], ["b"]);
 
         // to apply the delay for the keyboard
-        if (kup || kdown || kright || kleft || kconfirm || kback) {
+        if (kup || kdown || kright || kleft || kconfirm || kback || kb) {
             if (this.keyboardDelay + 150 >= Date.now()) {
                 return;
             } else {
@@ -295,8 +317,13 @@ class GamePauseInterface extends GameInterfaces {
             }
         }
 
+        if (kb) {
+            console.log(scope.state.entities.player.x, scope.state.entities.player.y);
+        }
+
         // unpause
-        if ((KTM.pressed(GameConfig.keyBoard.pause) || (kback && !this.inMenu)) && this.keyPressDelay + 150 < Date.now()) {
+        // BUG when quit and come back into the game
+        if ((kpause || (kback && !this.inMenu)) && this.keyPressDelay + 150 < Date.now()) {
             this.unpause(scope);
             return;
         }
@@ -418,8 +445,20 @@ class GamePauseInterface extends GameInterfaces {
         if (this.mainMenuChosen === 7) { }
 
         // Quit
-        if (this.mainMenuChosen === 8 && kconfirm) {
-            // TODO 
+        if (this.mainMenuChosen === 8) {
+            console.log("quit");
+            this.activated = false;
+            scope.cache.context[this.canvasGroup].clearRect(0, 0, scope.w, scope.h);
+            this.interfaceCanvas.hidden = true;
+            this.mainMenuChosen = 0;
+
+            scope.state.menu.map.remove();
+            scope.state.menu.map = null;
+            scope.state.menu.main.remove();
+            scope.state.menu.main = new GameMainMenuInterface(scope);
+            scope.state.menu.main.activated = true;
+            scope.state.menu.main.needsUpdate = true;
+            return;
         }
 
         // back to menu
@@ -463,6 +502,7 @@ class GamePauseInterface extends GameInterfaces {
         */
 
         scope.state.menu.map.interfaceCanvas.hidden = true;
+        scope.state.menu.mapUI.interfaceCanvas.hidden = true;
         this.interfaceCanvas.hidden = false;
         this.keyPressDelay = Date.now();
         this.activated = true;
@@ -486,7 +526,7 @@ class GamePauseInterface extends GameInterfaces {
     /**@param {GameScope} scope */
     mainMenuButtonHitbox(scope) {
         // calculate the average size of each element
-        scope.cache.context[this.canvasGroup].font = "15px Azure";
+        scope.cache.context[this.canvasGroup].font = "2vmin Azure";
         let wa = []
         this.mainMenuName.forEach(b => {
             wa.push(scope.cache.context[this.canvasGroup].measureText(b.name).width);
@@ -560,7 +600,7 @@ class GamePauseInterface extends GameInterfaces {
         ctx.fillText(`${entity.firstName} ${entity.lastName} | Level ${xps.l} | ${entity.species} | ${entity.class}`, x + 160, y + 20, Width - 230);
 
         // draw xp bar
-        ctx.font = "15px Azure";
+        ctx.font = "2vmin Azure";
         ctx.fillStyle = "white";
         ctx.lineWidth = 2;
         ctx.fillText(`Xp: ${xps.r} / ${xps.t}`, x + 160, y + 40);
@@ -570,7 +610,7 @@ class GamePauseInterface extends GameInterfaces {
         ctx.strokeRect(x + 160, y + 55, 200, 8);
 
         // draw health bar
-        ctx.font = "15px Azure";
+        ctx.font = "2vmin Azure";
         ctx.fillStyle = "white";
         ctx.lineWidth = 2;
         ctx.fillText(`Hp: ${entity.stats.hp} / ${entity.stats.maxhp}`, x + 160, y + 75);
@@ -580,7 +620,7 @@ class GamePauseInterface extends GameInterfaces {
         ctx.strokeRect(x + 160, y + 90, 200, 8);
 
         // draw magic point bar
-        ctx.font = "15px Azure";
+        ctx.font = "2vmin Azure";
         ctx.fillStyle = "white";
         ctx.lineWidth = 2;
         ctx.fillText(`Mp: ${entity.stats.mp} / ${entity.stats.maxmp}`, x + 160, y + 110);
@@ -590,10 +630,10 @@ class GamePauseInterface extends GameInterfaces {
         ctx.strokeRect(x + 160, y + 125, 200, 8);
 
         // say the description
-        ctx.font = "12px Azure";
+        ctx.font = "12px Senior";
         ctx.fillStyle = "white";
-        scope.divideText(ctx, entity.description, Width - 440, 100).forEach((line, id) => {
-            ctx.fillText(line, x + 380, y + 40 + id * 20);
+        scope.divideText(ctx, entity.description, Width - 440, 80, 20).forEach((line, id) => {
+            ctx.fillText(line, x + 380, y + 50 + id * 20);
         });
     }
 
@@ -607,18 +647,18 @@ class GamePauseInterface extends GameInterfaces {
         const Width = scope.w;
         const Height = scope.h;
 
-        ctx.font = "15px Azure";
+        ctx.font = "2vmin Azure";
         ctx.fillStyle = "white";
 
         // line between the entity menu
         RectangleCreator.frameLine(scope, ctx, 16, 140, Width - 32, true, true);
-        if (0 == this.partyMenu.chosenInEntity) { ctx.font = "bold 18px Azure"; } else { ctx.font = "15px Azure"; }
+        if (0 == this.partyMenu.chosenInEntity) { ctx.font = "bold 18px Azure"; } else { ctx.font = "2vmin Azure"; }
         ctx.fillText("General", ((Width - 40) / 5), 115);
-        if (1 == this.partyMenu.chosenInEntity) { ctx.font = "bold 18px Azure"; } else { ctx.font = "15px Azure"; }
+        if (1 == this.partyMenu.chosenInEntity) { ctx.font = "bold 18px Azure"; } else { ctx.font = "2vmin Azure"; }
         ctx.fillText("Equipment", ((Width - 40) / 5) * 2, 115);
-        if (2 == this.partyMenu.chosenInEntity) { ctx.font = "bold 18px Azure"; } else { ctx.font = "15px Azure"; }
+        if (2 == this.partyMenu.chosenInEntity) { ctx.font = "bold 18px Azure"; } else { ctx.font = "2vmin Azure"; }
         ctx.fillText("Formation", ((Width - 40) / 5) * 3, 115);
-        if (3 == this.partyMenu.chosenInEntity) { ctx.font = "bold 18px Azure"; } else { ctx.font = "15px Azure"; }
+        if (3 == this.partyMenu.chosenInEntity) { ctx.font = "bold 18px Azure"; } else { ctx.font = "2vmin Azure"; }
         ctx.fillText("Skills", ((Width - 40) / 5) * 4, 115);
 
         if (0 == this.partyMenu.chosenInEntity) {
@@ -638,7 +678,7 @@ class GamePauseInterface extends GameInterfaces {
             ctx.fillText(`${entity.firstName} ${entity.lastName} | Level ${xps.l} | ${entity.species} | ${entity.class}`, 180, 170, Width - 230);
 
             // draw xp bar
-            ctx.font = "15px Azure";
+            ctx.font = "2vmin Azure";
             ctx.fillStyle = "white";
             ctx.lineWidth = 2;
             ctx.fillText(`Xp: ${xps.r} / ${xps.t}`, 180, 190);
@@ -648,7 +688,7 @@ class GamePauseInterface extends GameInterfaces {
             ctx.strokeRect(180, 205, 200, 8);
 
             // draw health bar
-            ctx.font = "15px Azure";
+            ctx.font = "2vmin Azure";
             ctx.fillStyle = "white";
             ctx.lineWidth = 2;
             ctx.fillText(`Hp: ${entity.stats.hp} / ${entity.stats.maxhp}`, 180, 225);
@@ -658,7 +698,7 @@ class GamePauseInterface extends GameInterfaces {
             ctx.strokeRect(180, 240, 200, 8);
 
             // draw magic point bar
-            ctx.font = "15px Azure";
+            ctx.font = "2vmin Azure";
             ctx.fillStyle = "white";
             ctx.lineWidth = 2;
             ctx.fillText(`Mp: ${entity.stats.mp} / ${entity.stats.maxmp}`, 180, 260);
@@ -668,14 +708,15 @@ class GamePauseInterface extends GameInterfaces {
             ctx.strokeRect(180, 275, 200, 8);
 
             // say the description
-            ctx.font = "15px Azure";
+            ctx.font = "12px Senior";
             ctx.fillStyle = "white";
-            scope.divideText(ctx, entity.description, Width - 440, 100).forEach((line, id) => {
-                ctx.fillText(line, 400, 190 + id * 20);
+            scope.divideText(ctx, entity.description, Width - 440, 80, 20).forEach((line, id) => {
+                ctx.fillText(line, 400, 200 + id * 20);
             });
 
             // show stats
             // def and magicdef
+            ctx.font = "2vmin Azure";
             ctx.fillText(`Def: ${entity.stats.def}`, 20, 270 + 40);
             ctx.fillText(`| Mdef: ${entity.stats.magicdef}`, 140, 270 + 40);
             // atk and magicatk

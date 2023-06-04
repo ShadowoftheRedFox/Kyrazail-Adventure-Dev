@@ -42,6 +42,7 @@ tr:nth-child(even) {
 @font-face {
     font-family: "ComicSansMS";
     src: url("../Fonts/Comic Sans MS.ttf") format("truetype");
+    font-size: medium;
 }
 
 @font-face {
@@ -49,6 +50,7 @@ tr:nth-child(even) {
     src: url("../Fonts/Comic Sans MS Bold.ttf") format("truetype"),
         url("../Fonts/Comic Sans MS.ttf") format("truetype");
     font-weight: bold;
+    font-size: medium;
 }
 
 @font-face {
@@ -56,6 +58,7 @@ tr:nth-child(even) {
     src: url('../Fonts/PixelAzureBonds-327Z.ttf') format("TrueType"),
         url("../Fonts/Comic Sans MS.ttf") format("truetype");
     font-display: block;
+    font-size: medium;
 }
 
 @font-face {
@@ -63,6 +66,7 @@ tr:nth-child(even) {
     src: url('../Fonts/PixelTakhisis-ZajJ.ttf') format("TrueType"),
         url("../Fonts/Comic Sans MS.ttf") format("truetype");
     font-display: block;
+    font-size: medium;
 }
 
 @font-face {
@@ -70,4 +74,13 @@ tr:nth-child(even) {
     src: url('../Fonts/Unreadable.ttf') format("TrueType"),
         url("../Fonts/Comic Sans MS.ttf") format("truetype");
     font-display: block;
+    font-size: medium;
+}
+
+@font-face {
+    font-family: 'Senior';
+    src: url('../Fonts/pcsenior.ttf') format("TrueType"),
+        url("../Fonts/Comic Sans MS.ttf") format("truetype");
+    font-display: block;
+    font-size: medium;
 }

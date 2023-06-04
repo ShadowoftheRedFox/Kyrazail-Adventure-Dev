@@ -1,3 +1,4 @@
+! World Idea:
 The world is shattered in multiple flying island on top of cloud.
 No one knows what's under, and no one can go through them.
 There is the mains islands, then minors islands, then smalls islands.
@@ -5,8 +6,7 @@ You can travel to each one you want, if you have the required flying boat.
 
 You have you own small island, and you can build/upgrade it as you want it to be.
 
+* REMINDER: butler path ShadowOfTheRedFox/Kyrazail-Adventure:win32-browser
 
-
-
-
-REMINDER: butler path ShadowOfTheRedFox/Kyrazail-Adventure:win32-browser
+TODO:
+make the game playable to 320 x 320 px size

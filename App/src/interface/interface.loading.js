@@ -267,6 +267,8 @@ LSM.title = function () {
     ctx.fillText(".", 0, 0); // pre load Unreadble font
     ctx.font = "1px Takhi";
     ctx.fillText(".", 0, 0); // pre load Takhi font, for places names
+    ctx.font = "1px Senior";
+    ctx.fillText(".", 0, 0); // pre load Senior font, for text
 };
 
 LSM.addProgress = function (n) {

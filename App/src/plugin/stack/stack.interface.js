@@ -24,6 +24,11 @@ const StackLoadInterface = [{
     status: true,
     description: "Render each layer of the map."
 }, {
+    name: "interface.mapUI",
+    path: "./src/interface/",
+    status: true,
+    description: "Render effects and UI over the map."
+}, {
     name: "interface.over",
     path: "./src/interface/",
     status: true,

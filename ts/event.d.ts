@@ -10,6 +10,7 @@ declare global {
         start: string[],
         stop: string[],
         callbackEvent: GameEventCodeName | null,
+        argumentsNb: number,
         data: {
             // fullscreen text
             type: "text",
@@ -54,6 +55,9 @@ declare global {
         } | {
             type: "timeout",
             time: number
+        } | {
+            /**What item and it's number will be in the arguments*/
+            type: "giveItem"
         }
 
         /*

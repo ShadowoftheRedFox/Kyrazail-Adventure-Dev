@@ -219,7 +219,7 @@ declare global {
         map: { [name: string]: boolean | undefined }
         onkeydown(): void
         onkeyup(): void
-        pressed(array: string[]): boolean
+        pressed(...array: string[]): boolean
     }
 
     type MTM = {
@@ -448,8 +448,6 @@ declare global {
          * @param n the index starting from the end. Default is 0.
          */
         reverseIndex(n: number | 0): number
-
-        [n: number]: T
     }
 
     interface String {
@@ -515,5 +513,33 @@ declare global {
         validateOptions(options: GameInterfacesOptions, scope: GameScope): void
         render(scope: GameScope): void
         update(scope: GameScope): object
+    }
+
+    class Point2D {
+        constructor(x: number, y: number)
+        mx: number
+        my: number
+        getX(): number
+        setX(pX: number): void
+        getY(): number
+        setY(pY: number): void
+        from(pt: any): Point2D
+    }
+
+    class Vector2D {
+        constructor(x: number, y: number)
+        mx: number
+        my: number
+        getX(): number
+        setX(pX: number): void
+        getY(): number
+        setY(pY: number): void
+        add(v: number): Vector2D
+        subtract(v: number): Vector2D
+        multiply(scalar: number): number
+        divide(scalar: number): Vector2D
+        length(): number
+        normalize(): Vector2D
+        from(ptA: Point2D, ptB: Point2D): Vector2D
     }
 }

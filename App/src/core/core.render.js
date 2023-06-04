@@ -22,7 +22,7 @@ function GameRender(scope) {
         for (var menu in menus) {
             // Fire off each active menus `render` method
             const m = menus[menu];
-            if (m.activated === true) {
+            if (m && m.activated === true) {
                 if (m.spawned === true && m.transitionSpawn) {
                     m.spawned = false;
                     TransitionEffectFade(scope, m.transitionSpawnDuration);

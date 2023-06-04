@@ -49,4 +49,34 @@ declare global {
         source: string
     }
 
+    type GameMapEvent = {
+        x: number,
+        y: number,
+        o: OrientationType,
+        /**Event name. */
+        e: string,
+        /**Arguments for the event */
+        a: any[]
+        /**Type of the event for the animated tile */
+        t: number
+        //TODO conditions to enable the event
+    }
+
+    type MapData = {
+        [number: string]: {
+            /** Player spawn possibilities. */
+            player: { x: number, y: number, o: GameOrientation }[],
+            entities: GameEntitiesOptions[],
+            events: GameMapEvent[]
+        }
+    }
+
+    type MapUIPopup = {
+        string: string,
+        // TODO find a way to keep the right coos even after a resize
+        x: number,
+        y: number,
+        fade: number,
+        time: number
+    }
 }

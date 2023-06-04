@@ -81,8 +81,7 @@ class Game {
             // initialise the event system
             GameEventHandler.init(this);
 
-            // TODO add a share method so that every rendering object in their creating function share the same canavs
-            //add every rendering object to their current object
+            // add every rendering object to their current object
             this.state.entities = this.state.entities || {};
             this.state.entities.player = null; // player is created with the map change
             // others entities are added as they arrive
@@ -92,7 +91,6 @@ class Game {
             this.state.menu.intro = new GameIntroductionInterface(this);
             this.state.menu.dialogue = new GameDialogueInterface(this);
             this.state.menu.main = new GameMainMenuInterface(this);
-            this.state.menu.map = new GameMapInterface(this);
             this.state.menu.pause = new GamePauseInterface(this);
             // this.state.menu.gameOver = new GameOver(this); // TODO this will be disactivated by default, but shown by event system
             // this.state.menu.checkUpdate = new updateMenu(this); // TODO will be added later, because use a lot of data trafic and must manage the github API
@@ -123,6 +121,8 @@ class Game {
             WindowManager.fatal(e);
         }
     }
+
+    //? UNDER HERE ARE ALL THE FUNCTIONS USED BY THE GAME ITSELF TO RUN 
 
     /**
      * Calculate the level, total needed and xp left given xp amount and level.
@@ -162,9 +162,10 @@ class Game {
      * @param {string} string Text to split
      * @param {number} w Max width
      * @param {number} h Max height
+     * @param {number} lineh Height of each line when dsiplaying
      * @returns {string[]} The splited text
      */
-    divideText(ctx, string, w, h) {
+    divideText(ctx, string, w, h, lineh = h) {
         const result = [];
         let tempstr = "";
         // split with width
@@ -178,18 +179,29 @@ class Game {
         });
         result.push(tempstr);
         // split with height
-        let tot = 0;
-        let i = 0;
-        for (const line of result) {
-            if (tot > h) {
-                result.splice(i, result.length - i + 1);
-                break;
-            } else {
-                tot += ((e) => { (e.actualBoundingBoxAscent + e.actualBoundingBoxDescent) })(ctx.measureText(line));
-                i++;
+        if (result.length * lineh > h) {
+            let tot = 0;
+            let i = 0;
+            for (const line of result) {
+                if (tot > h) {
+                    result.splice(i, result.length - i + 1);
+                    // replace the 3 last char by .
+                    result[i - 1] = result[i - 1].slice(0, -3) + "...";
+                    break;
+                } else {
+                    tot += lineh;
+                    i++;
+                }
             }
         }
 
         return result;
     }
+
+    /**
+     * Give/retrieve an item from the player inventory
+     * @param {GameItemName} name The name of the item
+     * @param {number} nb positiv number gives item, negativ number retrieves
+     */
+    giveItem(name, nb) { }
 }

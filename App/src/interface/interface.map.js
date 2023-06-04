@@ -7,7 +7,7 @@ class GameMapInterface extends GameInterfaces {
             asOwnCanvas: true,
             zindex: ConfigConst.ZINDEX.MAP,
             canvasGroup: "GameMapGroup",
-            requiredImage: ["System/Shadow"],
+            requiredImage: ["System/Shadow", "Characters/!Flame"],
             requiredAudio: []
         }, scope);
 
@@ -27,6 +27,10 @@ class GameMapInterface extends GameInterfaces {
         this.stepAnimation = 0;
         this.stepAnimationTimeout = 0;
         this.keyPressDelay = 0;
+        this.tileDelay = 0;
+        this.tileCount = 0;
+
+        this.eventReady = true;
     }
 
     /**
@@ -52,17 +56,20 @@ class GameMapInterface extends GameInterfaces {
             return;
         }
 
-        //STEP map
-        const MapToRender = scope.cache.map[this.currentMapName];
+        // STEP map
         const CachedMap = scope.cache.layers[this.currentMapName];
+        const DataMap = scope.cache.data.map[this.currentMapName];
 
-        // TODO move this with the camera
         // draw ground
         ctx.drawImage(CachedMap.ground, this.CenteredPositionLayerX, this.CenteredPositionLayerY, CachedMap.ground.width, CachedMap.ground.height);
-        //STEP map animated
+        // STEP map animated
+        // TODO draw event tiles
+        DataMap.events.forEach(event => {
+            this.drawEventTile(ctx, scope.cache.image["Characters/!Flame"].image, event);
+        })
         // draw the shadow
         ctx.drawImage(scope.cache.image["System/Shadow"].image, Width / 2, Height / 2 + 4);
-        // TODO draw entities shadow
+        // TODO draw all entities shadow
         // draw collision layer
         ctx.drawImage(CachedMap.collision, this.CenteredPositionLayerX, this.CenteredPositionLayerY, CachedMap.collision.width, CachedMap.collision.height);
         // STEP render entities here
@@ -74,7 +81,7 @@ class GameMapInterface extends GameInterfaces {
         }
         // draw over layer
         ctx.drawImage(CachedMap.over, this.CenteredPositionLayerX, this.CenteredPositionLayerY, CachedMap.over.width, CachedMap.over.height);
-        //STEP map effect
+        // STEP map effect
 
         this.needsUpdate = false;
     }
@@ -88,6 +95,7 @@ class GameMapInterface extends GameInterfaces {
         const Height = scope.h;
         const Player = scope.state.entities.player;
         const MapToRender = scope.cache.map[this.currentMapName];
+        const MapData = scope.cache.data.map[this.currentMapName];
         const Collision = scope.cache.layers[this.currentMapName].collisionPattern;
         let PlayerRunning = GameConfig.alwaysRun;
 
@@ -115,10 +123,22 @@ class GameMapInterface extends GameInterfaces {
         // if the player isn't moving
         if (Player.goalX == Player.x && Player.goalY == Player.y) {
             let old = { x: Player.goalX, y: Player.goalY };
-            if (KTM.pressed(GameConfig.keyBoard.left)) { Player.goalX--; }
-            else if (KTM.pressed(GameConfig.keyBoard.up)) { Player.goalY--; }
-            else if (KTM.pressed(GameConfig.keyBoard.right)) { Player.goalX++; }
-            else if (KTM.pressed(GameConfig.keyBoard.down)) { Player.goalY++; }
+            if (KTM.pressed(GameConfig.keyBoard.left)) {
+                Player.goalX--;
+                Player.orientation = "west";
+            }
+            else if (KTM.pressed(GameConfig.keyBoard.up)) {
+                Player.goalY--;
+                Player.orientation = "north";
+            }
+            else if (KTM.pressed(GameConfig.keyBoard.right)) {
+                Player.goalX++;
+                Player.orientation = "east";
+            }
+            else if (KTM.pressed(GameConfig.keyBoard.down)) {
+                Player.goalY++;
+                Player.orientation = "south";
+            }
             // reset the step animation if the player doesn't move
             else { this.stepAnimation = 1; this.needsUpdate = true; }
             // check collision
@@ -140,11 +160,9 @@ class GameMapInterface extends GameInterfaces {
         if (Player.goalX != Player.x) {
             if (Player.goalX > Player.x) {
                 Player.x += speed;
-                Player.orientation = "east";
                 if (Player.x > Player.goalX) { Player.x = Player.goalX; }
             } else {
                 Player.x -= speed;
-                Player.orientation = "west";
                 if (Player.x < Player.goalX) { Player.x = Player.goalX; }
             }
             this.needsUpdate = true;
@@ -152,19 +170,37 @@ class GameMapInterface extends GameInterfaces {
         if (Player.goalY != Player.y) {
             if (Player.goalY > Player.y) {
                 Player.y += speed;
-                Player.orientation = "south";
                 if (Player.y > Player.goalY) { Player.y = Player.goalY; }
             } else {
                 Player.y -= speed;
-                Player.orientation = "north";
                 if (Player.y < Player.goalY) { Player.y = Player.goalY; }
             }
             this.needsUpdate = true;
         }
 
         //STEP map animated
+        if (this.tileDelay + 1000 < Date.now()) {
+            //BUG stop rendering when leaving the tab
+            this.tileDelay = Date.now();
+            this.tileCount++;
+            this.tileCount = this.tileCount.clamp(0, 12);
+            this.needsUpdate = true;
+        }
         //STEP entities
         //STEP map effect
+
+        // STEP check for event
+        MapData.events.forEach(event => {
+            if (event.x == Player.goalX && event.y == Player.goalY && Player.orientation == event.o && KTM.pressed(GameConfig.keyBoard.confirm) && this.eventReady) {
+                GameEventHandler.handle(event.e, ...event.a);
+                this.eventReady = false;
+                //TODO do a global event for the popup
+                scope.state.menu.mapUI.newPopup(scope, `${event.a[1] > 0 ? `+${event.a[1]}` : event.a[1]} ${event.a[0]}`);
+                setTimeout(() => {
+                    this.eventReady = true;
+                }, 100);
+            }
+        })
     }
 
     /**
@@ -185,8 +221,6 @@ class GameMapInterface extends GameInterfaces {
      * @param {number} spawn Player spawn number on the map
      */
     changeMap(scope, map, spawn = 0) {
-        //TODO create the player 
-        //? maybe put it in the if, because the map is "loaded", just not yet initialised
         this.isMapLoaded = false;
         if (!scope.cache.map[map]) {
             // try to live load the map
@@ -216,6 +250,7 @@ class GameMapInterface extends GameInterfaces {
         this.GroundLayers = MapLoaded.layers.filter(layer => layer.name.includes("Ground"));
         this.CollisionLayers = MapLoaded.layers.filter(layer => layer.name.includes("Collision"));
         this.OverLayers = MapLoaded.layers.filter(layer => layer.name.includes("Over"));
+        // TODO animated layer
 
         // initialise the player here, at the wanted spawn
         scope.state.entities.player = new GameEntityPlayer(scope, MapData.player[spawn].x, MapData.player[spawn].y, MapData.player[spawn].o);
@@ -402,5 +437,53 @@ class GameMapInterface extends GameInterfaces {
         });
 
         return { source: "Tilesets/" + this.getImageNameFromSource(sets[setIndex].source), firstgid: sets[setIndex].firstgid };
+    }
+
+    /**
+     * 
+     * @param {CanvasRenderingContext2D} ctx 
+     * @param {HTMLImageElement} image 
+     * @param {GameMapEvent} event 
+     * @param {number} x 
+     * @param {number} y 
+     */
+    drawEventTile(ctx, image, event, x, y) {
+        let sx = 0;
+        let sy = 0;
+        switch (event.t) {
+            default:
+            case 1:
+                sx = 6 * 32;
+                sy = (4 + this.tileCount % 4) * 32;
+                break;
+            case 2:
+                sx = 7 * 32;
+                sy = (4 + this.tileCount % 4) * 32;
+                break;
+            case 3:
+                sx = 8 * 32;
+                sy = (4 + this.tileCount % 4) * 32;
+                break;
+            case 4:
+                sx = (9 + this.tileCount % 3) * 32;
+                sy = 4 * 32;
+                break;
+            case 5:
+                sx = (9 + this.tileCount % 3) * 32;
+                sy = 5 * 32;
+                break;
+            case 6:
+                sx = (9 + this.tileCount % 3) * 32;
+                sy = 6 * 32;
+                break;
+            case 7:
+                sx = (9 + this.tileCount % 3) * 32;
+                sy = 7 * 32;
+                break;
+        }
+
+        // TODO check if animated tile is in the screen, if not don't draw it
+        ctx.drawImage(image, sx, sy, 32, 32,
+            this.CenteredPositionLayerX + event.x * 32, this.CenteredPositionLayerY + event.y * 32, 32, 32);
     }
 }

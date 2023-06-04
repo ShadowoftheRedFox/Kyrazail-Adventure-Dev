@@ -26,7 +26,7 @@ GameGlobalObject.newGame = function (scope = window.game) {
             species: "Monstruosity",
             class: "Miscellaneous",
             advancedSpecies: false,
-            description: "You should know yourself! You are the main character of this game, the great hero that will bring peace a properity. Or you could succomb to your greed and take control of this world.",
+            description: "You should know yourself! You are the main character of this game, the great hero that will bring peace and properity. Or you could succomb to your greed and take control of this world.",
 
             face: {
                 invisible: false,

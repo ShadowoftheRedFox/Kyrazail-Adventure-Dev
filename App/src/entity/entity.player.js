@@ -1,5 +1,3 @@
-
-
 class GameEntityPlayer extends GameEntitiesClass {
     /**
      * @param {GameScope} scope

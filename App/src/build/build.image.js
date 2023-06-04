@@ -14,7 +14,7 @@ function GameLoadImage(scope, imageArray, callback) {
     let c = imageArray.length;
 
     imageArray.forEach(image => {
-        if (scope.cache.image[image]) { console.log(`${image} is already loaded`); c--; }
+        if (ConfigConst.DEBUG && scope.cache.image[image]) { console.log(`${image} is already loaded`); c--; }
         else {
             const i = new Image();
             i.onerror = () => {

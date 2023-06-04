@@ -90,18 +90,12 @@ declare global {
                     lastnames: string[]
                 }
                 item: { [name: GameItemName]: GameItem }
-                event: { [name: string]: GameEvent[] }
+                event: { [name: string]: GameEvent }
                 title: {}
                 monsters: {}
                 class: {}
                 skills: { [name: string]: GameSpecialAbility }
-                map: {
-                    [number: string]: {
-                        /** Player spawn possibilities. */
-                        player: { x: number, y: number, o: GameOrientation }[],
-                        entities: GameEntitiesOptions[]
-                    }
-                }
+                map: MapData
             }
             context: { [name: string]: CanvasRenderingContext2D }
             layers: {
@@ -134,40 +128,20 @@ declare global {
          * @param string Text to split
          * @param w Max width
          * @param h Max height
+         * @param lineh Height of each line when dsiplaying
          * @returns The splited text
          */
-        divideText(ctx: CanvasRenderingContext2D, string: string, w: number, h: number): string[]
-    }
-
-    type GameInterfacesOptions = {
-        asOwnCanvas: boolean | false
-        canvasGroup: string | "MainGameGroup"
-        zindex: number | 0
-        requiredImage: string[] | []
-        requiredAudio: string[] | []
-
-        transitionSpawnDuration: number | 1000
-        transitionLeaveDuration: number | 1000
-        transitionSpawn: boolean | false
-        transitionLeave: boolean | false
-        activated: boolean | false
-        needsUpdate: boolean | true
-    }
-
-    type GameMenuOptions = {
-        x: number
-        y: number
-        name: string
+        divideText(ctx: CanvasRenderingContext2D, string: string, w: number, h: number, lineh: number): string[]
     }
 
     type GameState = {
         menu: {
             [name: string]: GameInterfaces
-            main: GameMainInterface
-            intro: GameIntroductionInterface
-            dialogue: GameDialogueInterface
-            map: GameMapInterface
-            pause: GamePauseInterface
+            main: GameInterfaces
+            intro: GameInterfaces
+            dialogue: GameInterfaces
+            map: GameInterfaces
+            pause: GameInterfaces
         }
         entities: {
             [name: string]: GameEntitiesClass

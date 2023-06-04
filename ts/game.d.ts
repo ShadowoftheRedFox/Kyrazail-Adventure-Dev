@@ -11,7 +11,9 @@ declare global {
     type GameGlobalState = {
         player: GamePlayerMember
         party: GamePartyMember[]
-        inventory: {}
+        inventory: {
+            [name: GameItemName]: number
+        }
         quest: {
             active: GameQuest
             finished: GameQuest[]
@@ -115,7 +117,7 @@ declare global {
         name: GameLanguageObject
         image: string
         col: number
-        rown: number
+        row: number
         description: GameLanguageCodedString
         special: boolean
         usable: boolean
@@ -201,7 +203,7 @@ declare global {
         xp: number
         species: GameSpeciesBase | GameSpeciesAdvanced
         advancedSpecies: boolean
-        class: GameEntitiesClass
+        class: GameFigthClass
         description: string
 
         face: GameIcon

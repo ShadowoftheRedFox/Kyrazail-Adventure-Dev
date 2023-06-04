@@ -17,23 +17,33 @@ GameEventHandler.init = function (scope) {
 GameEventHandler.handle = function (EventName, ...args) {
     const scope = GameEventHandler.scope;
     const data = scope.cache.data.event;
+    const event = data[EventName];
     if (!args) args = [];
-    if (!data[EventName]) {
+    if (!event) {
         console.warn(`Got an unknown event code: ${EventName}\nWith args: \n${args.join("\n")}`);
+    }
+    if (event.argumentsNb != args.length) {
+        console.warn(`Got ${args.length} arguments, needed ${event.argumentsNb} for ${EventName}`);
     }
 
     switch (EventName) {
-        default:
-            GameEventHandler.run(data[EventName]);
-            break;
         case "Test":
             console.log(`Got a test event, with args: \n${args.join("\n")}`);
             break;
         case "NewGame":
             // TODO create a save file
             // TODO start reminder
-            GameEventHandler.run(data[EventName]);
+            window.game.state.menu.map = new GameMapInterface(window.game);
+            window.game.state.menu.mapUI = new GameMapUIInterface(window.game);
+            GameEventHandler.run(event);
             GameGlobalObject.newGame();
+            break;
+        case "giveItem":
+            if (!scope.global.inventory[args[0]]) { scope.global.inventory[args[0]] = 0; }
+            scope.global.inventory[args[0]] += args[1];
+            break;
+        default:
+            GameEventHandler.run(event);
             break;
     }
 };
@@ -56,11 +66,9 @@ GameEventHandler.run = function (event) {
         if (this.scope.state.menu[interface]) {
             this.scope.state.menu[interface].activated = true;
             this.scope.state.menu[interface].needsUpdate = true;
-        } else if (this.scope.state.entities[interface]) {
-            this.scope.state.entities[interface].activated = true;
-            this.scope.state.entities[interface].needsUpdate = true;
         }
     })
+
     if (["text", "announcement", "dialogue", "keyboard"].includes(event.data.type)) {
         this.scope.state.menu.dialogue.currentEvent = event;
     } else if (event.data.type === "map") {

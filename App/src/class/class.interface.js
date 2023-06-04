@@ -20,7 +20,7 @@ class GameInterfaces {
 
         this.activated = options.activated || false;
         this.needsUpdate = options.needsUpdate || true;
-        this.resized = false;
+        this.resized = true;
         this.spawned = true;
         this.validateOptions(options, scope);
     }
@@ -47,5 +47,10 @@ class GameInterfaces {
         }
 
         // push the entity to the cache
+    }
+
+    /**Remove the interface from the document */
+    remove() {
+        this.interfaceCanvas.remove();
     }
 }

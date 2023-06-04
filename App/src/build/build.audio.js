@@ -14,7 +14,7 @@ function GameLoadAudio(scope, AudioArray, callback) {
     let c = AudioArray.length;
 
     AudioArray.forEach(audio => {
-        if (scope.cache.audio[audio]) { console.log(`${audio} is already loaded`); c--; }
+        if (ConfigConst.DEBUG && scope.cache.audio[audio]) { console.log(`${audio} is already loaded`); c--; }
         else {
             let src = scope.constants.href + "resources/Audio/" + audio + ".ogg";
             if (audio.split("/")[0] === "MAIN") src = scope.constants.href + "resources/Audio/" + audio + ".mp3";
