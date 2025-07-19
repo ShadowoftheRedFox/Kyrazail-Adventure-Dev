@@ -1,17 +1,15 @@
-
-
 /**
  * @param {CanvasRenderingContext2D} context 
  * @returns {number} the ratio
  */
-function getPixelRatio(context) {
-    const backingStoreRatio = context.webkitBackingStorePixelRatio ||
-        context.mozBackingStorePixelRatio ||
-        context.msBackingStorePixelRatio ||
-        context.oBackingStorePixelRatio ||
-        context.backingStorePixelRatio || 1;
+export function getPixelRatio(context: CanvasRenderingContext2D): number {
+    const backingStoreRatio = /* context?.webkitBackingStorePixelRatio ||
+        context?.mozBackingStorePixelRatio ||
+        context?.msBackingStorePixelRatio ||
+        context?.oBackingStorePixelRatio ||
+        context?.backingStorePixelRatio ||  */1;
 
-    let deviceRatio = window.devicePixelRatio || 1;
+    const deviceRatio = window.devicePixelRatio || 1;
 
     // Return the proper pixel ratio by dividing the device ratio by the backing ratio
     return deviceRatio / backingStoreRatio;
@@ -24,7 +22,7 @@ function getPixelRatio(context) {
  * @param {number} i z-index of the canvas 
  * @returns {HTMLCanvasElement}
  */
-function generateCanvas(w, h, i = 1) {
+export function generateCanvas(w: number, h: number, i = 1): HTMLCanvasElement {
     var canvas = document.createElement('canvas'),
         context = canvas.getContext('2d');
 
@@ -40,7 +38,7 @@ function generateCanvas(w, h, i = 1) {
     canvas.width = Math.floor(w * ratio);
     canvas.height = Math.floor(h * ratio);
 
-    canvas.style.zIndex = i;
+    canvas.style.zIndex = `${i}`;
     // Scale the context so we get accurate pixel density
     context.scale(ratio, ratio);
 
@@ -53,8 +51,14 @@ function generateCanvas(w, h, i = 1) {
  * @param {number} neww width of the canvas
  * @param {number} newh heigth of the canvas 
  */
-function regenerateCanvas(canvas, neww, newh) {
+export function regenerateCanvas(canvas: HTMLCanvasElement | null, neww: number, newh: number) {
+    if (!canvas) return;
     const context = canvas.getContext("2d");
+    if (!context) {
+        console.error("Unable to get context of the canvas.");
+        return;
+        //TODO throw error here
+    }
     // Pass our canvas' context to our getPixelRatio method
     var ratio = getPixelRatio(context);
 
@@ -68,7 +72,7 @@ function regenerateCanvas(canvas, neww, newh) {
     context.scale(ratio, ratio);
 }
 
-function regenerateAllCanvas(neww, newh) {
+export function regenerateAllCanvas(neww: number, newh: number) {
     const CanvasArray = document.getElementsByTagName("canvas");
     for (const canvas of CanvasArray) {
         regenerateCanvas(canvas, neww, newh);
@@ -80,10 +84,12 @@ function regenerateAllCanvas(neww, newh) {
  * @param {string} id Id of the element.
  * @returns {boolean} Success or not.
  */
-function removeElement(id) {
+export function removeElement(id: string) {
     const c = document.getElementById(id);
     if (c) {
         c.remove();
         return true;
     } else { return false; }
 }
+
+
